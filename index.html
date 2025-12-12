@@ -1,224 +1,213 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="loading">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Sawfish App Store</title>
+    <title>Sawfish App Store</title>
 
-    <!-- External CSS + Manifest Only -->
-    <link rel="stylesheet" href="style.css">
+    <!-- PWA Manifest -->
     <link rel="manifest" href="manifest.json">
+
+    <!-- Apple icons -->
+    <link rel="apple-touch-icon" href="icons/icon-192.png">
+    <meta name="apple-mobile-web-app-status-bar" content="#ffffff">
+    <meta name="apple-mobile-web-app-capable" content="yes">
 </head>
 
 <body>
 
-    <!-- ===========================================================
-         HERO / INTRO SCREEN
-    ============================================================ -->
-    <section id="intro-screen" class="screen">
-        <div class="container">
+    <!-- ==========================================================
+         INSTALLATION SCREEN (Shown ONLY when NOT installed)
+    =========================================================== -->
+    <section data-screen="install" class="visible">
+        <header class="install-header">
+            <h1>Sawfish App Store</h1>
+            <p class="subtitle">A new way for students to access fun, safe, and useful apps at school.</p>
+        </header>
 
-            <h1 class="main-title">Welcome to The Sawfish App Store</h1>
+        <main class="install-content">
 
-            <p class="headline-description">
-                A modern, student-created App Store designed to bring **fun**, **useful**,  
-                and **safe** web-apps to your school iPad — without the limitations of Self-Service.
-            </p>
-
-            <div class="intro-message">
-                <h2>Why Are We Building This?</h2>
+            <section class="intro-block">
+                <h2>Why We Built This</h2>
                 <p>
-                    For years, students have relied on the district’s Self-Service app to
-                    download school software. But let’s be honest — Self-Service is slow,
-                    outdated, missing useful apps, and often fails to deliver the tools that
-                    students actually need.  
+                    Many schools rely on tools like Self Service, but students often find it limited, slow, or 
+                    missing the apps they actually want to use.  
                 </p>
                 <p>
-                    Because of these issues, a small team of student developers has dedicated itself  
-                    to creating a new solution: a browser-based App Store that works smoothly,
-                    installs instantly, and delivers apps the way you expect.
+                    A group of student developers created the **Sawfish App Store** — a clean, fast, modern web app 
+                    that feels like a real App Store, built specifically for school-safe fun and communication tools.
                 </p>
-            </div>
+            </section>
 
-        </div>
-    </section>
-
-    <!-- ===========================================================
-         ABOUT THE PROJECT
-    ============================================================ -->
-    <section id="about-section" class="screen">
-        <div class="container">
-
-            <h2 class="section-title">What Makes This App Store Different?</h2>
-
-            <div class="feature-list">
-
-                <div class="feature-item">
-                    <h3>🚀 Fast & Lightweight</h3>
-                    <p>
-                        Unlike Self-Service, this store loads instantly, doesn’t freeze,
-                        and doesn’t require any special profile installs or updates.
-                    </p>
-                </div>
-
-                <div class="feature-item">
-                    <h3>🔒 Safe for School</h3>
-                    <p>
-                        All apps included here are browser-based and follow school technology
-                        rules. No system modifications, no downloads, no harmful content.
-                    </p>
-                </div>
-
-                <div class="feature-item">
-                    <h3>📱 Works Like a Real App</h3>
-                    <p>
-                        When installed, the store appears on your home screen with an icon,
-                        opens in full-screen mode, and behaves like a native iPad application.
-                    </p>
-                </div>
-
-                <div class="feature-item">
-                    <h3>🎮 Fun & Useful</h3>
-                    <p>
-                        This store provides instant access to the apps students actually use:  
-                        a chat platform, a call system, and a full game hub.
-                    </p>
-                </div>
-
-            </div>
-        </div>
-    </section>
-
-    <!-- ===========================================================
-         INSTALLATION INSTRUCTIONS
-    ============================================================ -->
-    <section id="setup-section" class="screen">
-        <div class="container">
-
-            <h2 class="section-title">How to Install the Sawfish App Store</h2>
-
-            <p class="section-description">
-                The Sawfish App Store uses PWA technology. Installation takes less than 10 seconds.
-                Once added to your home screen, the full App Store will unlock.
-            </p>
-
-            <ol class="instruction-steps">
-                <li>Open this website in <strong>Safari</strong> on your school iPad.</li>
-                <li>Tap the <strong>Share</strong> icon (the square with an arrow pointing upward).</li>
-                <li>Scroll down and select <strong>“Add to Home Screen”</strong>.</li>
-                <li>Confirm by tapping <strong>Add</strong> at the top right.</li>
-                <li>Once the icon appears on your home screen, tap it to open the App Store.</li>
-            </ol>
-
-            <div class="install-note">
+            <section class="how-it-works">
+                <h2>How to Install This App</h2>
                 <p>
-                    After installation, you will gain access to all apps:
-                    <strong>Chat App</strong>, <strong>Call App</strong>, and 
-                    <strong>The Sawfish Game Station</strong>.
+                    The Sawfish App Store works best when it is added to your iPad’s Home Screen.  
+                    Follow the steps below to complete setup:
                 </p>
-            </div>
 
-        </div>
+                <ol class="install-steps">
+                    <li>Tap the <strong>Share</strong> button at the top-right of Safari.</li>
+                    <li>Scroll down and tap <strong>Add to Home Screen</strong>.</li>
+                    <li>Tap <strong>Add</strong> in the top-right corner.</li>
+                    <li>Return to your Home Screen and open the Sawfish App Store from its icon.</li>
+                </ol>
+            </section>
+
+            <section class="benefits">
+                <h2>What You Get After Installation</h2>
+                <p>Once the app is installed, you’ll unlock access to:</p>
+
+                <ul class="benefit-list">
+                    <li><strong>The Sawfish Game Hub</strong> — a curated set of quick-play, school-friendly games.</li>
+                    <li><strong>Chat Portal</strong> — your link to the student chat app.</li>
+                    <li><strong>Call App Launcher</strong> — start school-safe calls instantly.</li>
+                    <li><strong>Automatic full-screen mode</strong> — feels like a native iPad app.</li>
+                    <li><strong>Clean iOS-style navigation</strong> with smooth transitions.</li>
+                </ul>
+            </section>
+
+            <section class="final-note">
+                <p>
+                    After installation, this screen disappears and the full app interface becomes available.
+                </p>
+            </section>
+        </main>
+
+        <footer class="install-footer">
+            <p>Built by the Sawfish Developer Group · Version 1.0</p>
+        </footer>
     </section>
 
-    <!-- ===========================================================
-         APP STORE CONTENT (HIDDEN UNTIL INSTALLED)
-    ============================================================ -->
-    <section id="app-screen" class="screen">
-    <header class="app-header">
-        <h1>Sawfish App Store</h1>
-    </header>
 
-    <!-- Tabs -->
-    <nav class="tab-bar">
-        <button class="tab active" data-tab="home">Home</button>
-        <button class="tab" data-tab="games">Games</button>
-        <button class="tab" data-tab="connect">Connect</button>
-        <button class="tab" data-tab="settings">Settings</button>
-    </nav>
+    <!-- ==========================================================
+         FULL APP SCREEN (Shown ONLY after PWA installation)
+    =========================================================== -->
+    <section data-screen="app">
 
-    <!-- ============================================================
-         HOME TAB
-    ============================================================ -->
-    <div id="tab-home" class="tab-content visible">
-        <div class="content-container">
-            <h2 class="section-title">Featured Apps</h2>
+        <!-- -------------------------------
+             TOP NAV (App Title)
+        ---------------------------------->
+        <header class="app-header">
+            <h1>Sawfish App Store</h1>
+        </header>
 
-            <div class="app-grid">
-                <div class="app-card">
-                    <h3>The Sawfish Game Portal</h3>
-                    <p>Play a wide variety of student-friendly games.</p>
-                    <a class="apple-button" href="https://the-sawfish.github.io/game-portal/" target="_blank">Open</a>
+        <!-- -------------------------------
+             TAB BAR (Home / Games / Connect)
+        ---------------------------------->
+        <nav class="tab-bar">
+            <button data-tab="home" class="active">Home</button>
+            <button data-tab="games">Games</button>
+            <button data-tab="connect">Connect</button>
+        </nav>
+
+        <!-- -------------------------------
+             PAGE: HOME
+        ---------------------------------->
+        <main data-page="home" class="visible">
+            <section class="home-hero">
+                <h2>Welcome</h2>
+                <p>
+                    Thanks for installing the Sawfish App Store!  
+                    Enjoy instant access to games, chat tools, and communication apps.
+                </p>
+            </section>
+
+            <section class="featured-section">
+                <h3>Featured Apps</h3>
+
+                <div class="card-grid">
+
+                    <article class="app-card">
+                        <h4>Sawfish Game Portal</h4>
+                        <p>A collection of school-friendly games.</p>
+                        <a class="app-launch" href="https://the-sawfish.github.io/game-portal/" target="_blank">
+                            Open Game Portal
+                        </a>
+                    </article>
+
+                    <article class="app-card">
+                        <h4>Chat App</h4>
+                        <p>Communicate with classmates in real-time.</p>
+                        <a class="app-launch" href="https://the-sawfish.github.io/chat1234567890/login.html" target="_blank">
+                            Open Chat App
+                        </a>
+                    </article>
+
+                    <article class="app-card">
+                        <h4>Call App</h4>
+                        <p>Simple call interface for student communication.</p>
+                        <a class="app-launch" href="https://the-sawfish.github.io/call-app/" target="_blank">
+                            Open Call App
+                        </a>
+                    </article>
+
                 </div>
+            </section>
+        </main>
 
-                <div class="app-card">
-                    <h3>Chat App</h3>
-                    <p>Communicate instantly with classmates and friends.</p>
-                    <a class="apple-button" href="https://the-sawfish.github.io/chat1234567890/login.html" target="_blank">Open</a>
-                </div>
 
-                <div class="app-card">
-                    <h3>Call App</h3>
-                    <p>Simple web-based calling between students.</p>
-                    <a class="apple-button" href="https://the-sawfish.github.io/call-app/" target="_blank">Open</a>
-                </div>
-            </div>
-        </div>
-    </div>
+        <!-- -------------------------------
+             PAGE: GAMES
+        ---------------------------------->
+        <main data-page="games">
+            <section class="page-header">
+                <h2>Games</h2>
+                <p>Welcome to the Sawfish Game Hub.</p>
+            </section>
 
-    <!-- ============================================================
-         GAMES TAB
-    ============================================================ -->
-    <div id="tab-games" class="tab-content">
-        <div class="content-container">
-            <h2 class="section-title">Games</h2>
-            <div class="app-grid">
-                <div class="app-card">
-                    <h3>The Sawfish Game Portal</h3>
-                    <p>Play anywhere. Works on school Wi-Fi.</p>
-                    <a class="apple-button" href="https://the-sawfish.github.io/game-portal/" target="_blank">Launch</a>
-                </div>
-            </div>
-        </div>
-    </div>
+            <section class="game-list">
+                <article class="game-card">
+                    <h4>Sawfish Game Portal</h4>
+                    <p>Instant access to all your school-friendly titles.</p>
+                    <a class="app-launch" href="https://the-sawfish.github.io/game-portal/" target="_blank">
+                        Launch Game Portal
+                    </a>
+                </article>
+            </section>
+        </main>
 
-    <!-- ============================================================
-         CONNECT TAB
-    ============================================================ -->
-    <div id="tab-connect" class="tab-content">
-        <div class="content-container">
-            <h2 class="section-title">Connect</h2>
 
-            <div class="app-grid">
-                <div class="app-card">
-                    <h3>Chat App</h3>
-                    <p>Group chats and private messaging.</p>
-                    <a class="apple-button" href="https://the-sawfish.github.io/chat1234567890/login.html" target="_blank">Open</a>
-                </div>
+        <!-- -------------------------------
+             PAGE: CONNECT
+        ---------------------------------->
+        <main data-page="connect">
+            <section class="page-header">
+                <h2>Connect</h2>
+                <p>All communication tools in one place.</p>
+            </section>
 
-                <div class="app-card">
-                    <h3>Call App</h3>
-                    <p>Browser-based calling for students.</p>
-                    <a class="apple-button" href="https://the-sawfish.github.io/call-app/" target="_blank">Open</a>
-                </div>
-            </div>
-        </div>
-    </div>
+            <section class="connect-list">
 
-    <!-- ============================================================
-        SETTINGS TAB
-    ============================================================ -->
-    <div id="tab-settings" class="tab-content">
-        <div class="content-container">
-            <h2 class="section-title">Settings</h2>
+                <article class="connect-card">
+                    <h4>Chat App</h4>
+                    <p>Real-time messaging for students.</p>
+                    <a class="app-launch" href="https://the-sawfish.github.io/chat1234567890/login.html" target="_blank">
+                        Open Chat
+                    </a>
+                </article>
 
-            <div class="apple-card">
-                <p>This area will include update information, appearance options, and app management in future versions.</p>
-            </div>
-        </div>
-    </div>
+                <article class="connect-card">
+                    <h4>Call App</h4>
+                    <p>Fast, simple calling interface.</p>
+                    <a class="app-launch" href="https://the-sawfish.github.io/call-app/" target="_blank">
+                        Open Call App
+                    </a>
+                </article>
 
-</section>
+            </section>
+        </main>
+
+    </section>
+
+
+    <!-- ==========================================================
+         SETUP SCRIPT
+    =========================================================== -->
+    <script>
+        document.documentElement.classList.remove("loading");
+    </script>
+    <script src="app.js"></script>
 
 </body>
 </html>
