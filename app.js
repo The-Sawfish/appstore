@@ -121,3 +121,38 @@ function initializeApp() {
    7 — START APPLICATION
 =========================================================================== */
 window.addEventListener('DOMContentLoaded', initializeApp);
+
+(function () {
+    const isStandalone =
+        window.matchMedia('(display-mode: standalone)').matches ||
+        window.navigator.standalone === true;
+
+    // ONLY show when running as installed PWA
+    if (!isStandalone) return;
+
+    const modal = document.getElementById('a2hs-modal');
+    const closeBtn = document.getElementById('a2hs-close');
+    const countdownEl = document.getElementById('countdown');
+
+    modal.classList.remove('a2hs-hidden');
+
+    let timeLeft = 5;
+    countdownEl.textContent = timeLeft;
+
+    const timer = setInterval(() => {
+        timeLeft--;
+        countdownEl.textContent = timeLeft;
+
+        if (timeLeft <= 0) {
+            clearInterval(timer);
+            closeBtn.disabled = false;
+            closeBtn.textContent = "Continue";
+        }
+    }, 1000);
+
+    closeBtn.addEventListener('click', () => {
+        modal.classList.add('a2hs-hidden');
+    });
+})();
+
+
