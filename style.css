@@ -1,6 +1,5 @@
 /* ==========================================================================
    GLOBAL RESET & SYSTEM SETTINGS
-   Clean, predictable rendering across iOS Safari + Desktop
    ========================================================================== */
 
 *,
@@ -48,7 +47,7 @@ a {
 }
 
 /* ==========================================================================
-   INSTALLATION SCREEN STYLING
+   INSTALLATION SCREEN
    ========================================================================== */
 
 .install-header {
@@ -137,7 +136,7 @@ a {
     font-weight: 700;
 }
 
-/* TAB BAR (iOS style) */
+/* TAB BAR */
 .tab-bar {
     display: flex;
     justify-content: space-around;
@@ -165,7 +164,7 @@ a {
     font-weight: 600;
 }
 
-/* Pages (shown/hidden by JS) */
+/* Pages */
 [data-page] {
     display: none;
     padding: 24px;
@@ -184,7 +183,7 @@ a {
 }
 
 /* ==========================================================================
-   HOME PAGE DESIGN
+   HOME PAGE
    ========================================================================== */
 
 .home-hero {
@@ -305,7 +304,7 @@ a {
 }
 
 /* ==========================================================================
-   OS TAB STYLING
+   OS TAB & OVERLAY
    ========================================================================== */
 
 .os-list {
@@ -345,7 +344,7 @@ a {
     align-items: center;
     text-align: center;
     z-index: 10;
-    pointer-events: auto; /* blocks interaction */
+    pointer-events: auto;
     opacity: 0;
     transition: opacity 0.25s ease;
     border-radius: 14px;
