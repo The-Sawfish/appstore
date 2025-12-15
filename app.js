@@ -1,13 +1,7 @@
 /* ==========================================================================
-   SAWFISH APP STORE — FULL APP LOGIC (CLEAN REWRITE)
-   Safe rewrite:
-     • PWA install detection
-     • Install screen vs app screen
-     • Tab navigation
-     • OS iframe overlays
-     • Visibility updates
-     • Add-to-Home-Screen modal (NO WAIT TIME)
-=========================================================================== */
+   SAWFISH APP STORE — FULL APP LOGIC
+   Clean + corrected
+   ========================================================================== */
 
 /* -----------------------------
    GLOBAL REFERENCES
@@ -38,22 +32,18 @@ function isPWAInstalled() {
    2 — SCREEN CONTROL
 =========================================================================== */
 function showInstallScreen() {
-    Screens.app.classList.remove("visible");
-    Screens.install.classList.add("visible");
+    if (Screens.app) Screens.app.classList.remove("visible");
+    if (Screens.install) Screens.install.classList.add("visible");
 }
 
 function showAppScreen() {
-    Screens.install.classList.remove("visible");
-    Screens.app.classList.add("visible");
+    if (Screens.install) Screens.install.classList.remove("visible");
+    if (Screens.app) Screens.app.classList.add("visible");
     setActiveTab("home");
 }
 
 function updateScreenState() {
-    if (isPWAInstalled()) {
-        showAppScreen();
-    } else {
-        showInstallScreen();
-    }
+    isPWAInstalled() ? showAppScreen() : showInstallScreen();
 }
 
 /* Prevent flash of wrong screen */
@@ -115,12 +105,11 @@ function initializeVisibilityHandler() {
 }
 
 /* ==========================================================================
-   6 — ADD TO HOME SCREEN MODAL (NO TIMER)
+   6 — ADD TO HOME SCREEN MODAL
 =========================================================================== */
 function initializeA2HSModal() {
     if (!A2HSModal || !A2HSClose) return;
 
-    // Show ONLY when not installed
     if (isPWAInstalled()) {
         A2HSModal.classList.add("a2hs-hidden");
         return;
@@ -148,3 +137,14 @@ function initializeApp() {
    8 — START
 =========================================================================== */
 window.addEventListener("DOMContentLoaded", initializeApp);
+
+/* ==========================================================================
+   9 — SERVICE WORKER REGISTRATION (FIXED)
+=========================================================================== */
+if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+        navigator.serviceWorker
+            .register("./service-worker.js")
+            .catch(() => {});
+    });
+}
