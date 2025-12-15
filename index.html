@@ -9,10 +9,10 @@
     <link rel="manifest" href="manifest.json">
     <link rel="stylesheet" href="style.css">
 
-    <!-- Apple icons -->
-    <link rel="apple-touch-icon" href="icons/icon-192.png">
-    <meta name="apple-mobile-web-app-status-bar" content="#ffffff">
+    <!-- Apple PWA -->
     <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <link rel="apple-touch-icon" sizes="192x192" href="icons/icon-192.png">
 </head>
 
 <body>
@@ -31,11 +31,11 @@
             <section class="intro-block">
                 <h2>Why We Built This</h2>
                 <p>
-                    Many schools rely on tools like Self Service, but students often find it limited, slow, or 
-                    missing the apps they actually want to use.  
+                    Many schools rely on tools like Self Service, but students often find it limited, slow,
+                    or missing the apps they actually want to use.
                 </p>
                 <p>
-                    A group of student developers created the <strong>Sawfish App Store</strong> — a clean, fast, modern web app 
+                    A group of student developers created the <strong>Sawfish App Store</strong> — a clean, fast, modern web app
                     that feels like a real App Store, built specifically for school-safe fun and communication tools.
                 </p>
             </section>
@@ -43,7 +43,7 @@
             <section class="how-it-works">
                 <h2>How to Install This App</h2>
                 <p>
-                    The Sawfish App Store works best when it is added to your iPad’s Home Screen.  
+                    The Sawfish App Store works best when it is added to your iPad’s Home Screen.
                     Follow the steps below to complete setup:
                 </p>
 
@@ -80,7 +80,6 @@
         </footer>
     </section>
 
-
     <!-- ==========================================================
          FULL APP SCREEN (Shown ONLY after PWA installation)
     =========================================================== -->
@@ -104,7 +103,7 @@
             <section class="home-hero">
                 <h2>Welcome</h2>
                 <p>
-                    Thanks for installing the Sawfish App Store!  
+                    Thanks for installing the Sawfish App Store!
                     Enjoy instant access to games, chat tools, and communication apps.
                 </p>
             </section>
@@ -160,7 +159,10 @@
                 <article class="game-card">
                     <h4>Retro Bowl</h4>
                     <p>We all know this.</p>
-                    <a class="app-launch" https://the-sawfish.github.io/seraph/games/retrobowl/index.html" target="_blank" rel="noopener noreferrer">
+                    <a class="app-launch"
+                       href="https://the-sawfish.github.io/seraph/games/retrobowl/index.html"
+                       target="_blank"
+                       rel="noopener noreferrer">
                         Go to Retro Bowl
                     </a>
                 </article>
@@ -175,10 +177,11 @@
 
                 <article class="game-card">
                     <h4>Run 3</h4>
-                    <p>Full screen version of Run 3 which you all know what that is. Also, this save all new progress but does not sync.</p>
+                    <p>Full screen version of Run 3 which you all know what that is. Also, this saves all new progress but does not sync.</p>
                     <a class="app-launch" href="https://the-sawfish.github.io/Run3Final/" target="_blank" rel="noopener noreferrer">
-                       Play Run 3
+                        Play Run 3
                     </a>
+                </article>
             </section>
         </main>
 
@@ -217,7 +220,6 @@
 
             <section class="os-list">
 
-                <!-- OS Card Example -->
                 <article class="os-card">
                     <h4>NovaOS</h4>
                     <div class="os-container">
@@ -266,31 +268,25 @@
     </section>
 
     <!-- ADD TO HOME SCREEN NOTICE -->
-<div id="a2hs-modal" class="a2hs-hidden">
-  <div class="a2hs-box">
-    <h1>Add to Home Screen</h1>
-
-    <p>
-      The Sawfish App Store works best when installed.
-      Some apps and features are limited in preview mode.
-    </p>
-
-    <p class="small">
-      Adding this app gives you full-screen mode, faster loading,
-      and access to all experiences.
-    </p>
-
-    <button id="a2hs-close">Continue</button>
-  </div>
-</div>
-
-
+    <div id="a2hs-modal" class="a2hs-hidden">
+        <div class="a2hs-box">
+            <h1>Add to Home Screen</h1>
+            <p>
+                The Sawfish App Store works best when installed.
+                Some apps and features are limited in preview mode.
+            </p>
+            <p class="small">
+                Adding this app gives you full-screen mode, faster loading,
+                and access to all experiences.
+            </p>
+            <button id="a2hs-close">Continue</button>
+        </div>
+    </div>
 
     <!-- SETUP SCRIPT -->
     <script>
         document.documentElement.classList.remove("loading");
 
-        // Show overlays after iframe loads
         document.querySelectorAll('.os-container iframe').forEach(iframe => {
             iframe.addEventListener('load', () => {
                 const overlay = iframe.parentElement.querySelector('.overlay');
@@ -298,6 +294,7 @@
             });
         });
     </script>
+
     <script src="app.js"></script>
 
 </body>
