@@ -148,3 +148,26 @@ if ("serviceWorker" in navigator) {
             .catch(() => {});
     });
 }
+
+window.addEventListener("DOMContentLoaded", () => {
+        // Select the full app section
+        const appSection = document.querySelector('[data-screen="app"]');
+
+        if (appSection) {
+            let accessGranted = false;
+
+            // Loop until correct password is entered
+            while (!accessGranted) {
+                let password = prompt("Enter the Sawfish App Store password:");
+
+                if (password === "120622") {
+                    accessGranted = true;
+                    alert("Access granted! Welcome to the app.");
+                } else {
+                    alert("Incorrect password. Try again.");
+                    // Optional: break loop after 3 attempts to prevent infinite prompts
+                    // Or redirect user elsewhere
+                }
+            }
+        }
+    });
