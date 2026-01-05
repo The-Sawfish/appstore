@@ -1,6 +1,6 @@
 <!-- ==========================================================
-         "I LOVE THE SAWFISH" - Eric Zhu - Dec 16, 2025
-    =========================================================== -->
+     "I LOVE THE SAWFISH" - Eric Zhu - Dec 16, 2025
+=========================================================== -->
 <!DOCTYPE html>
 <html lang="en" class="loading">
 <head>
@@ -20,479 +20,1179 @@
 
 <body>
 
-    <!-- ==========================================================
-         INSTALLATION SCREEN (Shown ONLY when NOT installed)
-    =========================================================== -->
-    <section data-screen="install" class="visible">
-        <header class="install-header">
-            <h1>Sawfish App Store</h1>
-            <p class="subtitle">A fast, school-safe way to access games and student tools.</p>
-        </header>
+<!-- ==========================================================
+     INSTALLATION SCREEN (Shown ONLY when NOT installed)
+=========================================================== -->
+<section data-screen="install" class="visible">
+    <header class="install-header">
+        <h1>Sawfish App Store</h1>
+        <p class="subtitle">A fast, school-safe way to access games and student tools.</p>
+    </header>
 
-        <main class="install-content">
+    <main class="install-content">
 
-            <section class="intro-block">
-                <h2>Why This Exists</h2>
-                <p>
-                    Many schools rely on managed app tools that can feel slow, limited, or missing the apps students actually use.
-                </p>
-                <p>
-                    The <strong>Sawfish App Store</strong> is a clean, modern web app that feels like a real App Store,
-                    built for school-safe fun and communication tools.
-                </p>
-            </section>
-
-            <section class="how-it-works">
-                <h2>How to Install</h2>
-                <p>
-                    This works best when added to your iPad’s Home Screen:
-                </p>
-
-                <ol class="install-steps">
-                    <li>Tap the <strong>Share</strong> button in Safari.</li>
-                    <li>Scroll down and tap <strong>Add to Home Screen</strong>.</li>
-                    <li>Tap <strong>Add</strong>.</li>
-                    <li>Open the Sawfish App Store from your Home Screen icon.</li>
-                </ol>
-            </section>
-
-            <section class="benefits">
-                <h2>What Installation Unlocks</h2>
-                <p>When installed, you get:</p>
-
-                <ul class="benefit-list">
-                    <li><strong>Game Hub</strong> — a curated set of school-friendly games.</li>
-                    <li><strong>Social tools</strong> — chat and call portals in one place.</li>
-                    <li><strong>Full-screen app feel</strong> — faster and more “native”.</li>
-                    <li><strong>Smoother navigation</strong> — clean iOS-style sections.</li>
-                </ul>
-            </section>
-
-            <section class="final-note">
-                <p>
-                    After installation, this setup screen disappears and the full app becomes available.
-                </p>
-            </section>
-        </main>
-
-        <footer class="install-footer">
-            <p>Built by the Sawfish Developer Group · <span id="install-version">Version</span></p>
-        </footer>
-    </section>
-
-    <!-- ==========================================================
-         FULL APP SCREEN (Shown ONLY after PWA installation)
-    =========================================================== -->
-    <section data-screen="app">
-
-        <!-- TOP NAV (App Title) -->
-        <header class="app-header">
-            <div class="app-header-row">
-                <h1>Sawfish App Store</h1>
-
-                <!-- PWA-ONLY BANNER (hidden unless installed PWA) -->
-                <div id="pwa-banner" class="pwa-banner" aria-hidden="true">
-                    <div class="pwa-banner-left">
-                        <div class="pwa-badge">PWA</div>
-                        <div class="pwa-banner-text">
-                            <div class="pwa-banner-title">App status</div>
-                            <div class="pwa-banner-sub" id="update-status">Checking for updates…</div>
-                        </div>
-                    </div>
-                    <button id="update-action" class="pwa-banner-btn" type="button">Up to date</button>
-                </div>
-            </div>
-        </header>
-
-        <!-- TAB BAR (Home / Games / Connect / OS) -->
-        <nav class="tab-bar">
-            <button data-tab="home" class="active">Home</button>
-            <button data-tab="games">Games</button>
-            <button data-tab="connect">Social</button>
-            <button data-tab="os">OS</button>
-        </nav>
-
-        <!-- PAGE: HOME -->
-        <main data-page="home" class="visible">
-            <section class="home-hero">
-                <h2>Welcome</h2>
-                <p>
-                    Thanks for installing the Sawfish App Store.
-                    Open games and student tools in one clean place.
-                </p>
-            </section>
-
-            <section class="featured-section">
-                <h3>Featured Apps</h3>
-                <div class="card-grid">
-
-                    <article class="app-card">
-                        <h4>Hack Stuff</h4>
-                        <p class="muted">Protected area. Use only if you have permission.</p>
-                        <div class="pill-row">
-                            <span class="pill">Password: 0128</span>
-                        </div>
-                        <a class="app-launch" href="https://the-sawfish.github.io/hack/" target="_blank" rel="noopener noreferrer">
-                            Open
-                        </a>
-                    </article>
-
-                    <article class="app-card">
-                        <h4>Sawfish Game Portal</h4>
-                        <p>A collection of school-friendly games.</p>
-                        <a class="app-launch" href="https://the-sawfish.github.io/game-portal/" target="_blank" rel="noopener noreferrer">
-                            Open Game Portal
-                        </a>
-                    </article>
-
-                    <article class="app-card">
-                        <h4>Chat App</h4>
-                        <p>Message classmates in real time.</p>
-                        <a class="app-launch" href="https://jimeneutron.github.io/chatapp/" target="_blank" rel="noopener noreferrer">
-                            Open Chat
-                        </a>
-                    </article>
-
-                    <article class="app-card">
-                        <h4>Call App</h4>
-                        <p>Fast, simple calling interface.</p>
-                        <a class="app-launch" href="https://the-sawfish.github.io/call-app/?from=sawfish" target="_blank" rel="noopener noreferrer">
-                            Open Call App
-                        </a>
-                    </article>
-
-                </div>
-            </section>
-
-            <!-- CHANGELOG / UPDATE INFO -->
-            <section class="changelog">
-                <div class="changelog-header">
-                    <h3>Changelog</h3>
-                    <div class="changelog-meta">
-                        <span class="meta-chip" id="app-version-chip">Version</span>
-                        <span class="meta-chip" id="last-check-chip">Last check: —</span>
-                    </div>
-                </div>
-
-                <div class="changelog-body">
-                    <p class="muted">
-                        This section updates when you publish changes to the site.
-                        If your device is still showing an old version, use the update button in the banner.
-                    </p>
-
-                    <!-- Placeholder entries (edit any time) -->
-                    <div class="changelog-entry">
-                        <div class="changelog-date">Latest</div>
-                        <ul>
-                            <li>Improved layout and styling.</li>
-                            <li>Added first-time setup notice (scroll + acknowledge).</li>
-                            <li>Improved update behavior (service worker refresh).</li>
-                        </ul>
-                    </div>
-
-                    <div class="changelog-entry">
-                        <div class="changelog-date">Previous</div>
-                        <ul>
-                            <li>Chat app: fixed an issue that caused failure on certain devices.</li>
-                        </ul>
-                    </div>
-                </div>
-            </section>
-        </main>
-
-        <!-- PAGE: GAMES (Offline merged in here to avoid duplicate data-page="games") -->
-        <main data-page="games">
-            <section class="page-header">
-                <h2>Games</h2>
-                <p>Welcome to the Sawfish Game Hub.</p>
-            </section>
-
-            <section class="info-callout">
-                <h3>Offline (Add to Home Screen Required)</h3>
-                <p class="muted">
-                    Some games support offline or work best when installed to your Home Screen.
-                    If something doesn’t load, make sure you opened the installed app (not Safari preview).
-                </p>
-            </section>
-
-            <section class="game-list">
-                <article class="game-card">
-                    <h4>Draw a Circle</h4>
-                    <p>Quick challenge game. Add to Home Screen for best experience.</p>
-                    <a class="app-launch" href="https://the-sawfish.github.io/circle/" target="_blank" rel="noopener noreferrer">
-                        Open
-                    </a>
-                </article>
-
-                <article class="game-card">
-                    <h4>2048</h4>
-                    <p>The classic number puzzle.</p>
-                    <a class="app-launch" href="https://the-sawfish.github.io/2048/" target="_blank" rel="noopener noreferrer">
-                        Play
-                    </a>
-                </article>
-
-                <article class="game-card">
-                    <h4>Minecraft (Web) — Beta</h4>
-                    <p>Not the full Minecraft. Use multiplayer servers for crafting features.</p>
-                    <a class="app-launch" href="https://zardoy.github.io/minecraft-web-client/" target="_blank" rel="noopener noreferrer">
-                        Play
-                    </a>
-                </article>
-
-                <article class="game-card">
-                    <h4>Block Blast</h4>
-                    <p>Quick puzzle / block game.</p>
-                    <a class="app-launch" href="https://aappqq.github.io/BlockBlast/index.html" target="_blank" rel="noopener noreferrer">
-                        Play
-                    </a>
-                </article>
-
-                <article class="game-card">
-                    <h4>Sandboxels</h4>
-                    <p>Falling sand simulator with lots of materials. Add to Home Screen for best results.</p>
-                    <a class="app-launch" href="https://the-sawfish.github.io/sandboxels/" target="_blank" rel="noopener noreferrer">
-                        Play
-                    </a>
-                </article>
-
-                <article class="game-card">
-                    <h4>Sawfish Game Portal</h4>
-                    <p>Instant access to school-friendly titles.</p>
-                    <a class="app-launch" href="https://the-sawfish.github.io/game-portal/" target="_blank" rel="noopener noreferrer">
-                        Launch
-                    </a>
-                </article>
-
-                <article class="game-card">
-                    <h4>Syrup Games</h4>
-                    <p>Alternative game launcher.</p>
-                    <a class="app-launch"
-                       href="https://jimeneutron.github.io/"
-                       target="_blank"
-                       rel="noopener noreferrer">
-                        Open
-                    </a>
-                </article>
-
-                <article class="game-card">
-                    <h4>Bob The Robber</h4>
-                    <p>Stealth game classic.</p>
-                    <a class="app-launch" href="https://bobtherobberunblocked.github.io/2/" target="_blank" rel="noopener noreferrer">
-                        Play
-                    </a>
-                </article>
-
-                <article class="game-card">
-                    <h4>Retro Bowl</h4>
-                    <p>Football management game.</p>
-                    <a class="app-launch"
-                       href="https://the-sawfish.github.io/seraph/games/retrobowl/index.html"
-                       target="_blank"
-                       rel="noopener noreferrer">
-                        Open
-                    </a>
-                </article>
-
-                <article class="game-card">
-                    <h4>Paper Io 2</h4>
-                    <p>Capture territory and survive.</p>
-                    <a class="app-launch" href="https://the-sawfish.github.io/seraph/games/paperio2/index.html" target="_blank" rel="noopener noreferrer">
-                        Open
-                    </a>
-                </article>
-
-                <article class="game-card">
-                    <h4>Run 3</h4>
-                    <p>Full-screen Run 3. Progress saves locally (does not sync).</p>
-                    <a class="app-launch" href="https://the-sawfish.github.io/Run3Final/" target="_blank" rel="noopener noreferrer">
-                        Play
-                    </a>
-                </article>
-            </section>
-        </main>
-
-        <!-- PAGE: CONNECT -->
-        <main data-page="connect">
-            <section class="page-header">
-                <h2>Social</h2>
-                <p>All communication tools in one place.</p>
-            </section>
-
-            <section class="connect-list">
-                <article class="connect-card">
-                    <h4>Chat App</h4>
-                    <p>Real-time messaging for students.</p>
-                    <a class="app-launch" href="https://jimeneutron.github.io/chatapp/" target="_blank" rel="noopener noreferrer">
-                        Open Chat
-                    </a>
-                </article>
-
-                <article class="connect-card">
-                    <h4>Call App</h4>
-                    <p>Fast, simple calling interface.</p>
-                    <a class="app-launch" href="https://the-sawfish.github.io/call-app/?from=sawfish" target="_blank" rel="noopener noreferrer">
-                        Open Call App
-                    </a>
-                </article>
-            </section>
-        </main>
-
-        <!-- PAGE: OS -->
-        <main data-page="os">
-            <section class="page-header">
-                <h2>Operating Systems</h2>
-                <p>Previews are non-interactive. Add to Home Screen to use fully.</p>
-            </section>
-
-            <section class="os-list">
-
-                <article class="os-card">
-                    <h4>NovaOS</h4>
-                    <div class="os-container">
-                        <iframe src="https://runnova.github.io/NovaOS/" frameborder="0"></iframe>
-                        <div class="overlay">
-                            <h2>Preview Disabled</h2>
-                            <p>You can’t interact here. Install to Home Screen to use fully.</p>
-                        </div>
-                    </div>
-                    <a class="app-launch" href="https://runnova.github.io/NovaOS/" target="_blank" rel="noopener noreferrer">
-                        Open NovaOS
-                    </a>
-                </article>
-
-                <article class="os-card">
-                    <h4>WinRipen</h4>
-                    <div class="os-container">
-                        <iframe src="https://ripenos.web.app/WinRipen/index.html" frameborder="0"></iframe>
-                        <div class="overlay">
-                            <h2>Preview Disabled</h2>
-                            <p>You can’t interact here. Install to Home Screen to use fully.</p>
-                        </div>
-                    </div>
-                    <a class="app-launch" href="https://ripenos.web.app/WinRipen/index.html" target="_blank" rel="noopener noreferrer">
-                        Open WinRipen
-                    </a>
-                </article>
-
-                <article class="os-card">
-                    <h4>PlutoOS</h4>
-                    <div class="os-container">
-                        <iframe src="https://pluto-app.zeon.dev" frameborder="0"></iframe>
-                        <div class="overlay">
-                            <h2>Preview Disabled</h2>
-                            <p>You can’t interact here. Install to Home Screen to use fully.</p>
-                        </div>
-                    </div>
-                    <a class="app-launch" href="https://pluto-app.zeon.dev" target="_blank" rel="noopener noreferrer">
-                        Run PlutoOS
-                    </a>
-                </article>
-
-                <article class="os-card">
-                    <h4>Ripenos</h4>
-                    <div class="os-container">
-                        <iframe src="https://ripenos.web.app/Ripenos/" frameborder="0"></iframe>
-                        <div class="overlay">
-                            <h2>Preview Disabled</h2>
-                            <p>You can’t interact here. Install to Home Screen to use fully.</p>
-                        </div>
-                    </div>
-                    <a class="app-launch" href="https://ripenos.web.app/Ripenos/" target="_blank" rel="noopener noreferrer">
-                        Open Ripenos
-                    </a>
-                </article>
-
-            </section>
-        </main>
-
-    </section>
-
-    <!-- ADD TO HOME SCREEN NOTICE (Safari preview only) -->
-    <div id="a2hs-modal" class="a2hs-hidden">
-        <div class="a2hs-box">
-            <h1>Add to Home Screen</h1>
+        <section class="intro-block">
+            <h2>Why This Exists</h2>
             <p>
-                The Sawfish App Store works best when installed.
-                Some features are limited in preview mode.
+                Many schools rely on managed app tools that can feel slow, limited,
+                or missing the apps students actually use.
             </p>
-            <p class="small">
-                Installing gives full-screen mode, faster loading,
-                and the best experience.
+            <p>
+                The <strong>Sawfish App Store</strong> is a clean, modern web app
+                that feels like a real App Store, built for school-safe fun
+                and communication tools.
             </p>
-            <button id="a2hs-close">Continue</button>
-        </div>
-    </div>
+        </section>
 
-    <!-- FIRST-TIME / RETURNING WELCOME MODAL (PWA only) -->
-    <div id="welcome-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="welcome-title">
-        <div class="modal-card">
-            <div class="modal-header">
-                <h2 id="welcome-title">Read This First</h2>
-                <p class="muted" id="welcome-subtitle">One-time setup message</p>
-            </div>
+        <section class="how-it-works">
+            <h2>How to Install</h2>
+            <p>This works best when added to your iPad’s Home Screen:</p>
 
-            <!-- First-time: scroll required -->
-            <div id="welcome-scrollwrap" class="modal-scroll">
-                <div class="modal-content">
-                    <h3>Minecraft Important Rule</h3>
-                    <p>
-                        In Minecraft Web, <strong>do not use single player</strong>.
-                        You <strong>must use a multiplayer server</strong> to be able to craft.
-                        Prefer the <strong>official first server</strong> when available.
-                    </p>
+            <ol class="install-steps">
+                <li>Tap the <strong>Share</strong> button in Safari.</li>
+                <li>Scroll down and tap <strong>Add to Home Screen</strong>.</li>
+                <li>Tap <strong>Add</strong>.</li>
+                <li>Open the Sawfish App Store from your Home Screen icon.</li>
+            </ol>
+        </section>
 
-                    <h3>Add Apps for Best Experience</h3>
-                    <p>
-                        For the smoothest experience, add important apps to your Home Screen when possible.
-                        Some apps require installation to work well (fullscreen, faster load, better reliability).
-                    </p>
+        <section class="benefits">
+            <h2>What Installation Unlocks</h2>
+            <ul class="benefit-list">
+                <li><strong>Game Hub</strong> — curated school-friendly games.</li>
+                <li><strong>Social tools</strong> — chat and calling in one place.</li>
+                <li><strong>Full-screen experience</strong>.</li>
+                <li><strong>Smoother navigation</strong>.</li>
+            </ul>
+        </section>
 
-                    <h3>Changelog & Updates</h3>
-                    <p>
-                        This app improves over time. Check the <strong>Changelog</strong> on the Home tab.
-                        If you ever see old content, use the <strong>Update</strong> button in the top banner.
-                    </p>
+        <section class="final-note">
+            <p>
+                After installation, this setup screen disappears and
+                the full app becomes available.
+            </p>
+        </section>
+    </main>
 
-                    <div class="spacer"></div>
-                    <p class="muted">
-                        (Placeholders for now: later you can add exact steps, links, and policies here.)
-                    </p>
-                    <div class="scroll-end-marker" aria-hidden="true"></div>
+    <footer class="install-footer">
+        <p>Built by the Sawfish Developer Group · <span id="install-version">Version</span></p>
+    </footer>
+</section>
+
+<!-- ==========================================================
+     FULL APP SCREEN (Shown ONLY after PWA installation)
+=========================================================== -->
+<section data-screen="app">
+
+<!-- ================= HEADER ================= -->
+<header class="app-header">
+    <div class="app-header-row">
+        <h1>Sawfish App Store</h1>
+
+        <!-- PWA-ONLY BANNER -->
+        <div id="pwa-banner" class="pwa-banner" aria-hidden="true">
+            <div class="pwa-banner-left">
+                <div class="pwa-badge">PWA</div>
+                <div class="pwa-banner-text">
+                    <div class="pwa-banner-title">App status</div>
+                    <div class="pwa-banner-sub" id="update-status">
+                        Checking for updates…
+                    </div>
                 </div>
             </div>
+            <button id="update-action" class="pwa-banner-btn">
+                Up to date
+            </button>
+        </div>
+    </div>
+</header>
 
-            <!-- Returning: no scroll required (hidden via JS) -->
-            <div id="welcome-returning" class="modal-returning hidden">
-                <p class="muted">
-                    Welcome back. Tap Continue to enter the app.
-                </p>
-            </div>
+<!-- ================= TAB BAR ================= -->
+<nav class="tab-bar">
+    <button data-tab="home" class="active">Home</button>
+    <button data-tab="games">Games</button>
+    <button data-tab="connect">Social</button>
+    <button data-tab="os">OS</button>
+</nav>
 
-            <div class="modal-footer">
-                <label id="welcome-ack-row" class="ack-row hidden">
-                    <input id="welcome-ack" type="checkbox">
-                    <span>I understand</span>
-                </label>
+<!-- ==========================================================
+     HOME PAGE
+=========================================================== -->
+<main data-page="home" class="visible">
 
-                <button id="welcome-continue" class="primary-btn" type="button" disabled>Continue</button>
-            </div>
+<section class="home-hero">
+    <h2>Welcome</h2>
+    <p>
+        Thanks for installing the Sawfish App Store.
+        Open games and student tools in one clean place.
+    </p>
+</section>
+
+<!-- ================= FEATURED ================= -->
+<section class="featured-section">
+    <h3>Featured Apps</h3>
+
+    <div class="card-grid">
+
+        <article class="app-card" data-app="hack">
+            <img src="icons/hack.png" alt="">
+            <h4>Hack Stuff</h4>
+            <p class="card-desc">
+                Restricted utilities and experimental tools.
+            </p>
+            <p class="rating-line">
+                ⭐ <span data-avg-rating>—</span>
+            </p>
+        </article>
+
+        <article class="app-card" data-app="portal">
+            <img src="icons/game-portal.png" alt="">
+            <h4>Sawfish Game Portal</h4>
+            <p class="card-desc">
+                Central launcher for Sawfish-approved games.
+            </p>
+            <p class="rating-line">
+                ⭐ <span data-avg-rating>—</span>
+            </p>
+        </article>
+
+        <article class="app-card" data-app="chat">
+            <img src="icons/chat.png" alt="">
+            <h4>Chat App</h4>
+            <p class="card-desc">
+                Real-time messaging for students.
+            </p>
+            <p class="rating-line">
+                ⭐ <span data-avg-rating>—</span>
+            </p>
+        </article>
+
+        <article class="app-card" data-app="call">
+            <img src="icons/call.png" alt="">
+            <h4>Call App</h4>
+            <p class="card-desc">
+                Simple, fast calling interface.
+            </p>
+            <p class="rating-line">
+                ⭐ <span data-avg-rating>—</span>
+            </p>
+        </article>
+
+    </div>
+</section>
+
+<!-- ================= CHANGELOG ================= -->
+<section class="changelog">
+    <div class="changelog-header">
+        <h3>Changelog</h3>
+        <div class="changelog-meta">
+            <span class="meta-chip" id="app-version-chip">Version</span>
+            <span class="meta-chip" id="last-check-chip">Last check: —</span>
         </div>
     </div>
 
-    <!-- SETUP SCRIPT -->
-    <script>
-        document.documentElement.classList.remove("loading");
+    <div class="card-grid">
 
-        document.querySelectorAll('.os-container iframe').forEach(iframe => {
-            iframe.addEventListener('load', () => {
-                const overlay = iframe.parentElement.querySelector('.overlay');
-                if (overlay) overlay.classList.add('visible');
-            });
-        });
-    </script>
+        <article class="app-card">
+            <img src="icons/update.png">
+            <h4>Latest Update</h4>
+            <p class="card-desc">
+                Layout improvements, setup notice, update behavior fixes.
+            </p>
+        </article>
 
-    <script src="app.js"></script>
+        <article class="app-card">
+            <img src="icons/history.png">
+            <h4>Previous Changes</h4>
+            <p class="card-desc">
+                Chat app reliability fixes.
+            </p>
+        </article>
+
+    </div>
+</section>
+
+</main>
+
+<!-- ==========================================================
+     GAMES PAGE
+=========================================================== -->
+<main data-page="games">
+
+<section class="page-header">
+    <h2>Games</h2>
+    <p>School-friendly games curated for fast access.</p>
+</section>
+
+<div class="card-grid">
+
+    <article class="app-card"><img src="icons/circle.png"><h4>Draw a Circle</h4>
+        <p class="card-desc">Quick reflex challenge.</p>
+        <p class="rating-line">⭐ <span>—</span></p>
+    </article>
+
+    <article class="app-card"><img src="icons/2048.png"><h4>2048</h4>
+        <p class="card-desc">Classic number puzzle.</p>
+        <p class="rating-line">⭐ <span>—</span></p>
+    </article>
+
+    <article class="app-card"><img src="icons/minecraft.png"><h4>Minecraft Web</h4>
+        <p class="card-desc">Multiplayer crafting only.</p>
+        <p class="rating-line">⭐ <span>—</span></p>
+    </article>
+
+    <article class="app-card"><img src="icons/blockblast.png"><h4>Block Blast</h4>
+        <p class="card-desc">Fast block puzzle game.</p>
+        <p class="rating-line">⭐ <span>—</span></p>
+    </article>
+
+    <article class="app-card"><img src="icons/sandboxels.png"><h4>Sandboxels</h4>
+        <p class="card-desc">Falling sand physics sim.</p>
+        <p class="rating-line">⭐ <span>—</span></p>
+    </article>
+
+    <article class="app-card"><img src="icons/run3.png"><h4>Run 3</h4>
+        <p class="card-desc">Endless platform runner.</p>
+        <p class="rating-line">⭐ <span>—</span></p>
+    </article>
+
+</div>
+</main>
+
+<!-- ==========================================================
+     SOCIAL PAGE
+=========================================================== -->
+<main data-page="connect">
+
+<section class="page-header">
+    <h2>Social</h2>
+    <p>Communication tools in one place.</p>
+</section>
+
+<div class="card-grid">
+    <article class="app-card"><img src="icons/chat.png"><h4>Chat App</h4>
+        <p class="card-desc">Live student messaging.</p>
+        <p class="rating-line">⭐ <span>—</span></p>
+    </article>
+
+    <article class="app-card"><img src="icons/call.png"><h4>Call App</h4>
+        <p class="card-desc">Fast calling interface.</p>
+        <p class="rating-line">⭐ <span>—</span></p>
+    </article>
+</div>
+
+</main>
+
+<!-- ==========================================================
+     OS PAGE
+=========================================================== -->
+<main data-page="os">
+
+<section class="page-header">
+    <h2>Operating Systems</h2>
+    <p>Install to Home Screen to interact fully.</p>
+</section>
+
+<div class="card-grid">
+
+    <article class="app-card"><img src="icons/novaos.png">
+        <h4>NovaOS</h4>
+        <p class="card-desc">Web-based desktop OS.</p>
+        <p class="rating-line">⭐ <span>—</span></p>
+    </article>
+
+    <article class="app-card"><img src="icons/winripen.png">
+        <h4>WinRipen</h4>
+        <p class="card-desc">Windows-style web OS.</p>
+        <p class="rating-line">⭐ <span>—</span></p>
+    </article>
+
+    <article class="app-card"><img src="icons/plutoos.png">
+        <h4>PlutoOS</h4>
+        <p class="card-desc">Minimalist web OS.</p>
+        <p class="rating-line">⭐ <span>—</span></p>
+    </article>
+
+    <article class="app-card"><img src="icons/ripenos.png">
+        <h4>Ripenos</h4>
+        <p class="card-desc">Experimental OS environment.</p>
+        <p class="rating-line">⭐ <span>—</span></p>
+    </article>
+
+</div>
+</main>
+
+</section>
+<!-- ==========================================================
+     EXPANDED APP DETAILS
+     These are hidden by default and opened via JS
+=========================================================== -->
+<section id="expanded-views" hidden>
+
+<!-- ==========================================================
+     HACK STUFF
+=========================================================== -->
+<article class="expanded-app" data-app="hack">
+    <header class="expanded-header">
+        <img src="icons/hack.png">
+        <div>
+            <h2>Hack Stuff</h2>
+            <p class="developer">By Sawfish Developer Group</p>
+            <p class="category">Category: Utilities / Restricted</p>
+        </div>
+    </header>
+
+    <section class="expanded-summary">
+        <p>
+            Restricted utilities and experimental tools intended for advanced users only.
+        </p>
+    </section>
+
+    <section class="expanded-description">
+        <p>
+            Hack Stuff is a collection of experimental utilities designed for
+            advanced students and developers. These tools may expose low-level
+            functionality, debugging interfaces, or sandboxed experiments that
+            are not suitable for general use.
+        </p>
+        <p>
+            Access may be limited depending on device restrictions or school
+            network policies. Misuse of these tools may violate school rules.
+        </p>
+    </section>
+
+    <section class="expanded-meta">
+        <p>Current version: <span>—</span></p>
+        <p>Last updated: <span>—</span></p>
+    </section>
+
+    <section class="expanded-actions">
+        <a href="https://the-sawfish.github.io/hack/" target="_blank">Open App</a>
+        <button data-iframe="hack">Open Preview</button>
+    </section>
+
+    <section class="expanded-ratings">
+        <h3>User Ratings</h3>
+        <p>Average rating: ⭐ <span data-avg-rating>—</span></p>
+        <p>Total reviews: <span data-review-count>0</span></p>
+    </section>
+
+    <section class="expanded-comments">
+        <h3>User Reviews</h3>
+        <div class="comment-list"></div>
+
+        <form class="comment-form">
+            <label>Rating</label>
+            <select required>
+                <option></option>
+                <option>1</option><option>2</option><option>3</option>
+                <option>4</option><option>5</option>
+            </select>
+
+            <label>Write a review</label>
+            <textarea required></textarea>
+
+            <button type="submit">Submit Review</button>
+        </form>
+    </section>
+</article>
+
+<!-- ==========================================================
+     SAWFISH GAME PORTAL
+=========================================================== -->
+<article class="expanded-app" data-app="portal">
+    <header class="expanded-header">
+        <img src="icons/game-portal.png">
+        <div>
+            <h2>Sawfish Game Portal</h2>
+            <p class="developer">By Sawfish Developer Group</p>
+            <p class="category">Category: Games Hub</p>
+        </div>
+    </header>
+
+    <section class="expanded-summary">
+        <p>
+            Central hub for all Sawfish-approved browser games.
+        </p>
+    </section>
+
+    <section class="expanded-description">
+        <p>
+            The Sawfish Game Portal acts as a unified launcher for all supported
+            games within the Sawfish ecosystem. Instead of bookmarking dozens
+            of links, students can access everything from one organized interface.
+        </p>
+        <p>
+            All games available through this portal are reviewed to ensure they
+            remain school-appropriate, distraction-free, and performant on
+            managed devices.
+        </p>
+    </section>
+
+    <section class="expanded-meta">
+        <p>Version: <span>—</span></p>
+        <p>Last updated: <span>—</span></p>
+    </section>
+
+    <section class="expanded-actions">
+        <a href="https://the-sawfish.github.io/game-portal/" target="_blank">Open Portal</a>
+        <button data-iframe="portal">Open Preview</button>
+    </section>
+
+    <section class="expanded-ratings">
+        <h3>User Ratings</h3>
+        <p>Average rating: ⭐ <span data-avg-rating>—</span></p>
+        <p>Total reviews: <span data-review-count>0</span></p>
+    </section>
+
+    <section class="expanded-comments">
+        <h3>User Reviews</h3>
+        <div class="comment-list"></div>
+        <form class="comment-form">
+            <select required>
+                <option></option>
+                <option>1</option><option>2</option><option>3</option>
+                <option>4</option><option>5</option>
+            </select>
+            <textarea required></textarea>
+            <button>Submit Review</button>
+        </form>
+    </section>
+</article>
+
+<!-- ==========================================================
+     DRAW A CIRCLE
+=========================================================== -->
+<article class="expanded-app" data-app="circle">
+    <header class="expanded-header">
+        <img src="icons/circle.png">
+        <div>
+            <h2>Draw a Circle</h2>
+            <p class="developer">By Sawfish Developer Group</p>
+            <p class="category">Category: Games / Skill</p>
+        </div>
+    </header>
+
+    <section class="expanded-summary">
+        <p>
+            A simple challenge: draw the most perfect circle you can.
+        </p>
+    </section>
+
+    <section class="expanded-description">
+        <p>
+            Draw a Circle challenges hand-eye coordination by asking users
+            to draw a circle without any assistance. The closer the shape is
+            to a perfect circle, the higher the score.
+        </p>
+        <p>
+            This game is quick to load, easy to replay, and works best
+            when installed as a PWA for full-screen input.
+        </p>
+    </section>
+
+    <section class="expanded-actions">
+        <a href="https://the-sawfish.github.io/circle/" target="_blank">Play Game</a>
+        <button data-iframe="circle">Open Preview</button>
+    </section>
+
+    <section class="expanded-ratings">
+        <p>Average rating: ⭐ <span data-avg-rating>—</span></p>
+        <p>Total reviews: <span data-review-count>0</span></p>
+    </section>
+
+    <section class="expanded-comments">
+        <div class="comment-list"></div>
+        <form class="comment-form">
+            <select required>
+                <option></option><option>1</option><option>2</option>
+                <option>3</option><option>4</option><option>5</option>
+            </select>
+            <textarea required></textarea>
+            <button>Submit</button>
+        </form>
+    </section>
+</article>
+
+<!-- ==========================================================
+     2048
+=========================================================== -->
+<article class="expanded-app" data-app="2048">
+    <header class="expanded-header">
+        <img src="icons/2048.png">
+        <div>
+            <h2>2048</h2>
+            <p class="developer">By Sawfish Developer Group</p>
+            <p class="category">Category: Games / Puzzle</p>
+        </div>
+    </header>
+
+    <section class="expanded-summary">
+        <p>
+            Combine tiles to reach the 2048 tile.
+        </p>
+    </section>
+
+    <section class="expanded-description">
+        <p>
+            2048 is a classic sliding tile puzzle game where players merge
+            numbers by swiping in four directions. Strategic planning is
+            required to avoid running out of space.
+        </p>
+        <p>
+            This version is optimized for school devices and touch input.
+        </p>
+    </section>
+
+    <section class="expanded-actions">
+        <a href="https://the-sawfish.github.io/2048/" target="_blank">Play Game</a>
+        <button data-iframe="2048">Open Preview</button>
+    </section>
+
+    <section class="expanded-ratings">
+        <p>Average rating: ⭐ <span data-avg-rating>—</span></p>
+        <p>Total reviews: <span data-review-count>0</span></p>
+    </section>
+
+    <section class="expanded-comments">
+        <div class="comment-list"></div>
+        <form class="comment-form">
+            <select required>
+                <option></option><option>1</option><option>2</option>
+                <option>3</option><option>4</option><option>5</option>
+            </select>
+            <textarea required></textarea>
+            <button>Submit</button>
+        </form>
+    </section>
+</article>
+
+<!-- ==========================================================
+     (REPEAT PATTERN FOR: Minecraft Web, Block Blast, Sandboxels,
+      Run 3, Chat App, Call App, NovaOS, WinRipen, PlutoOS, Ripenos)
+     — structure stays IDENTICAL, content customized per app
+=========================================================== -->
+
+</section>
+
+<!-- ==========================================================
+     MINECRAFT WEB
+=========================================================== -->
+<article class="expanded-app" data-app="minecraft">
+    <header class="expanded-header">
+        <img src="icons/minecraft.png">
+        <div>
+            <h2>Minecraft Web (Beta)</h2>
+            <p class="developer">By Zardoy</p>
+            <p class="category">Category: Games / Sandbox</p>
+        </div>
+    </header>
+
+    <section class="expanded-summary">
+        <p>
+            Browser-based Minecraft experience with multiplayer support.
+        </p>
+    </section>
+
+    <section class="expanded-description">
+        <p>
+            Minecraft Web allows players to experience Minecraft directly
+            in their browser without downloads. This version focuses on
+            multiplayer servers, which are required for crafting and
+            full gameplay functionality.
+        </p>
+        <p>
+            Singleplayer mode is intentionally unsupported. For best results,
+            users should join the official first server listed when launching.
+        </p>
+        <p>
+            Performance and feature availability may vary depending on
+            device and network restrictions.
+        </p>
+    </section>
+
+    <section class="expanded-actions">
+        <a href="https://zardoy.github.io/minecraft-web-client/" target="_blank">Play Minecraft</a>
+        <button data-iframe="minecraft">Open Preview</button>
+    </section>
+
+    <section class="expanded-ratings">
+        <p>Average rating: ⭐ <span data-avg-rating>—</span></p>
+        <p>Total reviews: <span data-review-count>0</span></p>
+    </section>
+
+    <section class="expanded-comments">
+        <div class="comment-list"></div>
+        <form class="comment-form">
+            <select required>
+                <option></option><option>1</option><option>2</option>
+                <option>3</option><option>4</option><option>5</option>
+            </select>
+            <textarea required></textarea>
+            <button>Submit Review</button>
+        </form>
+    </section>
+</article>
+
+<!-- ==========================================================
+     BLOCK BLAST
+=========================================================== -->
+<article class="expanded-app" data-app="blockblast">
+    <header class="expanded-header">
+        <img src="icons/blockblast.png">
+        <div>
+            <h2>Block Blast</h2>
+            <p class="developer">By AAPPQQ</p>
+            <p class="category">Category: Games / Puzzle</p>
+        </div>
+    </header>
+
+    <section class="expanded-summary">
+        <p>
+            Fast-paced block placement puzzle game.
+        </p>
+    </section>
+
+    <section class="expanded-description">
+        <p>
+            Block Blast challenges players to strategically place blocks
+            into a grid without running out of space. Each move requires
+            planning, as misplaced pieces quickly lead to failure.
+        </p>
+        <p>
+            The game emphasizes quick thinking and pattern recognition,
+            making it ideal for short sessions or competitive score chasing.
+        </p>
+    </section>
+
+    <section class="expanded-actions">
+        <a href="https://aappqq.github.io/BlockBlast/index.html" target="_blank">Play Game</a>
+        <button data-iframe="blockblast">Open Preview</button>
+    </section>
+
+    <section class="expanded-ratings">
+        <p>Average rating: ⭐ <span data-avg-rating>—</span></p>
+        <p>Total reviews: <span data-review-count>0</span></p>
+    </section>
+
+    <section class="expanded-comments">
+        <div class="comment-list"></div>
+        <form class="comment-form">
+            <select required>
+                <option></option><option>1</option><option>2</option>
+                <option>3</option><option>4</option><option>5</option>
+            </select>
+            <textarea required></textarea>
+            <button>Submit Review</button>
+        </form>
+    </section>
+</article>
+
+<!-- ==========================================================
+     SANDBOXELS
+=========================================================== -->
+<article class="expanded-app" data-app="sandboxels">
+    <header class="expanded-header">
+        <img src="icons/sandboxels.png">
+        <div>
+            <h2>Sandboxels</h2>
+            <p class="developer">By R74n</p>
+            <p class="category">Category: Games / Simulation</p>
+        </div>
+    </header>
+
+    <section class="expanded-summary">
+        <p>
+            A physics-based falling sand simulator with hundreds of elements.
+        </p>
+    </section>
+
+    <section class="expanded-description">
+        <p>
+            Sandboxels is an advanced simulation game where users experiment
+            with materials such as sand, water, fire, electricity, and more.
+            Each element interacts according to physics-based rules.
+        </p>
+        <p>
+            The game encourages experimentation, creativity, and learning
+            through cause-and-effect interactions.
+        </p>
+        <p>
+            Performance improves significantly when added to the Home Screen.
+        </p>
+    </section>
+
+    <section class="expanded-actions">
+        <a href="https://the-sawfish.github.io/sandboxels/" target="_blank">Launch Sandboxels</a>
+        <button data-iframe="sandboxels">Open Preview</button>
+    </section>
+
+    <section class="expanded-ratings">
+        <p>Average rating: ⭐ <span data-avg-rating>—</span></p>
+        <p>Total reviews: <span data-review-count>0</span></p>
+    </section>
+
+    <section class="expanded-comments">
+        <div class="comment-list"></div>
+        <form class="comment-form">
+            <select required>
+                <option></option><option>1</option><option>2</option>
+                <option>3</option><option>4</option><option>5</option>
+            </select>
+            <textarea required></textarea>
+            <button>Submit Review</button>
+        </form>
+    </section>
+</article>
+
+<!-- ==========================================================
+     RUN 3
+=========================================================== -->
+<article class="expanded-app" data-app="run3">
+    <header class="expanded-header">
+        <img src="icons/run3.png">
+        <div>
+            <h2>Run 3</h2>
+            <p class="developer">By Joseph Cloutier</p>
+            <p class="category">Category: Games / Platformer</p>
+        </div>
+    </header>
+
+    <section class="expanded-summary">
+        <p>
+            Endless runner platformer set in space.
+        </p>
+    </section>
+
+    <section class="expanded-description">
+        <p>
+            Run 3 is a fast-paced platforming game where players guide
+            characters through floating tunnels in space. Gravity shifts
+            dynamically, forcing players to adapt quickly.
+        </p>
+        <p>
+            Progress is saved locally on the device and does not sync
+            across browsers or devices.
+        </p>
+    </section>
+
+    <section class="expanded-actions">
+        <a href="https://the-sawfish.github.io/Run3Final/" target="_blank">Play Run 3</a>
+        <button data-iframe="run3">Open Preview</button>
+    </section>
+
+    <section class="expanded-ratings">
+        <p>Average rating: ⭐ <span data-avg-rating>—</span></p>
+        <p>Total reviews: <span data-review-count>0</span></p>
+    </section>
+
+    <section class="expanded-comments">
+        <div class="comment-list"></div>
+        <form class="comment-form">
+            <select required>
+                <option></option><option>1</option><option>2</option>
+                <option>3</option><option>4</option><option>5</option>
+            </select>
+            <textarea required></textarea>
+            <button>Submit Review</button>
+        </form>
+    </section>
+</article>
+
+<!-- ==========================================================
+     CHAT APP
+=========================================================== -->
+<article class="expanded-app" data-app="chat">
+    <header class="expanded-header">
+        <img src="icons/chat.png">
+        <div>
+            <h2>Chat App</h2>
+            <p class="developer">By Jimeneutron</p>
+            <p class="category">Category: Social / Messaging</p>
+        </div>
+    </header>
+
+    <section class="expanded-summary">
+        <p>
+            Real-time browser-based messaging for students.
+        </p>
+    </section>
+
+    <section class="expanded-description">
+        <p>
+            Chat App allows users to communicate in real time through
+            a clean, minimal interface. Messages are sent instantly
+            and organized into rooms or channels depending on usage.
+        </p>
+        <p>
+            Designed to remain lightweight and usable on managed
+            school devices.
+        </p>
+    </section>
+
+    <section class="expanded-actions">
+        <a href="https://jimeneutron.github.io/chatapp/" target="_blank">Open Chat</a>
+        <button data-iframe="chat">Open Preview</button>
+    </section>
+
+    <section class="expanded-ratings">
+        <p>Average rating: ⭐ <span data-avg-rating>—</span></p>
+        <p>Total reviews: <span data-review-count>0</span></p>
+    </section>
+
+    <section class="expanded-comments">
+        <div class="comment-list"></div>
+        <form class="comment-form">
+            <select required>
+                <option></option><option>1</option><option>2</option>
+                <option>3</option><option>4</option><option>5</option>
+            </select>
+            <textarea required></textarea>
+            <button>Submit Review</button>
+        </form>
+    </section>
+</article>
+
+<!-- ==========================================================
+     CALL APP
+=========================================================== -->
+<article class="expanded-app" data-app="call">
+    <header class="expanded-header">
+        <img src="icons/call.png">
+        <div>
+            <h2>Call App</h2>
+            <p class="developer">By Sawfish Developer Group</p>
+            <p class="category">Category: Social / Communication</p>
+        </div>
+    </header>
+
+    <section class="expanded-summary">
+        <p>
+            Simple browser-based calling interface.
+        </p>
+    </section>
+
+    <section class="expanded-description">
+        <p>
+            Call App provides a fast, minimal interface for initiating
+            voice calls through the browser. Designed to work reliably
+            on managed networks.
+        </p>
+        <p>
+            Intended for quick communication rather than extended calls.
+        </p>
+    </section>
+
+    <section class="expanded-actions">
+        <a href="https://the-sawfish.github.io/call-app/?from=sawfish" target="_blank">Open Call App</a>
+        <button data-iframe="call">Open Preview</button>
+    </section>
+
+    <section class="expanded-ratings">
+        <p>Average rating: ⭐ <span data-avg-rating>—</span></p>
+        <p>Total reviews: <span data-review-count>0</span></p>
+    </section>
+
+    <section class="expanded-comments">
+        <div class="comment-list"></div>
+        <form class="comment-form">
+            <select required>
+                <option></option><option>1</option><option>2</option>
+                <option>3</option><option>4</option><option>5</option>
+            </select>
+            <textarea required></textarea>
+            <button>Submit Review</button>
+        </form>
+    </section>
+</article>
+
+<!-- ==========================================================
+     NOVA OS
+=========================================================== -->
+<article class="expanded-app" data-app="novaos">
+    <header class="expanded-header">
+        <img src="icons/novaos.png">
+        <div>
+            <h2>NovaOS</h2>
+            <p class="developer">By RunNova</p>
+            <p class="category">Category: Operating System</p>
+        </div>
+    </header>
+
+    <section class="expanded-summary">
+        <p>
+            Browser-based desktop operating system environment.
+        </p>
+    </section>
+
+    <section class="expanded-description">
+        <p>
+            NovaOS simulates a full desktop operating system inside
+            the browser, including windows, apps, and file management.
+        </p>
+        <p>
+            Intended as a demonstration platform rather than a
+            replacement for a real OS.
+        </p>
+    </section>
+
+    <section class="expanded-actions">
+        <a href="https://runnova.github.io/NovaOS/" target="_blank">Open NovaOS</a>
+        <button data-iframe="novaos">Open Preview</button>
+    </section>
+
+    <section class="expanded-ratings">
+        <p>Average rating: ⭐ <span data-avg-rating>—</span></p>
+        <p>Total reviews: <span data-review-count>0</span></p>
+    </section>
+
+    <section class="expanded-comments">
+        <div class="comment-list"></div>
+        <form class="comment-form">
+            <select required>
+                <option></option><option>1</option><option>2</option>
+                <option>3</option><option>4</option><option>5</option>
+            </select>
+            <textarea required></textarea>
+            <button>Submit Review</button>
+        </form>
+    </section>
+</article>
+
+<!-- ==========================================================
+     (WinRipen, PlutoOS, Ripenos follow IDENTICAL structure)
+=========================================================== -->
+
+<!-- ==========================================================
+     WINRIPEN
+=========================================================== -->
+<article class="expanded-app" data-app="winripen">
+    <header class="expanded-header">
+        <img src="icons/winripen.png">
+        <div>
+            <h2>WinRipen</h2>
+            <p class="developer">By Ripenos</p>
+            <p class="category">Category: Operating System</p>
+        </div>
+    </header>
+
+    <section class="expanded-summary">
+        <p>
+            A Windows-inspired browser-based operating system environment.
+        </p>
+    </section>
+
+    <section class="expanded-description">
+        <p>
+            WinRipen is a web-based operating system designed to replicate
+            the look and feel of classic Windows environments while remaining
+            fully browser-based. It includes window management, basic apps,
+            and a familiar desktop layout.
+        </p>
+        <p>
+            This OS is intended for experimentation, learning, and exploration
+            rather than daily productivity. Performance may vary depending on
+            device and browser limitations.
+        </p>
+        <p>
+            Interaction is disabled in preview mode inside Sawfish. To fully
+            use WinRipen, it must be opened directly or installed to the Home
+            Screen.
+        </p>
+    </section>
+
+    <section class="expanded-meta">
+        <p>Version: <span>—</span></p>
+        <p>Last updated: <span>—</span></p>
+    </section>
+
+    <section class="expanded-actions">
+        <a href="https://ripenos.web.app/WinRipen/index.html" target="_blank">
+            Open WinRipen
+        </a>
+        <button data-iframe="winripen">Open Preview</button>
+    </section>
+
+    <section class="expanded-ratings">
+        <h3>User Ratings</h3>
+        <p>Average rating: ⭐ <span data-avg-rating>—</span></p>
+        <p>Total reviews: <span data-review-count>0</span></p>
+    </section>
+
+    <section class="expanded-comments">
+        <h3>User Reviews</h3>
+        <div class="comment-list"></div>
+
+        <form class="comment-form">
+            <label>Rating</label>
+            <select required>
+                <option></option>
+                <option>1</option><option>2</option><option>3</option>
+                <option>4</option><option>5</option>
+            </select>
+
+            <label>Write a review</label>
+            <textarea required></textarea>
+
+            <button type="submit">Submit Review</button>
+        </form>
+    </section>
+</article>
+
+<!-- ==========================================================
+     PLUTO OS
+=========================================================== -->
+<article class="expanded-app" data-app="plutoos">
+    <header class="expanded-header">
+        <img src="icons/plutoos.png">
+        <div>
+            <h2>PlutoOS</h2>
+            <p class="developer">By Zeon</p>
+            <p class="category">Category: Operating System</p>
+        </div>
+    </header>
+
+    <section class="expanded-summary">
+        <p>
+            A modern, experimental web-based operating system.
+        </p>
+    </section>
+
+    <section class="expanded-description">
+        <p>
+            PlutoOS is a futuristic operating system concept implemented
+            entirely in the browser. It focuses on smooth animations,
+            modern UI elements, and modular app-like components.
+        </p>
+        <p>
+            Unlike traditional OS simulations, PlutoOS emphasizes
+            design experimentation and interface fluidity rather
+            than strict realism.
+        </p>
+        <p>
+            Due to browser limitations, performance may vary across
+            devices. Preview interaction is disabled inside Sawfish.
+        </p>
+    </section>
+
+    <section class="expanded-meta">
+        <p>Version: <span>—</span></p>
+        <p>Last updated: <span>—</span></p>
+    </section>
+
+    <section class="expanded-actions">
+        <a href="https://pluto-app.zeon.dev" target="_blank">
+            Run PlutoOS
+        </a>
+        <button data-iframe="plutoos">Open Preview</button>
+    </section>
+
+    <section class="expanded-ratings">
+        <h3>User Ratings</h3>
+        <p>Average rating: ⭐ <span data-avg-rating>—</span></p>
+        <p>Total reviews: <span data-review-count>0</span></p>
+    </section>
+
+    <section class="expanded-comments">
+        <h3>User Reviews</h3>
+        <div class="comment-list"></div>
+
+        <form class="comment-form">
+            <label>Rating</label>
+            <select required>
+                <option></option>
+                <option>1</option><option>2</option><option>3</option>
+                <option>4</option><option>5</option>
+            </select>
+
+            <label>Write a review</label>
+            <textarea required></textarea>
+
+            <button type="submit">Submit Review</button>
+        </form>
+    </section>
+</article>
+
+<!-- ==========================================================
+     RIPENOS
+=========================================================== -->
+<article class="expanded-app" data-app="ripenos">
+    <header class="expanded-header">
+        <img src="icons/ripenos.png">
+        <div>
+            <h2>Ripenos</h2>
+            <p class="developer">By Ripenos</p>
+            <p class="category">Category: Operating System</p>
+        </div>
+    </header>
+
+    <section class="expanded-summary">
+        <p>
+            Lightweight web-based operating system framework.
+        </p>
+    </section>
+
+    <section class="expanded-description">
+        <p>
+            Ripenos is a browser-based operating system framework
+            designed to be lightweight, fast, and modular. It
+            provides a minimal desktop environment with expandable
+            functionality.
+        </p>
+        <p>
+            The project focuses on performance and simplicity,
+            making it suitable for lower-powered devices and
+            educational experimentation.
+        </p>
+        <p>
+            Full interaction requires opening Ripenos directly
+            or installing the Sawfish App Store to the Home Screen.
+        </p>
+    </section>
+
+    <section class="expanded-meta">
+        <p>Version: <span>—</span></p>
+        <p>Last updated: <span>—</span></p>
+    </section>
+
+    <section class="expanded-actions">
+        <a href="https://ripenos.web.app/Ripenos/" target="_blank">
+            Open Ripenos
+        </a>
+        <button data-iframe="ripenos">Open Preview</button>
+    </section>
+
+    <section class="expanded-ratings">
+        <h3>User Ratings</h3>
+        <p>Average rating: ⭐ <span data-avg-rating>—</span></p>
+        <p>Total reviews: <span data-review-count>0</span></p>
+    </section>
+
+    <section class="expanded-comments">
+        <h3>User Reviews</h3>
+        <div class="comment-list"></div>
+
+        <form class="comment-form">
+            <label>Rating</label>
+            <select required>
+                <option></option>
+                <option>1</option><option>2</option><option>3</option>
+                <option>4</option><option>5</option>
+            </select>
+
+            <label>Write a review</label>
+            <textarea required></textarea>
+
+            <button type="submit">Submit Review</button>
+        </form>
+    </section>
+</article>
+
+<!-- JS stays unchanged -->
+<script>
+document.documentElement.classList.remove("loading");
+</script>
+<script src="app.js"></script>
 
 </body>
 </html>
