@@ -1,380 +1,205 @@
-/* ==========================================================================
-   SAWFISH APP STORE — FULL APP LOGIC
-   Modernized UI additions WITHOUT breaking existing behavior
-   ========================================================================== */
+// ==========================================================
+// SAWFISH APP STORE — MAIN SCRIPT
+// Handles: expanded views, comments, ratings, Firebase
+// ==========================================================
 
-/* -----------------------------
-   APP VERSION (update this each release)
------------------------------- */
-const APP_VERSION = "1.1.0";
+// -------------------- FIREBASE SETUP --------------------
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+import { getFirestore, collection, addDoc, getDocs, query, where, orderBy } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
 
-/* -----------------------------
-   GLOBAL REFERENCES
------------------------------- */
-const Screens = {
-    install: document.querySelector("[data-screen='install']"),
-    app: document.querySelector("[data-screen='app']")
+const firebaseConfig = {
+  apiKey: "AIzaSyB5JaGq3ezv1ghif7ggRr8_jxuq7ZGw4Bo",
+  authDomain: "appstore-cb2fa.firebaseapp.com",
+  projectId: "appstore-cb2fa",
+  storageBucket: "appstore-cb2fa.firebasestorage.app",
+  messagingSenderId: "122307463006",
+  appId: "1:122307463006:web:25993ed888531908fbb1cf"
 };
 
-const Tabs = Array.from(document.querySelectorAll("[data-tab]"));
-const Pages = Array.from(document.querySelectorAll("[data-page]"));
-const OSContainers = Array.from(document.querySelectorAll(".os-container"));
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
-const A2HSModal = document.getElementById("a2hs-modal");
-const A2HSClose = document.getElementById("a2hs-close");
+// -------------------- EXPANDED VIEW HANDLING --------------------
+const expandedContainer = document.getElementById("expanded-views");
 
-/* PWA banner UI */
-const PWABanner = document.getElementById("pwa-banner");
-const UpdateStatus = document.getElementById("update-status");
-const UpdateAction = document.getElementById("update-action");
+function openExpanded(appId) {
+    const appCard = document.querySelector(`[data-app-id="${appId}"]`);
+    const cloned = appCard.cloneNode(true);
 
-/* Version UI */
-const InstallVersion = document.getElementById("install-version");
-const AppVersionChip = document.getElementById("app-version-chip");
-const LastCheckChip = document.getElementById("last-check-chip");
+    // Remove previous expanded content
+    expandedContainer.innerHTML = "";
 
-/* Welcome modal UI */
-const WelcomeModal = document.getElementById("welcome-modal");
-const WelcomeSubtitle = document.getElementById("welcome-subtitle");
-const WelcomeScrollWrap = document.getElementById("welcome-scrollwrap");
-const WelcomeReturning = document.getElementById("welcome-returning");
-const WelcomeAckRow = document.getElementById("welcome-ack-row");
-const WelcomeAck = document.getElementById("welcome-ack");
-const WelcomeContinue = document.getElementById("welcome-continue");
+    // Create expanded wrapper
+    const wrapper = document.createElement("div");
+    wrapper.className = "expanded-app";
 
-/* Keys */
-const KEY_ONBOARDING = "sawfish_onboarding_seen_v1";
+    // Build expanded header
+    const header = document.createElement("div");
+    header.className = "expanded-header";
+    const img = document.createElement("img");
+    img.src = appCard.dataset.icon; // Icon path
+    header.appendChild(img);
 
-/* ==========================================================================
-   1 — PWA DETECTION
-=========================================================================== */
-function isPWAInstalled() {
-    return (
-        window.matchMedia("(display-mode: standalone)").matches ||
-        window.navigator.standalone === true
-    );
-}
+    const titleCol = document.createElement("div");
+    const title = document.createElement("h2");
+    title.textContent = appCard.dataset.name;
+    const dev = document.createElement("div");
+    dev.className = "developer";
+    dev.textContent = `Developer: ${appCard.dataset.dev}`;
+    const category = document.createElement("div");
+    category.className = "category";
+    category.textContent = `Category: ${appCard.dataset.category}`;
 
-/* ==========================================================================
-   2 — SCREEN CONTROL
-=========================================================================== */
-function showInstallScreen() {
-    if (Screens.app) Screens.app.classList.remove("visible");
-    if (Screens.install) Screens.install.classList.add("visible");
-}
+    titleCol.appendChild(title);
+    titleCol.appendChild(dev);
+    titleCol.appendChild(category);
+    header.appendChild(titleCol);
 
-function showAppScreen() {
-    if (Screens.install) Screens.install.classList.remove("visible");
-    if (Screens.app) Screens.app.classList.add("visible");
-    setActiveTab("home");
-}
+    wrapper.appendChild(header);
 
-function updateScreenState() {
-    const pwa = isPWAInstalled();
-    document.body.classList.toggle("is-pwa", pwa);
-    pwa ? showAppScreen() : showInstallScreen();
-}
+    // Description
+    const summary = document.createElement("div");
+    summary.className = "expanded-summary";
+    summary.textContent = appCard.dataset.brief;
+    wrapper.appendChild(summary);
 
-/* Prevent flash of wrong screen */
-function enforceInitialView() {
-    document.documentElement.style.visibility = "hidden";
-    updateScreenState();
-    document.documentElement.style.visibility = "visible";
-}
+    const description = document.createElement("div");
+    description.className = "expanded-description";
+    description.innerHTML = appCard.dataset.longdesc;
+    wrapper.appendChild(description);
 
-/* ==========================================================================
-   3 — TAB NAVIGATION
-=========================================================================== */
-function setActiveTab(tabName) {
-    Tabs.forEach(tab =>
-        tab.classList.toggle("active", tab.dataset.tab === tabName)
-    );
+    // Actions (open app / link)
+    const actions = document.createElement("div");
+    actions.className = "expanded-actions";
+    const link = document.createElement("a");
+    link.href = appCard.dataset.link;
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    link.textContent = "Open App";
+    actions.appendChild(link);
+    wrapper.appendChild(actions);
 
-    Pages.forEach(page =>
-        page.classList.toggle("visible", page.dataset.page === tabName)
-    );
+    // Ratings
+    const ratings = document.createElement("div");
+    ratings.className = "expanded-ratings";
+    const ratingTitle = document.createElement("h3");
+    ratingTitle.textContent = "Average Rating:";
+    ratings.appendChild(ratingTitle);
 
-    const activePage = document.querySelector(`[data-page="${tabName}"]`);
-    if (activePage) activePage.scrollTop = 0;
-}
+    const ratingValue = document.createElement("span");
+    ratingValue.textContent = "Loading…";
+    ratingValue.id = "avg-rating";
+    ratings.appendChild(ratingValue);
+    wrapper.appendChild(ratings);
 
-function initializeTabs() {
-    Tabs.forEach(tab => {
-        tab.addEventListener("click", () => {
-            setActiveTab(tab.dataset.tab);
+    // Comments
+    const commentsSection = document.createElement("div");
+    commentsSection.className = "expanded-comments";
+    const commentsTitle = document.createElement("h3");
+    commentsTitle.textContent = "Comments:";
+    commentsSection.appendChild(commentsTitle);
+
+    const commentList = document.createElement("div");
+    commentList.className = "comment-list";
+    commentsSection.appendChild(commentList);
+
+    // Comment form
+    const form = document.createElement("div");
+    form.className = "comment-form";
+
+    const textarea = document.createElement("textarea");
+    textarea.placeholder = "Write your comment here…";
+
+    const ratingSelect = document.createElement("select");
+    [1,2,3,4,5].forEach(n => {
+        const option = document.createElement("option");
+        option.value = n;
+        option.textContent = `${n} Star${n > 1 ? "s" : ""}`;
+        ratingSelect.appendChild(option);
+    });
+
+    const submitBtn = document.createElement("button");
+    submitBtn.textContent = "Submit";
+
+    form.appendChild(textarea);
+    form.appendChild(ratingSelect);
+    form.appendChild(submitBtn);
+    commentsSection.appendChild(form);
+
+    wrapper.appendChild(commentsSection);
+
+    expandedContainer.appendChild(wrapper);
+    expandedContainer.classList.add("visible");
+
+    // Load comments and rating from Firebase
+    loadComments(appId, commentList, ratingValue);
+
+    // Handle submit
+    submitBtn.onclick = async () => {
+        const text = textarea.value.trim();
+        const rating = parseInt(ratingSelect.value);
+
+        if (!text) return alert("Please write a comment.");
+
+        await addDoc(collection(db, "app-comments"), {
+            appId,
+            comment: text,
+            rating,
+            timestamp: Date.now()
         });
-    });
+
+        textarea.value = "";
+        loadComments(appId, commentList, ratingValue);
+    };
 }
 
-/* ==========================================================================
-   4 — OS IFRAME OVERLAYS
-=========================================================================== */
-function initializeOSOverlays() {
-    OSContainers.forEach(container => {
-        const iframe = container.querySelector("iframe");
-        const overlay = container.querySelector(".overlay");
-        if (!iframe || !overlay) return;
-
-        iframe.addEventListener("load", () => {
-            overlay.classList.add("visible");
-        });
-    });
-}
-
-/* ==========================================================================
-   5 — VISIBILITY / FOCUS HANDLING
-=========================================================================== */
-function initializeVisibilityHandler() {
-    document.addEventListener("visibilitychange", () => {
-        if (!document.hidden) {
-            updateScreenState();
-        }
-    });
-}
-
-/* ==========================================================================
-   6 — ADD TO HOME SCREEN MODAL (Safari preview only)
-=========================================================================== */
-function initializeA2HSModal() {
-    if (!A2HSModal || !A2HSClose) return;
-
-    if (isPWAInstalled()) {
-        A2HSModal.classList.add("a2hs-hidden");
-        return;
+// Close expanded on outside click
+expandedContainer.addEventListener("click", e => {
+    if (e.target === expandedContainer) {
+        expandedContainer.classList.remove("visible");
     }
+});
 
-    A2HSModal.classList.remove("a2hs-hidden");
+// -------------------- LOAD COMMENTS & AVG RATING --------------------
+async function loadComments(appId, commentListEl, ratingEl) {
+    const q = query(
+        collection(db, "app-comments"),
+        where("appId", "==", appId),
+        orderBy("timestamp", "desc")
+    );
 
-    A2HSClose.addEventListener("click", () => {
-        A2HSModal.classList.add("a2hs-hidden");
+    const snapshot = await getDocs(q);
+    commentListEl.innerHTML = "";
+
+    let sum = 0;
+    let count = 0;
+
+    snapshot.forEach(doc => {
+        const data = doc.data();
+        sum += data.rating;
+        count++;
+
+        const div = document.createElement("div");
+        div.className = "comment";
+        div.innerHTML = `<strong>${data.rating} Star${data.rating>1?"s":""}</strong>${data.comment}`;
+        commentListEl.appendChild(div);
     });
+
+    ratingEl.textContent = count ? (sum/count).toFixed(1) + " / 5" : "No ratings yet";
 }
 
-/* ==========================================================================
-   7 — FIRST-TIME / RETURNING WELCOME MODAL (PWA only)
-=========================================================================== */
-function showWelcomeModalFirstTime() {
-    if (!WelcomeModal) return;
-
-    WelcomeModal.classList.remove("hidden");
-    WelcomeSubtitle.textContent = "Please scroll to the bottom, then confirm you understand.";
-
-    // First-time mode: scroll required + checkbox required
-    WelcomeScrollWrap.classList.remove("hidden");
-    WelcomeReturning.classList.add("hidden");
-    WelcomeAckRow.classList.remove("hidden");
-
-    WelcomeContinue.disabled = true;
-    WelcomeAck.checked = false;
-
-    // Require scroll to bottom
-    const onScroll = () => {
-        const el = WelcomeScrollWrap;
-        const nearBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 6;
-        // Only allow checkbox row to function once they've scrolled
-        WelcomeAck.disabled = !nearBottom;
-        if (!nearBottom) {
-            WelcomeAck.checked = false;
-            WelcomeContinue.disabled = true;
-        }
-    };
-
-    // Reset scroll position
-    WelcomeScrollWrap.scrollTop = 0;
-    WelcomeAck.disabled = true;
-
-    WelcomeScrollWrap.addEventListener("scroll", onScroll, { passive: true });
-
-    const onAckChange = () => {
-        // Continue enabled only if they reached bottom (ack enabled) AND checked it
-        WelcomeContinue.disabled = !(WelcomeAck.disabled === false && WelcomeAck.checked === true);
-    };
-    WelcomeAck.addEventListener("change", onAckChange);
-
-    const onContinue = () => {
-        localStorage.setItem(KEY_ONBOARDING, "seen");
-        WelcomeModal.classList.add("hidden");
-
-        // Cleanup listeners (avoid stacking)
-        WelcomeScrollWrap.removeEventListener("scroll", onScroll);
-        WelcomeAck.removeEventListener("change", onAckChange);
-        WelcomeContinue.removeEventListener("click", onContinue);
-    };
-
-    WelcomeContinue.addEventListener("click", onContinue);
-}
-
-function showWelcomeModalReturning() {
-    if (!WelcomeModal) return;
-
-    WelcomeModal.classList.remove("hidden");
-    WelcomeSubtitle.textContent = "Quick reminder";
-
-    // Returning mode: NO scroll + NO checkbox
-    WelcomeScrollWrap.classList.add("hidden");
-    WelcomeReturning.classList.remove("hidden");
-    WelcomeAckRow.classList.add("hidden");
-
-    WelcomeContinue.disabled = false;
-
-    const onContinue = () => {
-        WelcomeModal.classList.add("hidden");
-        WelcomeContinue.removeEventListener("click", onContinue);
-    };
-    WelcomeContinue.addEventListener("click", onContinue);
-}
-
-function initializeWelcomeModal() {
-    // Only apply inside installed PWA
-    if (!isPWAInstalled()) return;
-
-    const seen = localStorage.getItem(KEY_ONBOARDING) === "seen";
-    if (!seen) showWelcomeModalFirstTime();
-    else showWelcomeModalReturning();
-}
-
-/* ==========================================================================
-   8 — VERSION UI
-=========================================================================== */
-function initializeVersionUI() {
-    if (InstallVersion) InstallVersion.textContent = `Version ${APP_VERSION}`;
-    if (AppVersionChip) AppVersionChip.textContent = `Version ${APP_VERSION}`;
-}
-
-/* ==========================================================================
-   9 — UPDATE / SERVICE WORKER UI
-   - Shows banner only in PWA
-   - Detects waiting SW and prompts update
-=========================================================================== */
-function setLastCheckLabel() {
-    if (!LastCheckChip) return;
-    const d = new Date();
-    const t = d.toLocaleString();
-    LastCheckChip.textContent = `Last check: ${t}`;
-}
-
-function setBannerState({ statusText, buttonText, buttonMode }) {
-    if (UpdateStatus) UpdateStatus.textContent = statusText || "";
-    if (!UpdateAction) return;
-
-    UpdateAction.textContent = buttonText || "Up to date";
-    UpdateAction.classList.toggle("update", buttonMode === "update");
-    UpdateAction.disabled = buttonMode === "disabled";
-}
-
-async function checkForSWUpdate(reg) {
-    try {
-        setBannerState({ statusText: "Checking for updates…", buttonText: "Checking…", buttonMode: "disabled" });
-        await reg.update();
-        setLastCheckLabel();
-
-        // If there's a waiting worker, update is available
-        if (reg.waiting) {
-            setBannerState({ statusText: "Update available. Tap to refresh.", buttonText: "Update", buttonMode: "update" });
-            return;
-        }
-
-        setBannerState({ statusText: "Up to date.", buttonText: "Up to date", buttonMode: "normal" });
-    } catch (e) {
-        setLastCheckLabel();
-        setBannerState({ statusText: "Could not check for updates.", buttonText: "Retry", buttonMode: "update" });
-    }
-}
-
-function initializeUpdateBanner() {
-    // Only show meaningful banner inside PWA
-    if (!isPWAInstalled()) return;
-    if (!PWABanner || !UpdateAction || !UpdateStatus) return;
-
-    // Default state
-    setBannerState({ statusText: "Up to date.", buttonText: "Up to date", buttonMode: "normal" });
-
-    if (!("serviceWorker" in navigator)) {
-        setBannerState({ statusText: "Service worker not supported.", buttonText: "—", buttonMode: "disabled" });
-        return;
-    }
-
-    navigator.serviceWorker.getRegistration().then(reg => {
-        if (!reg) {
-            setBannerState({ statusText: "Offline caching not active.", buttonText: "—", buttonMode: "disabled" });
-            return;
-        }
-
-        // If there is already a waiting SW
-        if (reg.waiting) {
-            setBannerState({ statusText: "Update available. Tap to refresh.", buttonText: "Update", buttonMode: "update" });
-        }
-
-        // Listen for updates found
-        reg.addEventListener("updatefound", () => {
-            const newWorker = reg.installing;
-            if (!newWorker) return;
-
-            newWorker.addEventListener("statechange", () => {
-                if (newWorker.state === "installed" && navigator.serviceWorker.controller) {
-                    setBannerState({ statusText: "Update available. Tap to refresh.", buttonText: "Update", buttonMode: "update" });
-                }
-            });
-        });
-
-        // Button action
-        UpdateAction.addEventListener("click", async () => {
-            const text = UpdateAction.textContent || "";
-            if (text.toLowerCase().includes("update") || text.toLowerCase().includes("retry")) {
-                // If we have a waiting SW, activate it
-                const freshReg = await navigator.serviceWorker.getRegistration();
-                if (freshReg && freshReg.waiting) {
-                    freshReg.waiting.postMessage({ type: "SKIP_WAITING" });
-                    setBannerState({ statusText: "Updating…", buttonText: "Updating…", buttonMode: "disabled" });
-                    return;
-                }
-                // Otherwise try checking again
-                if (freshReg) await checkForSWUpdate(freshReg);
-            }
-        });
-
-        // When controller changes, reload to get the new cache
-        navigator.serviceWorker.addEventListener("controllerchange", () => {
-            window.location.reload();
-        });
-
-        // Initial check
-        checkForSWUpdate(reg);
+// -------------------- CARD CLICK LISTENERS --------------------
+document.querySelectorAll(".app-card, .game-card, .connect-card, .os-card").forEach(card => {
+    card.addEventListener("click", () => {
+        const appId = card.dataset.appId;
+        openExpanded(appId);
     });
-}
+});
 
-/* ==========================================================================
-   10 — INITIALIZATION
-=========================================================================== */
-function initializeApp() {
-    enforceInitialView();
-    initializeTabs();
-    initializeOSOverlays();
-    initializeVisibilityHandler();
-    initializeA2HSModal();
-
-    initializeVersionUI();
-
-    // Welcome modal should appear AFTER app screen is shown in PWA
-    // Timeout avoids race with visibility toggles on some iOS builds
-    setTimeout(() => {
-        initializeWelcomeModal();
-        initializeUpdateBanner();
-    }, 50);
-}
-
-/* ==========================================================================
-   11 — START
-=========================================================================== */
-window.addEventListener("DOMContentLoaded", initializeApp);
-
-/* ==========================================================================
-   12 — SERVICE WORKER REGISTRATION
-=========================================================================== */
-if ("serviceWorker" in navigator) {
-    window.addEventListener("load", () => {
-        navigator.serviceWorker
-            .register("./service-worker.js")
-            .catch(() => {});
+// -------------------- OS IFRAME PREVIEWS --------------------
+document.querySelectorAll('.os-container iframe').forEach(iframe => {
+    iframe.addEventListener('load', () => {
+        const overlay = iframe.parentElement.querySelector('.overlay');
+        if (overlay) overlay.classList.add('visible');
     });
-}
+});
