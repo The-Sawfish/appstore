@@ -2,8 +2,8 @@
   "name": "Sawfish App Store",
   "short_name": "Sawfish Store",
   "description": "A fast, school-safe way to access games and student tools. Install as a PWA for the full experience.",
-  "start_url": "/appstore",
-  "scope": "/",
+  "start_url": "/appstore/",
+  "scope": "/appstore/",
   "display": "standalone",
   "orientation": "any",
   "background_color": "#0b0d10",
@@ -107,21 +107,21 @@
       "name": "Games",
       "short_name": "Games",
       "description": "Browse all available games",
-      "url": "/?tab=games",
+      "url": "/appstore/?tab=games",
       "icons": [{ "src": "icons/games-shortcut.png", "sizes": "96x96" }]
     },
     {
       "name": "Social",
       "short_name": "Social",
       "description": "Access chat and call apps",
-      "url": "/?tab=social",
+      "url": "/appstore/?tab=social",
       "icons": [{ "src": "icons/social-shortcut.png", "sizes": "96x96" }]
     },
     {
       "name": "Operating Systems",
       "short_name": "OS",
       "description": "Explore browser-based operating systems",
-      "url": "/?tab=os",
+      "url": "/appstore/?tab=os",
       "icons": [{ "src": "icons/os-shortcut.png", "sizes": "96x96" }]
     }
   ],
@@ -143,7 +143,7 @@
   },
   
   "share_target": {
-    "action": "/share",
+    "action": "/appstore/share",
     "method": "POST",
     "enctype": "multipart/form-data",
     "params": {
@@ -156,7 +156,7 @@
   "protocol_handlers": [
     {
       "protocol": "web+sawfish",
-      "url": "/open/%s"
+      "url": "/appstore/open/%s"
     }
   ]
 }
