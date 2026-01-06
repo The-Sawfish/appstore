@@ -1,7 +1,7 @@
 // ============================================================
 // SAWFISH APP STORE - APPLICATION JAVASCRIPT
 // Full Logic for PWA, Navigation, Ratings, Reviews, Firestore
-// Author: Sawfish Developer Group
+// Author: Eric Zhu / Sawfish Developer Group
 // Date: January 6, 2026
 // ============================================================
 
@@ -34,53 +34,45 @@ try {
 }
 
 // ============================================================
-// FIRESTORE COMMENTS SYSTEM
+// FIRESTORE COMMENTS MODULE
+// Handles cloud-synced ratings and reviews
 // ============================================================
 const FirestoreComments = {
-    COLLECTION: 'app_reviews',
-    
     // Save a review to Firestore
-    async saveReview(appId, rating, comment, userName, isDeveloperResponse = false, parentId = null) {
+    saveReview: async function(appId, rating, comment, userName, isDeveloper = false) {
         if (!db) {
             console.warn('Firestore not available, using local storage fallback');
-            return null;
+            return RatingsLocalStorage.saveRating(appId, rating, comment, userName);
         }
         
         try {
-            const reviewData = {
+            const review = {
                 appId: appId,
                 rating: rating,
                 comment: comment,
                 user: userName || 'Anonymous',
-                isDeveloperResponse: isDeveloperResponse,
-                parentId: parentId,
-                timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-                createdAt: new Date().toISOString()
-            };
-            
-            const docRef = await db.collection(this.COLLECTION).add(reviewData);
-            console.log('Review saved to Firestore:', docRef.id);
-            
-            return {
-                id: docRef.id,
-                ...reviewData,
+                isDeveloper: isDeveloper,
                 timestamp: new Date().toISOString()
             };
+            
+            await db.collection('reviews').add(review);
+            console.log('Review saved to Firestore:', review);
+            return review;
         } catch (error) {
-            console.error('Error saving review to Firestore:', error);
-            return null;
+            console.error('Error saving to Firestore:', error);
+            // Fallback to local storage
+            return RatingsLocalStorage.saveRating(appId, rating, comment, userName);
         }
     },
     
     // Get all reviews for an app from Firestore
-    async getReviews(appId) {
+    getReviews: async function(appId) {
         if (!db) {
-            console.warn('Firestore not available, using local storage fallback');
-            return [];
+            return RatingsLocalStorage.getAppRatings(appId);
         }
         
         try {
-            const snapshot = await db.collection(this.COLLECTION)
+            const snapshot = await db.collection('reviews')
                 .where('appId', '==', appId)
                 .orderBy('timestamp', 'desc')
                 .get();
@@ -90,52 +82,67 @@ const FirestoreComments = {
                 ...doc.data()
             }));
         } catch (error) {
-            console.error('Error fetching reviews from Firestore:', error);
-            return [];
+            console.error('Error fetching from Firestore:', error);
+            return RatingsLocalStorage.getAppRatings(appId);
         }
     },
     
-    // Get all reviews (for admin/developer purposes)
-    async getAllReviews() {
+    // Subscribe to real-time updates for an app's reviews
+    subscribeToReviews: function(appId, callback) {
         if (!db) {
-            return [];
+            // Use local storage polling as fallback
+            const localReviews = RatingsLocalStorage.getAppRatings(appId);
+            callback(localReviews);
+            return () => {};
         }
         
         try {
-            const snapshot = await db.collection(this.COLLECTION)
-                .orderBy('timestamp', 'desc')
-                .get();
-            
-            return snapshot.docs.map(doc => ({
-                id: doc.id,
-                ...doc.data()
-            }));
-        } catch (error) {
-            console.error('Error fetching all reviews:', error);
-            return [];
-        }
-    },
-    
-    // Get average rating for an app
-    async getAverageRating(appId) {
-        if (!db) {
-            return 0;
-        }
-        
-        try {
-            const snapshot = await db.collection(this.COLLECTION)
+            const unsubscribe = db.collection('reviews')
                 .where('appId', '==', appId)
-                .where('isDeveloperResponse', '==', false)
+                .orderBy('timestamp', 'desc')
+                .onSnapshot(
+                    (snapshot) => {
+                        const reviews = snapshot.docs.map(doc => ({
+                            id: doc.id,
+                            ...doc.data()
+                        }));
+                        callback(reviews);
+                    },
+                    (error) => {
+                        console.error('Firestore subscription error:', error);
+                        // Fallback to local storage on error
+                        callback(RatingsLocalStorage.getAppRatings(appId));
+                    }
+                );
+            
+            return unsubscribe;
+        } catch (error) {
+            console.error('Error setting up Firestore subscription:', error);
+            return () => {};
+        }
+    },
+    
+    // Calculate average rating for an app
+    getAverageRating: async function(appId) {
+        if (!db) {
+            return RatingsLocalStorage.getAverageRating(appId);
+        }
+        
+        try {
+            const snapshot = await db.collection('reviews')
+                .where('appId', '==', appId)
                 .get();
             
-            if (snapshot.empty) return 0;
+            if (snapshot.empty) {
+                return 0;
+            }
             
             let sum = 0;
             let count = 0;
             
-            snapshot.docs.forEach(doc => {
+            snapshot.forEach(doc => {
                 const data = doc.data();
-                if (data.rating) {
+                if (typeof data.rating === 'number') {
                     sum += data.rating;
                     count++;
                 }
@@ -143,82 +150,157 @@ const FirestoreComments = {
             
             return count > 0 ? sum / count : 0;
         } catch (error) {
-            console.error('Error calculating average rating:', error);
-            return 0;
+            console.error('Error calculating average:', error);
+            return RatingsLocalStorage.getAverageRating(appId);
         }
     },
     
     // Get rating distribution for an app
-    async getRatingDistribution(appId) {
+    getRatingDistribution: async function(appId) {
         if (!db) {
-            return { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
+            return RatingsLocalStorage.getRatingDistribution(appId);
         }
         
         try {
-            const snapshot = await db.collection(this.COLLECTION)
+            const snapshot = await db.collection('reviews')
                 .where('appId', '==', appId)
-                .where('isDeveloperResponse', '==', false)
                 .get();
             
             const distribution = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
             
-            snapshot.docs.forEach(doc => {
+            snapshot.forEach(doc => {
                 const data = doc.data();
-                if (data.rating && distribution[data.rating] !== undefined) {
+                if (distribution[data.rating] !== undefined) {
                     distribution[data.rating]++;
                 }
             });
             
             return distribution;
         } catch (error) {
-            console.error('Error getting rating distribution:', error);
-            return { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
+            console.error('Error getting distribution:', error);
+            return RatingsLocalStorage.getRatingDistribution(appId);
         }
     },
     
     // Get total review count for an app
-    async getTotalReviews(appId) {
+    getTotalReviews: async function(appId) {
         if (!db) {
-            return 0;
+            return RatingsLocalStorage.getTotalReviews(appId);
         }
         
         try {
-            const snapshot = await db.collection(this.COLLECTION)
+            const snapshot = await db.collection('reviews')
                 .where('appId', '==', appId)
-                .where('isDeveloperResponse', '==', false)
                 .get();
             
             return snapshot.size;
         } catch (error) {
-            console.error('Error getting total reviews:', error);
-            return 0;
+            console.error('Error getting count:', error);
+            return RatingsLocalStorage.getTotalReviews(appId);
+        }
+    }
+};
+
+// ============================================================
+// DEVELOPER MODE MODULE
+// Handles developer authentication and responses
+// ============================================================
+const DeveloperMode = {
+    isLoggedIn: false,
+    DEVELOPER_PASSWORD: '120622',
+    
+    // Initialize developer mode
+    init: function() {
+        // Check if already logged in from previous session
+        if (sessionStorage.getItem('developer_logged_in') === 'true') {
+            this.isLoggedIn = true;
+            this.updateLoginButton();
+        }
+        
+        // Set up login button listener
+        const loginBtn = document.getElementById('developer-login-button');
+        if (loginBtn) {
+            loginBtn.addEventListener('click', () => this.toggleLogin());
         }
     },
     
-    // Real-time subscription for reviews
-    subscribeToReviews(appId, callback) {
-        if (!db) {
-            console.warn('Firestore not available');
-            return () => {};
+    // Toggle login/logout
+    toggleLogin: function() {
+        if (this.isLoggedIn) {
+            this.logout();
+        } else {
+            this.login();
+        }
+    },
+    
+    // Attempt to log in
+    login: function() {
+        const password = prompt('Enter developer password:');
+        
+        if (password === null) {
+            // User cancelled
+            return;
         }
         
-        try {
-            return db.collection(this.COLLECTION)
-                .where('appId', '==', appId)
-                .orderBy('timestamp', 'desc')
-                .onSnapshot(snapshot => {
-                    const reviews = snapshot.docs.map(doc => ({
-                        id: doc.id,
-                        ...doc.data()
-                    }));
-                    callback(reviews);
-                }, error => {
-                    console.error('Error in reviews subscription:', error);
-                });
-        } catch (error) {
-            console.error('Error setting up reviews subscription:', error);
-            return () => {};
+        if (password === this.DEVELOPER_PASSWORD) {
+            this.isLoggedIn = true;
+            sessionStorage.setItem('developer_logged_in', 'true');
+            this.updateLoginButton();
+            showNotification('Developer mode activated');
+            console.log('Developer logged in successfully');
+        } else if (password !== '') {
+            alert('Incorrect password. Please try again.');
         }
+    },
+    
+    // Log out
+    logout: function() {
+        this.isLoggedIn = false;
+        sessionStorage.removeItem('developer_logged_in');
+        this.updateLoginButton();
+        showNotification('Developer mode deactivated');
+        console.log('Developer logged out');
+    },
+    
+    // Update the login button UI
+    updateLoginButton: function() {
+        const btn = document.getElementById('developer-login-button');
+        if (!btn) return;
+        
+        const statusText = btn.querySelector('.developer-status-text');
+        const icon = btn.querySelector('svg');
+        
+        if (this.isLoggedIn) {
+            btn.classList.add('logged-in');
+            if (statusText) {
+                statusText.textContent = 'Logout';
+            }
+            // Update icon to indicate logged in state
+            if (icon) {
+                icon.innerHTML = `
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                    <polyline points="16 17 21 12 16 7"/>
+                    <line x1="21" y1="12" x2="9" y2="12"/>
+                `;
+            }
+        } else {
+            btn.classList.remove('logged-in');
+            if (statusText) {
+                statusText.textContent = 'Developer';
+            }
+            // Reset icon
+            if (icon) {
+                icon.innerHTML = `
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
+                `;
+            }
+        }
+    },
+    
+    // Check if current review is from developer
+    isDeveloperReview: function(review) {
+        return review.isDeveloper === true;
     }
 };
 
@@ -250,6 +332,7 @@ const RatingsLocalStorage = {
                 rating: rating,
                 comment: comment,
                 user: userName || 'Anonymous',
+                isDeveloper: false,
                 timestamp: new Date().toISOString()
             };
             
@@ -294,91 +377,6 @@ const RatingsLocalStorage = {
 };
 
 // ============================================================
-// UNIFIED RATINGS SYSTEM (Firestore with Local Fallback)
-// ============================================================
-const RatingsSystem = {
-    DEVELOPER_PASSWORD: '120622',
-    isDeveloperMode: false,
-    
-    async getAverageRating(appId) {
-        // Try Firestore first, fall back to local
-        if (db) {
-            return await FirestoreComments.getAverageRating(appId);
-        }
-        return RatingsLocalStorage.getAverageRating(appId);
-    },
-    
-    async getRatingDistribution(appId) {
-        if (db) {
-            return await FirestoreComments.getRatingDistribution(appId);
-        }
-        return RatingsLocalStorage.getRatingDistribution(appId);
-    },
-    
-    async getTotalReviews(appId) {
-        if (db) {
-            return await FirestoreComments.getTotalReviews(appId);
-        }
-        return RatingsLocalStorage.getTotalReviews(appId);
-    },
-    
-    async getReviews(appId) {
-        if (db) {
-            return await FirestoreComments.getReviews(appId);
-        }
-        return RatingsLocalStorage.getAppRatings(appId);
-    },
-    
-    async saveReview(appId, rating, comment, userName, isDeveloperResponse = false) {
-        // If in developer mode, save as developer response to Firestore
-        if (this.isDeveloperMode && db) {
-            const result = await FirestoreComments.saveReview(appId, rating, comment, userName, true);
-            if (result) return result;
-        }
-        
-        // Fall back to local storage or regular Firestore save
-        if (db) {
-            const result = await FirestoreComments.saveReview(appId, rating, comment, userName, false);
-            if (result) return result;
-        }
-        
-        return RatingsLocalStorage.saveRating(appId, rating, comment, userName);
-    },
-    
-    subscribeToReviews(appId, callback) {
-        if (db) {
-            return FirestoreComments.subscribeToReviews(appId, callback);
-        }
-        
-        // For local storage, just return current reviews
-        const reviews = RatingsLocalStorage.getAppRatings(appId);
-        callback(reviews);
-        return () => {};
-    },
-    
-    // Developer mode functions
-    loginDeveloper(password) {
-        if (password === this.DEVELOPER_PASSWORD) {
-            this.isDeveloperMode = true;
-            localStorage.setItem('sawfish_developer_mode', 'true');
-            return true;
-        }
-        return false;
-    },
-    
-    logoutDeveloper() {
-        this.isDeveloperMode = false;
-        localStorage.removeItem('sawfish_developer_mode');
-    },
-    
-    checkDeveloperStatus() {
-        const stored = localStorage.getItem('sawfish_developer_mode');
-        this.isDeveloperMode = stored === 'true';
-        return this.isDeveloperMode;
-    }
-};
-
-// ============================================================
 // APPLICATION STATE
 // ============================================================
 const AppState = {
@@ -387,7 +385,7 @@ const AppState = {
     currentPage: 'home',
     expandedApp: null,
     sidebarOpen: false,
-    developerMode: false
+    reviewSubscriptions: {} // Store active subscriptions
 };
 
 // ============================================================
@@ -425,10 +423,7 @@ const elements = {
     updateAction: null,
     
     // Ratings display elements
-    ratingDisplays: null,
-    
-    // Developer Login
-    userStatus: null
+    ratingDisplays: null
 };
 
 // ============================================================
@@ -440,8 +435,11 @@ document.addEventListener('DOMContentLoaded', function() {
     setupEventListeners();
     loadAllRatings();
     checkFirstVisit();
-    checkDeveloperStatus();
     removeLoadingClass();
+    
+    // Initialize developer mode
+    DeveloperMode.init();
+    
     console.log('Sawfish App Store initialized');
 });
 
@@ -465,14 +463,15 @@ function initializeElements() {
     elements.updateStatus = document.getElementById('update-status');
     elements.updateAction = document.getElementById('update-action');
     elements.ratingDisplays = document.querySelectorAll('[data-avg-rating]');
-    elements.userStatus = document.querySelector('.user-status');
 }
 
 function detectPWA() {
+    // Check if running as PWA
     AppState.isPWA = window.matchMedia('(display-mode: standalone)').matches || 
                     window.navigator.standalone === true ||
                     document.referrer.includes('android-app://');
     
+    // Update UI based on PWA status
     if (AppState.isPWA) {
         elements.installScreen?.classList.add('hidden');
         elements.installScreen?.classList.remove('visible');
@@ -504,31 +503,39 @@ function checkFirstVisit() {
         AppState.isFirstVisit = true;
         localStorage.setItem('sawfish_visited', 'true');
         
+        // Show welcome modal after a short delay
         setTimeout(() => {
             showWelcomeModal(true);
         }, 1000);
     }
 }
 
-function checkDeveloperStatus() {
-    AppState.developerMode = RatingsSystem.checkDeveloperStatus();
-    updateDeveloperUI();
-}
-
 // ============================================================
 // EVENT LISTENERS
 // ============================================================
 function setupEventListeners() {
+    // Navigation
     setupNavigationListeners();
-    setupCardListeners();
-    setupExpandedViewListeners();
-    setupWelcomeModalListeners();
-    setupPWABannerListeners();
-    setupCategoryTabListeners();
-    setupOSPreviewListeners();
-    setupServiceWorkerListeners();
-    setupDeveloperLoginListeners();
     
+    // App Cards
+    setupCardListeners();
+    
+    // Expanded View
+    setupExpandedViewListeners();
+    
+    // Welcome Modal
+    setupWelcomeModalListeners();
+    
+    // PWA Banner
+    setupPWABannerListeners();
+    
+    // Category Tabs
+    setupCategoryTabListeners();
+    
+    // Service Worker Updates
+    setupServiceWorkerListeners();
+    
+    // Media Query for PWA detection
     window.matchMedia('(display-mode: standalone)').addEventListener('change', function(e) {
         AppState.isPWA = e.matches;
         location.reload();
@@ -536,6 +543,7 @@ function setupEventListeners() {
 }
 
 function setupNavigationListeners() {
+    // Tab buttons
     elements.tabButtons.forEach(button => {
         button.addEventListener('click', function() {
             const tab = this.dataset.tab;
@@ -543,6 +551,7 @@ function setupNavigationListeners() {
         });
     });
     
+    // Nav items
     elements.navItems.forEach(item => {
         item.addEventListener('click', function() {
             const tab = this.dataset.tab;
@@ -553,8 +562,32 @@ function setupNavigationListeners() {
 
 function setupCardListeners() {
     const cards = document.querySelectorAll('.app-card');
+    const featuredCards = document.querySelectorAll('.featured-card');
     
+    // Regular app cards
     cards.forEach(card => {
+        card.addEventListener('click', function() {
+            const appId = this.dataset.app;
+            if (appId) {
+                openExpandedApp(appId);
+            }
+        });
+        
+        // Keyboard support
+        card.setAttribute('tabindex', '0');
+        card.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                const appId = this.dataset.app;
+                if (appId) {
+                    openExpandedApp(appId);
+                }
+            }
+        });
+    });
+    
+    // Featured cards
+    featuredCards.forEach(card => {
         card.addEventListener('click', function() {
             const appId = this.dataset.app;
             if (appId) {
@@ -576,11 +609,14 @@ function setupCardListeners() {
 }
 
 function setupExpandedViewListeners() {
+    // Close button
     elements.expandedCloseBtn?.addEventListener('click', closeExpandedApp);
     
+    // Backdrop click
     const backdrop = elements.expandedOverlay?.querySelector('.expanded-backdrop');
     backdrop?.addEventListener('click', closeExpandedApp);
     
+    // Escape key
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape' && !elements.expandedOverlay.classList.contains('hidden')) {
             closeExpandedApp();
@@ -589,11 +625,13 @@ function setupExpandedViewListeners() {
 }
 
 function setupWelcomeModalListeners() {
+    // Scroll detection
     const scrollContent = elements.welcomeScrollContent;
     if (scrollContent) {
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (!entry.isIntersecting) {
+                    // User has scrolled past the scroll indicator
                     const continueBtn = elements.welcomeContinue;
                     if (continueBtn) {
                         continueBtn.disabled = false;
@@ -608,10 +646,12 @@ function setupWelcomeModalListeners() {
         }
     }
     
+    // Ack checkbox
     elements.welcomeAck?.addEventListener('change', function() {
         elements.welcomeContinue.disabled = !this.checked;
     });
     
+    // Continue button
     elements.welcomeContinue?.addEventListener('click', function() {
         closeWelcomeModal();
     });
@@ -630,27 +670,13 @@ function setupCategoryTabListeners() {
         tab.addEventListener('click', function() {
             const category = this.dataset.category;
             
+            // Update active state
             categoryTabs.forEach(t => t.classList.remove('active'));
             this.classList.add('active');
             
+            // Filter cards
             filterGameCards(category);
         });
-    });
-}
-
-function setupOSPreviewListeners() {
-    // OS previews have been removed, but keeping for potential future use
-    const osContainers = document.querySelectorAll('.os-preview-container');
-    
-    osContainers.forEach(container => {
-        const iframe = container.querySelector('iframe');
-        const overlay = container.querySelector('.preview-overlay');
-        
-        if (iframe && overlay) {
-            iframe.addEventListener('load', function() {
-                overlay.classList.add('visible');
-            });
-        }
     });
 }
 
@@ -666,60 +692,11 @@ function setupServiceWorkerListeners() {
     }
 }
 
-function setupDeveloperLoginListeners() {
-    const userStatus = document.querySelector('.user-status');
-    if (userStatus) {
-        userStatus.style.cursor = 'pointer';
-        userStatus.addEventListener('click', handleDeveloperLogin);
-    }
-}
-
-// ============================================================
-// DEVELOPER LOGIN HANDLER
-// ============================================================
-function handleDeveloperLogin() {
-    if (AppState.developerMode) {
-        // Logout
-        RatingsSystem.logoutDeveloper();
-        AppState.developerMode = false;
-        updateDeveloperUI();
-        showNotification('Developer mode disabled');
-    } else {
-        // Login
-        const password = prompt('Enter developer password:');
-        if (password) {
-            if (RatingsSystem.loginDeveloper(password)) {
-                AppState.developerMode = true;
-                updateDeveloperUI();
-                showNotification('Developer mode enabled - You can now respond to reviews');
-            } else {
-                showNotification('Incorrect password');
-            }
-        }
-    }
-}
-
-function updateDeveloperUI() {
-    const userStatus = document.querySelector('.user-status');
-    if (userStatus) {
-        if (AppState.developerMode) {
-            userStatus.innerHTML = `
-                <div class="status-dot online" style="background: #fbbf24; box-shadow: 0 0 8px #fbbf24;"></div>
-                <span>Developer Mode</span>
-            `;
-        } else {
-            userStatus.innerHTML = `
-                <div class="status-dot online"></div>
-                <span>Login</span>
-            `;
-        }
-    }
-}
-
 // ============================================================
 // NAVIGATION FUNCTIONS
 // ============================================================
 function switchTab(tabName) {
+    // Update nav items
     elements.navItems.forEach(item => {
         if (item.dataset.tab === tabName) {
             item.classList.add('active');
@@ -728,6 +705,7 @@ function switchTab(tabName) {
         }
     });
     
+    // Update tab buttons if they exist
     elements.tabButtons.forEach(button => {
         if (button.dataset.tab === tabName) {
             button.classList.add('active');
@@ -736,6 +714,7 @@ function switchTab(tabName) {
         }
     });
     
+    // Update pages
     elements.pages.forEach(page => {
         if (page.dataset.page === tabName) {
             page.classList.add('visible');
@@ -746,6 +725,7 @@ function switchTab(tabName) {
     
     AppState.currentPage = tabName;
     
+    // Close sidebar on mobile
     if (window.innerWidth <= 768) {
         elements.sidebar?.classList.remove('open');
     }
@@ -769,8 +749,8 @@ const appData = {
         icon: "icons/hack.png",
         category: "Utilities / Experimental",
         description: "Hack Stuff is a collection of advanced utilities and experimental tools designed specifically for students and developers who need access to low-level functionality within their browser environment. This powerful toolkit provides sandboxed access to various development and debugging tools that would typically require elevated system permissions.",
-        features: "The Hack Stuff suite includes HTML and CSS inspectors, JavaScript consoles, network request monitors, and various debugging utilities. Each tool has been carefully implemented to work within browser security constraints while still providing genuine utility for educational and development purposes.",
-        additional: "Please note that access to certain advanced features may be restricted based on school network policies or device management configurations.",
+        features: "The Hack Stuff suite includes HTML and CSS inspectors, JavaScript consoles, network request monitors, and various debugging utilities. Each tool has been carefully implemented to work within browser security constraints while still providing genuine utility.",
+        additional: "Please note that access to certain advanced features may be restricted based on school network policies or device management configurations. The tool is designed to work within these constraints while still providing as much functionality as possible.",
         link: "https://the-sawfish.github.io/hack/",
         screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Hack+Stuff+Interface", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Development+Tools"]
     },
@@ -779,9 +759,9 @@ const appData = {
         developer: "Sawfish Developer Group",
         icon: "icons/game-portal.png",
         category: "Games Hub",
-        description: "The Sawfish Game Portal serves as a unified launcher and collection point for all approved browser-based games available through the Sawfish ecosystem. Instead of bookmarking dozens of individual game links, students can access everything from one beautifully designed, organized interface.",
+        description: "The Sawfish Game Portal serves as a unified launcher and collection point for all approved browser-based games available through the Sawfish ecosystem.",
         features: "The portal features a sophisticated categorization system that organizes games by genre, difficulty, and playtime. Games can be filtered by category including puzzle games, platformers, simulation games, arcade classics, and educational content.",
-        additional: "All games available through the portal have been vetted for age-appropriate content, no excessive advertising, and reasonable system requirements.",
+        additional: "All games available through the portal have been vetted for age-appropriate content, no excessive advertising, and reasonable system requirements. New games are added regularly after going through the approval process.",
         link: "https://the-sawfish.github.io/game-portal/",
         screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Game+Portal+Home", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Game+Categories"]
     },
@@ -801,8 +781,8 @@ const appData = {
         developer: "Sawfish Developer Group",
         icon: "icons/2048.png",
         category: "Games / Puzzle",
-        description: "2048 is the iconic sliding tile puzzle game that took the world by storm, now available optimized for school browsers and touch devices. The goal is to combine matching numbered tiles to reach the 2048 tile.",
-        features: "This implementation features touch-optimized controls, multiple board sizes, an undo feature, and daily challenges.",
+        description: "2048 is the iconic sliding tile puzzle game that took the world by storm, and now it's available optimized for school browsers and touch devices.",
+        features: "This implementation features touch-optimized controls that make swiping on tablets and touchscreens feel natural and responsive. Multiple board sizes available.",
         additional: "The game has been optimized for school networks, with no external dependencies and minimal data usage.",
         link: "https://the-sawfish.github.io/2048/",
         screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=2048+Game+Board", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Tile+Merging"]
@@ -813,7 +793,7 @@ const appData = {
         icon: "icons/minecraft.png",
         category: "Games / Sandbox",
         description: "Experience the boundless creativity of the world's best-selling game directly in your browser with Minecraft Web (Beta).",
-        features: "The Beta version introduces optimized rendering engines, procedural terrain generation, and streamlined inventory systems.",
+        features: "The Beta version introduces optimized rendering engines specifically tuned for web performance, ensuring smooth frame rates even on Chromebooks.",
         additional: "IMPORTANT: In this web version, single player mode does not include crafting functionality. You MUST use a multiplayer server to access full crafting features.",
         link: "https://zardoy.github.io/minecraft-web-client/",
         screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Minecraft+Web+Gameplay", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Multiplayer+Servers"]
@@ -824,7 +804,7 @@ const appData = {
         icon: "icons/blockblast.png",
         category: "Games / Puzzle",
         description: "Block Blast is a fast-paced, addictive puzzle game that challenges your spatial reasoning and strategic planning skills.",
-        features: "Block Blast features multiple game modes, touch-optimized controls, and visual feedback including satisfying particle effects.",
+        features: "Block Blast features multiple game modes including classic endless play, timed challenges, and daily puzzle modes.",
         additional: "The game has been optimized to run smoothly on school devices with minimal performance requirements.",
         link: "https://aappqq.github.io/BlockBlast/index.html",
         screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Block+Blast+Gameplay", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Combo+System"]
@@ -834,9 +814,9 @@ const appData = {
         developer: "R74n",
         icon: "icons/sandboxels.png",
         category: "Games / Simulation",
-        description: "Sandboxels is an extraordinary physics-based falling sand simulation with over 500 unique elements.",
+        description: "Sandboxels is an extraordinary physics-based falling sand simulation that offers an almost endless sandbox for creativity and experimentation.",
         features: "The simulation includes elements in multiple categories: basic materials, liquids, gases, fire, electrical components, plants, and creatures.",
-        additional: "Sandboxels is particularly valuable as an educational tool, allowing students to experiment with scientific concepts.",
+        additional: "Sandboxels is particularly valuable as an educational tool, allowing students to experiment with scientific concepts in a safe environment.",
         link: "https://the-sawfish.github.io/sandboxels/",
         screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Sandboxels+Simulation", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Element+Interactions"]
     },
@@ -845,8 +825,8 @@ const appData = {
         developer: "Joseph Cloutier",
         icon: "icons/run3.png",
         category: "Games / Platformer",
-        description: "Run 3 is an incredibly addictive endless runner that takes place in procedurally generated space tunnels.",
-        features: "The game features multiple game modes, over 20 unique alien characters, and procedurally generated tunnels.",
+        description: "Run 3 is an incredibly addictive endless runner that takes place in the unique environment of procedurally generated space tunnels.",
+        features: "The game features multiple game modes including the classic endless run, the challenging tunnel run mode with a finish line, and the time attack mode.",
         additional: "As you progress, the game introduces new challenges including crumbling tiles, portals, and sections where the tunnel rotates.",
         link: "https://the-sawfish.github.io/Run3Final/",
         screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Run+3+Gameplay", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Space+Tunnels"]
@@ -857,7 +837,7 @@ const appData = {
         icon: "icons/chat.png",
         category: "Social / Messaging",
         description: "Chat App provides a clean, efficient platform for real-time messaging designed specifically for student communication needs.",
-        features: "The app features topic-based rooms, real-time messaging with delivery confirmations, and keyboard accessibility.",
+        features: "The app features topic-based rooms where students can join discussions relevant to their classes, projects, or interests.",
         additional: "The Chat App is designed to work within school network restrictions while still providing effective real-time communication.",
         link: "https://jimeneutron.github.io/chatapp/",
         screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Chat+App+Interface", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Chat+Rooms"]
@@ -868,8 +848,8 @@ const appData = {
         icon: "icons/call.png",
         category: "Social / Communication",
         description: "Call App offers a fast, minimal browser-based voice calling interface that enables quick communication between students.",
-        features: "The calling system supports direct calls between users who share a room code, with adaptive audio quality.",
-        additional: "The Call App is intended for quick, efficient communication rather than extended calls.",
+        features: "The calling system supports direct calls between users who share a room code. Call quality adapts to network conditions.",
+        additional: "The Call App is intended for quick, efficient communication rather than extended calls. All calls are peer-to-peer where possible.",
         link: "https://the-sawfish.github.io/call-app/?from=sawfish",
         screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Call+App+Interface", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Call+Controls"]
     },
@@ -878,9 +858,9 @@ const appData = {
         developer: "RunNova",
         icon: "icons/novaos.png",
         category: "Operating System",
-        description: "NovaOS is a full-featured browser-based desktop operating system environment with remarkable completeness.",
-        features: "The OS features a customizable desktop, window management, built-in apps including file manager and text editor.",
-        additional: "For the full NovaOS experience, we recommend opening the OS directly in a new tab.",
+        description: "NovaOS is a full-featured browser-based desktop operating system environment that brings the concept of a web OS to life.",
+        features: "The OS features a customizable desktop, window management, file manager, text editor, calculator, and app store.",
+        additional: "For the full NovaOS experience, we recommend opening the OS directly in a new tab or installing the Sawfish App Store.",
         link: "https://runnova.github.io/NovaOS/",
         screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=NovaOS+Desktop", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=NovaOS+Apps"]
     },
@@ -889,9 +869,9 @@ const appData = {
         developer: "Ripenos",
         icon: "icons/winripen.png",
         category: "Operating System",
-        description: "WinRipen is a web-based operating system that recreates the familiar look and feel of classic Windows.",
-        features: "The OS features authentic-looking windows, a start menu, and various Windows-specific behaviors.",
-        additional: "Due to browser security restrictions, full interaction requires opening it directly.",
+        description: "WinRipen is a web-based operating system that recreates the familiar look and feel of classic Windows operating systems.",
+        features: "The OS features authentic-looking windows with title bars, minimize/maximize/close buttons, and resizing handles.",
+        additional: "Due to browser security restrictions, full interaction with WinRipen requires opening it directly.",
         link: "https://ripenos.web.app/WinRipen/index.html",
         screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=WinRipen+Interface", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Windows+Apps"]
     },
@@ -900,8 +880,8 @@ const appData = {
         developer: "Zeon",
         icon: "icons/plutoos.png",
         category: "Operating System",
-        description: "PlutoOS represents a futuristic vision of what a web-based operating system could be.",
-        features: "The OS features a modular design, modern visual design with glass-morphism effects, and fluid animations.",
+        description: "PlutoOS represents a futuristic vision of what a web-based operating system could be, with a focus on modern design aesthetics.",
+        features: "The OS features a modular design with glass-morphism effects, smooth gradients, and subtle shadows.",
         additional: "PlutoOS is an experimental project that demonstrates the cutting edge of browser-based computing.",
         link: "https://pluto-app.zeon.dev",
         screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=PlutoOS+Modern+UI", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Fluid+Animations"]
@@ -912,7 +892,7 @@ const appData = {
         icon: "icons/ripenos.png",
         category: "Operating System",
         description: "Ripenos is a lightweight, modular web-based operating system framework designed for speed and efficiency.",
-        features: "The core OS provides essential desktop functionality, modular design, and a plugin system.",
+        features: "The core OS provides essential desktop functionality including window management, app launching, and system settings.",
         additional: "Ripenos is particularly suitable for educational environments where performance on varied hardware is important.",
         link: "https://ripenos.web.app/Ripenos/",
         screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Ripenos+Desktop", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Modular+Apps"]
@@ -922,8 +902,8 @@ const appData = {
         developer: "Jimeneutron",
         icon: "icons/syrup.png",
         category: "Games / Launcher",
-        description: "Syrup Games is an alternative game launcher providing access to a curated collection of unique browser-based games.",
-        features: "The launcher features a clean interface, game categorization, and progress tracking.",
+        description: "Syrup Games is an alternative game launcher that provides access to a curated collection of unique browser-based games.",
+        features: "The launcher features a clean, modern interface that makes it easy to browse and discover new games.",
         additional: "Syrup Games complements the main Sawfish Game Portal by offering a different selection of titles.",
         link: "https://jimeneutron.github.io/",
         screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Syrup+Games+Launcher", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Game+Collection"]
@@ -933,9 +913,9 @@ const appData = {
         developer: "GameDevelop",
         icon: "icons/bobtherobber.png",
         category: "Games / Stealth",
-        description: "Bob The Robber is a stealth puzzle game that challenges players to infiltrate various locations.",
-        features: "Each level presents a unique location with different security systems and objectives.",
-        additional: "The Bob The Robber series has multiple installments, each with increasing complexity.",
+        description: "Bob The Robber is a stealth puzzle game series that challenges players to infiltrate various locations and avoid detection.",
+        features: "Each level presents a unique location with different security systems, guard placements, and objectives.",
+        additional: "The Bob The Robber series has multiple installments, each with increasing complexity and new mechanics.",
         link: "https://bobtherobberunblocked.github.io/2/",
         screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Bob+The+Robber+Gameplay", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Stealth+Puzzles"]
     },
@@ -944,8 +924,8 @@ const appData = {
         developer: "Coloso",
         icon: "icons/retrobowl.png",
         category: "Games / Sports",
-        description: "Retro Bowl brings the classic American football video game experience to your browser.",
-        features: "The gameplay combines strategy and action with management elements including player contracts.",
+        description: "Retro Bowl brings the classic American football video game experience to your browser with charming pixel-art graphics.",
+        features: "The gameplay combines strategy and action with management elements including player contracts and draft systems.",
         additional: "Retro Bowl has been optimized for browser play, with controls that work well on both desktop and touch devices.",
         link: "https://the-sawfish.github.io/seraph/games/retrobowl/index.html",
         screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Retro+Bowl+Gameplay", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Football+Action"]
@@ -955,8 +935,8 @@ const appData = {
         developer: "Voodoo",
         icon: "icons/paperio2.png",
         category: "Games / Arcade",
-        description: "Paper Io 2 is an addictive territory conquest game where you control a character that leaves a trail.",
-        features: "The game features both single-player mode against AI opponents and multiplayer mode.",
+        description: "Paper Io 2 is an addictive territory conquest game where you control a character to capture territory.",
+        features: "The game features both single-player mode against AI opponents and multiplayer mode against real players.",
         additional: "Paper Io 2 is designed for quick, exciting matches that can be completed in a few minutes.",
         link: "https://the-sawfish.github.io/seraph/games/paperio2/index.html",
         screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Paper+Io+2+Gameplay", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Territory+Capture"]
@@ -972,22 +952,79 @@ function openExpandedApp(appId) {
     
     AppState.expandedApp = appId;
     
-    // Build expanded content
-    const content = buildExpandedContent(app, appId);
-    
+    // Build expanded content with loading state
+    const content = buildExpandedContent(app, appId, 0, 0, {5:0,4:0,3:0,2:0,1:0});
     elements.expandedContentWrapper.innerHTML = content;
     
+    // Show overlay
     elements.expandedOverlay.classList.remove('hidden');
     elements.expandedOverlay.setAttribute('aria-hidden', 'false');
     
+    // Prevent body scroll
     document.body.style.overflow = 'hidden';
     
-    // Setup rating form and load reviews
+    // Load ratings and reviews asynchronously
+    loadAppRatings(appId);
+    
+    // Setup rating form
     setupRatingForm(appId);
-    loadReviews(appId);
+    
+    // Subscribe to real-time updates
+    subscribeToAppReviews(appId);
 }
 
-function buildExpandedContent(app, appId) {
+async function loadAppRatings(appId) {
+    try {
+        const [avgRating, distribution, totalReviews] = await Promise.all([
+            FirestoreComments.getAverageRating(appId),
+            FirestoreComments.getRatingDistribution(appId),
+            FirestoreComments.getTotalReviews(appId)
+        ]);
+        
+        // Update the display
+        updateRatingDisplay(appId, avgRating, distribution, totalReviews);
+        
+        // Load reviews
+        loadReviews(appId);
+        
+        // Update the main card grid ratings
+        const displayElement = document.querySelector(`[data-avg-rating="${appId}"]`);
+        if (displayElement) {
+            displayElement.textContent = avgRating > 0 ? avgRating.toFixed(1) : '—';
+        }
+    } catch (error) {
+        console.error('Error loading ratings:', error);
+    }
+}
+
+function updateRatingDisplay(appId, avgRating, distribution, totalReviews) {
+    // Update the big rating display
+    const bigRating = document.querySelector(`#expanded-overlay .rating-big`);
+    const ratingCount = document.querySelector(`#expanded-overlay .rating-count`);
+    const ratingStars = document.querySelector(`#expanded-overlay .rating-stars`);
+    
+    if (bigRating) {
+        bigRating.textContent = avgRating.toFixed(1);
+    }
+    
+    if (ratingCount) {
+        ratingCount.textContent = `${totalReviews} reviews`;
+    }
+    
+    if (ratingStars) {
+        ratingStars.textContent = getStarDisplay(avgRating);
+    }
+    
+    // Update rating bars
+    const ratingBarsContainer = document.querySelector(`#expanded-overlay .rating-bars`);
+    if (ratingBarsContainer) {
+        ratingBarsContainer.innerHTML = buildRatingBars(distribution, totalReviews);
+    }
+}
+
+function buildExpandedContent(app, appId, avgRating, totalReviews, distribution) {
+    const ratingStars = getStarDisplay(avgRating);
+    
     return `
         <article class="expanded-app" data-app="${appId}">
             <header class="expanded-app-header">
@@ -1036,20 +1073,19 @@ function buildExpandedContent(app, appId) {
                 </a>
             </section>
             
-            <section class="expanded-ratings" id="ratings-section-${appId}">
+            <section class="expanded-ratings">
                 <div class="ratings-header">
                     <h3>Ratings & Reviews</h3>
-                    <span class="loading-indicator">Loading...</span>
                 </div>
-                <div class="rating-stats" id="rating-stats-${appId}">
-                    <div class="rating-big">—</div>
+                <div class="rating-stats">
+                    <div class="rating-big">${avgRating.toFixed(1)}</div>
                     <div class="rating-details">
-                        <div class="rating-stars">☆☆☆☆☆</div>
-                        <div class="rating-count">0 reviews</div>
+                        <div class="rating-stars">${ratingStars}</div>
+                        <div class="rating-count">${totalReviews} reviews</div>
                     </div>
                 </div>
-                <div class="rating-bars" id="rating-bars-${appId}">
-                    ${buildRatingBars({5:0,4:0,3:0,2:0,1:0}, 0)}
+                <div class="rating-bars">
+                    ${buildRatingBars(distribution, totalReviews)}
                 </div>
             </section>
             
@@ -1060,10 +1096,9 @@ function buildExpandedContent(app, appId) {
                 </div>
                 
                 <form class="comment-form" id="comment-form-${appId}">
-                    <h4>${AppState.developerMode ? 'Developer Response' : 'Write a Review'}</h4>
-                    ${AppState.developerMode ? '<p class="developer-note">Posting as a developer - your response will be marked as official.</p>' : ''}
+                    <h4>Write a Review</h4>
                     <div class="form-group">
-                        <label>Rating</label>
+                        <label>Your Rating</label>
                         <div class="rating-input" id="rating-input-${appId}">
                             <button type="button" class="rating-star-btn" data-value="1">★</button>
                             <button type="button" class="rating-star-btn" data-value="2">★</button>
@@ -1073,10 +1108,10 @@ function buildExpandedContent(app, appId) {
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="comment-input-${appId}">${AppState.developerMode ? 'Your Response' : 'Your Review'}</label>
-                        <textarea id="comment-input-${appId}" placeholder="${AppState.developerMode ? 'Write an official response to users...' : 'Share your experience with this app...'}"></textarea>
+                        <label for="comment-input-${appId}">Your Review</label>
+                        <textarea id="comment-input-${appId}" placeholder="Share your experience with this app..."></textarea>
                     </div>
-                    <button type="submit" id="submit-review-${appId}">${AppState.developerMode ? 'Post Response' : 'Submit Review'}</button>
+                    <button type="submit" id="submit-review-${appId}">Submit Review</button>
                 </form>
             </section>
         </article>
@@ -1114,10 +1149,17 @@ function buildRatingBars(distribution, total) {
 }
 
 function closeExpandedApp() {
+    // Unsubscribe from real-time updates
+    if (AppState.expandedApp && AppState.reviewSubscriptions[AppState.expandedApp]) {
+        AppState.reviewSubscriptions[AppState.expandedApp]();
+        delete AppState.reviewSubscriptions[AppState.expandedApp];
+    }
+    
     elements.expandedOverlay.classList.add('hidden');
     elements.expandedOverlay.setAttribute('aria-hidden', 'true');
     AppState.expandedApp = null;
     
+    // Restore body scroll
     document.body.style.overflow = '';
 }
 
@@ -1129,10 +1171,11 @@ function setupRatingForm(appId) {
     const ratingBtns = form?.querySelectorAll('.rating-star-btn');
     let selectedRating = 0;
     
+    // Rating star buttons
     ratingBtns?.forEach(btn => {
         btn.addEventListener('click', function() {
             selectedRating = parseInt(this.dataset.value);
-            updateRatingDisplay(form, selectedRating);
+            updateRatingDisplayStars(form, selectedRating);
         });
         
         btn.addEventListener('mouseenter', function() {
@@ -1143,12 +1186,13 @@ function setupRatingForm(appId) {
     
     form?.addEventListener('mouseleave', function() {
         if (selectedRating > 0) {
-            updateRatingDisplay(form, selectedRating);
+            updateRatingDisplayStars(form, selectedRating);
         } else {
             clearStars(form);
         }
     });
     
+    // Form submission
     form?.addEventListener('submit', function(e) {
         e.preventDefault();
         
@@ -1169,7 +1213,7 @@ function setupRatingForm(appId) {
     });
 }
 
-function updateRatingDisplay(form, rating) {
+function updateRatingDisplayStars(form, rating) {
     const btns = form.querySelectorAll('.rating-star-btn');
     btns.forEach(btn => {
         const value = parseInt(btn.dataset.value);
@@ -1206,69 +1250,73 @@ function clearStars(form) {
 }
 
 async function submitReview(appId, rating, comment) {
-    const userName = AppState.developerMode ? 'Developer' : 'Anonymous';
-    const review = await RatingsSystem.saveReview(appId, rating, comment, userName, AppState.developerMode);
+    // Check if developer mode is active
+    const isDeveloper = DeveloperMode.isLoggedIn;
+    const userName = isDeveloper ? 'Developer' : 'Anonymous';
+    
+    // Save to Firestore (with local storage fallback)
+    const review = await FirestoreComments.saveReview(appId, rating, comment, userName, isDeveloper);
     
     if (review) {
-        showNotification(AppState.developerMode ? 'Developer response posted!' : 'Review submitted successfully!');
+        showNotification(isDeveloper ? 'Developer response submitted!' : 'Review submitted successfully!');
         
-        // Refresh the view
-        openExpandedApp(appId);
+        // Reload ratings and reviews
+        await loadAppRatings(appId);
+        
+        // Clear the form
+        const textarea = document.getElementById(`comment-input-${appId}`);
+        if (textarea) textarea.value = '';
+        clearStars(document.getElementById(`comment-form-${appId}`));
     } else {
         alert('Failed to submit review. Please try again.');
     }
 }
 
-async function loadReviews(appId) {
+function subscribeToAppReviews(appId) {
+    // Unsubscribe from previous subscription if exists
+    if (AppState.reviewSubscriptions[appId]) {
+        AppState.reviewSubscriptions[appId]();
+    }
+    
+    // Subscribe to real-time updates
+    const unsubscribe = FirestoreComments.subscribeToReviews(appId, (reviews) => {
+        displayReviews(appId, reviews);
+    });
+    
+    AppState.reviewSubscriptions[appId] = unsubscribe;
+}
+
+function loadReviews(appId) {
+    FirestoreComments.getReviews(appId).then(reviews => {
+        displayReviews(appId, reviews);
+    });
+}
+
+function displayReviews(appId, reviews) {
     const container = document.getElementById(`comment-list-${appId}`);
+    
     if (!container) return;
     
-    // Load rating stats
-    const [avgRating, totalReviews, distribution] = await Promise.all([
-        RatingsSystem.getAverageRating(appId),
-        RatingsSystem.getTotalReviews(appId),
-        RatingsSystem.getRatingDistribution(appId)
-    ]);
-    
-    // Update rating display
-    const statsContainer = document.getElementById(`rating-stats-${appId}`);
-    const barsContainer = document.getElementById(`rating-bars-${appId}`);
-    
-    if (statsContainer) {
-        statsContainer.innerHTML = `
-            <div class="rating-big">${avgRating > 0 ? avgRating.toFixed(1) : '—'}</div>
-            <div class="rating-details">
-                <div class="rating-stars">${getStarDisplay(avgRating)}</div>
-                <div class="rating-count">${totalReviews} review${totalReviews !== 1 ? 's' : ''}</div>
-            </div>
-        `;
-    }
-    
-    if (barsContainer) {
-        barsContainer.innerHTML = buildRatingBars(distribution, totalReviews);
-    }
-    
-    // Load reviews
-    const reviews = await RatingsSystem.getReviews(appId);
-    
-    if (reviews.length === 0) {
+    if (!reviews || reviews.length === 0) {
         container.innerHTML = '<p class="muted">No reviews yet. Be the first to leave a review!</p>';
         return;
     }
     
     container.innerHTML = reviews.map(review => {
-        const isDeveloper = review.isDeveloperResponse === true;
+        const isDeveloperReview = DeveloperMode.isDeveloperReview(review);
+        const reviewClass = isDeveloperReview ? 'comment-item developer-response' : 'comment-item';
+        
         return `
-            <div class="comment-item ${isDeveloper ? 'developer-response' : ''}">
+            <div class="${reviewClass}">
                 <div class="comment-header">
                     <div class="comment-author">
-                        <div class="comment-avatar ${isDeveloper ? 'developer-avatar' : ''}">${review.user.charAt(0).toUpperCase()}</div>
+                        <div class="comment-avatar">${escapeHtml(review.user.charAt(0).toUpperCase())}</div>
                         <span class="comment-name">${escapeHtml(review.user)}</span>
-                        ${isDeveloper ? '<span class="developer-badge">Developer</span>' : ''}
+                        ${isDeveloperReview ? '<span class="developer-badge">Developer</span>' : ''}
                     </div>
                     <div>
-                        ${review.rating ? `<span class="comment-rating">${'★'.repeat(review.rating)}${'☆'.repeat(5 - review.rating)}</span>` : ''}
-                        <span class="comment-date">${formatDate(review.timestamp || review.createdAt)}</span>
+                        <span class="comment-rating">${'★'.repeat(review.rating)}${'☆'.repeat(5 - review.rating)}</span>
+                        <span class="comment-date">${formatDate(review.timestamp)}</span>
                     </div>
                 </div>
                 <div class="comment-body">${escapeHtml(review.comment)}</div>
@@ -1284,11 +1332,15 @@ async function loadAllRatings() {
     const apps = Object.keys(appData);
     
     for (const appId of apps) {
-        const avgRating = await RatingsSystem.getAverageRating(appId);
-        const displayElement = document.querySelector(`[data-avg-rating="${appId}"]`);
-        
-        if (displayElement) {
-            displayElement.textContent = avgRating > 0 ? avgRating.toFixed(1) : '—';
+        try {
+            const avgRating = await FirestoreComments.getAverageRating(appId);
+            const displayElement = document.querySelector(`[data-avg-rating="${appId}"]`);
+            
+            if (displayElement) {
+                displayElement.textContent = avgRating > 0 ? avgRating.toFixed(1) : '—';
+            }
+        } catch (error) {
+            console.error('Error loading rating for', appId, ':', error);
         }
     }
     
@@ -1305,6 +1357,7 @@ function filterGameCards(category) {
         if (category === 'all') {
             card.style.display = '';
         } else {
+            // For now, show all cards (can be enhanced with category data attributes)
             card.style.display = '';
         }
     });
@@ -1338,6 +1391,7 @@ function closeWelcomeModal() {
     elements.welcomeModal.classList.add('hidden');
     elements.welcomeModal.setAttribute('aria-hidden', 'true');
     
+    // Store that user has acknowledged the welcome
     localStorage.setItem('sawfish_welcome_acknowledged', 'true');
 }
 
@@ -1369,6 +1423,7 @@ function updateApp() {
             updateAppStatus('updating');
         });
         
+        // Reload the page after update
         window.addEventListener('swUpdated', () => {
             location.reload(true);
         });
@@ -1398,8 +1453,7 @@ function formatDate(timestamp) {
 }
 
 function showNotification(message) {
-    console.log('Notification:', message);
-    
+    // Create a temporary notification element
     const notification = document.createElement('div');
     notification.className = 'notification-toast';
     notification.textContent = message;
@@ -1427,8 +1481,11 @@ function showNotification(message) {
 }
 
 // ============================================================
-// GLOBAL FUNCTIONS
+// GLOBAL FUNCTIONS (for inline HTML calls)
 // ============================================================
 window.scrollToSection = scrollToSection;
 
+// ============================================================
+// END OF JAVASCRIPT
+// ============================================================
 console.log('Sawfish App Store JavaScript loaded successfully');
