@@ -605,6 +605,15 @@ ul, ol {
     text-align: left;
 }
 
+/* Developer Mode Nav Item */
+.nav-item.developer-only {
+    display: none;
+}
+
+.developer-mode-active .nav-item.developer-only {
+    display: flex;
+}
+
 /* ==========================================================
    MAIN CONTENT
 ========================================================== */
@@ -793,6 +802,81 @@ ul, ol {
 .rating-value {
     font-size: 0.75rem;
     color: var(--text-tertiary);
+}
+
+/* ==========================================================
+   STAR RATING SYSTEM WITH HALF-STARS
+========================================================== */
+
+/* Star Rating Container */
+.star-rating {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    font-size: inherit;
+    color: #fbbf24;
+    letter-spacing: 1px;
+}
+
+/* Individual Star */
+.star {
+    position: relative;
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    font-size: inherit;
+}
+
+.star::before {
+    content: '★';
+    position: relative;
+    z-index: 1;
+}
+
+/* Half Star Styling */
+.star.half::before {
+    content: '★';
+    background: linear-gradient(90deg, #fbbf24 50%, transparent 50%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: #fbbf24;
+}
+
+/* Empty Star */
+.star.empty::before {
+    color: var(--bg-surface);
+}
+
+/* Full Star */
+.star.filled::before {
+    color: #fbbf24;
+}
+
+/* Star size variations */
+.star-rating.small {
+    font-size: 0.8rem;
+}
+
+.star-rating.medium {
+    font-size: 1rem;
+}
+
+.star-rating.large {
+    font-size: 1.5rem;
+}
+
+/* Rating value text */
+.rating-text {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin-left: var(--spacing-sm);
+}
+
+.rating-na {
+    font-size: 0.75rem;
+    color: var(--text-tertiary);
+    font-style: italic;
 }
 
 /* ==========================================================
@@ -1906,6 +1990,309 @@ ul, ol {
 }
 
 /* ==========================================================
+   DEVELOPER LOGIN MODAL
+========================================================== */
+.developer-login-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 1300;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-lg);
+    opacity: 1;
+    transition: opacity var(--transition-normal);
+}
+
+.developer-login-modal.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.developer-modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.developer-modal-container {
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    box-shadow: var(--shadow-xl);
+    animation: slideUp var(--transition-normal);
+    border: 1px solid var(--border-light);
+}
+
+.developer-modal-header {
+    padding: var(--spacing-lg);
+    border-bottom: 1px solid var(--border-subtle);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+}
+
+.developer-modal-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-md);
+    background: rgba(167, 139, 250, 0.15);
+    color: var(--developer-accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.developer-modal-icon svg {
+    width: 24px;
+    height: 24px;
+}
+
+.developer-modal-header h2 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.developer-modal-header p {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.developer-modal-close {
+    position: absolute;
+    top: var(--spacing-md);
+    right: var(--spacing-md);
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-full);
+    background: var(--bg-tertiary);
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-fast);
+}
+
+.developer-modal-close:hover {
+    background: var(--bg-surface);
+    color: var(--text-primary);
+}
+
+.developer-modal-close svg {
+    width: 18px;
+    height: 18px;
+}
+
+.developer-modal-body {
+    padding: var(--spacing-lg);
+}
+
+.developer-input-group {
+    margin-bottom: var(--spacing-md);
+}
+
+.developer-input-group label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 500;
+    margin-bottom: var(--spacing-sm);
+    color: var(--text-secondary);
+}
+
+.developer-input-group input {
+    width: 100%;
+    padding: var(--spacing-md);
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    color: var(--text-primary);
+    font-family: inherit;
+    font-size: 0.9rem;
+    transition: all var(--transition-fast);
+}
+
+.developer-input-group input:focus {
+    outline: none;
+    border-color: var(--developer-accent);
+    box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.15);
+}
+
+.developer-input-group input::placeholder {
+    color: var(--text-tertiary);
+}
+
+/* Password field styling - dark themed with masked input */
+.developer-input-group input[type="password"] {
+    background: #1e293b;
+    border-color: var(--border-medium);
+    letter-spacing: 2px;
+}
+
+.developer-input-group input[type="password"]::placeholder {
+    letter-spacing: normal;
+}
+
+.developer-submit-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-md);
+    background: linear-gradient(135deg, var(--developer-accent) 0%, #8b5cf6 100%);
+    color: var(--text-inverse);
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+    font-weight: 600;
+    transition: all var(--transition-fast);
+    margin-top: var(--spacing-md);
+}
+
+.developer-submit-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-developer);
+}
+
+.developer-submit-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.developer-error-message {
+    background: rgba(248, 113, 113, 0.1);
+    border: 1px solid rgba(248, 113, 113, 0.3);
+    color: var(--error);
+    padding: var(--spacing-md);
+    border-radius: var(--radius-md);
+    font-size: 0.85rem;
+    margin-bottom: var(--spacing-md);
+    display: none;
+}
+
+.developer-error-message.visible {
+    display: block;
+}
+
+/* ==========================================================
+   DEVELOPER DASHBOARD STYLES
+========================================================== */
+.developer-section {
+    margin-bottom: var(--spacing-xl);
+}
+
+.developer-section h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: var(--spacing-md);
+    color: var(--developer-accent);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.developer-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+}
+
+.developer-stat-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-md);
+    text-align: center;
+}
+
+.developer-stat-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--developer-accent);
+    margin-bottom: var(--spacing-xs);
+}
+
+.developer-stat-label {
+    font-size: 0.8rem;
+    color: var(--text-tertiary);
+}
+
+.developer-table-container {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+}
+
+.developer-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.developer-table th,
+.developer-table td {
+    padding: var(--spacing-md);
+    text-align: left;
+    border-bottom: 1px solid var(--border-subtle);
+}
+
+.developer-table th {
+    background: var(--bg-tertiary);
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.developer-table td {
+    font-size: 0.9rem;
+    color: var(--text-primary);
+}
+
+.developer-table tr:last-child td {
+    border-bottom: none;
+}
+
+.developer-table tr:hover td {
+    background: var(--bg-tertiary);
+}
+
+.developer-action-btn {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--radius-sm);
+    font-size: 0.8rem;
+    font-weight: 500;
+    transition: all var(--transition-fast);
+}
+
+.developer-action-btn.edit {
+    background: var(--accent-soft);
+    color: var(--accent-primary);
+}
+
+.developer-action-btn.edit:hover {
+    background: var(--accent-primary);
+    color: var(--text-inverse);
+}
+
+.developer-action-btn.delete {
+    background: rgba(248, 113, 113, 0.1);
+    color: var(--error);
+}
+
+.developer-action-btn.delete:hover {
+    background: var(--error);
+    color: var(--text-inverse);
+}
+
+/* ==========================================================
    NOTIFICATION TOAST
 ========================================================== */
 .notification-toast {
@@ -2099,6 +2486,18 @@ ul, ol {
     .featured-grid {
         grid-template-columns: repeat(2, 1fr);
     }
+    
+    .developer-stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .developer-table-container {
+        overflow-x: auto;
+    }
+    
+    .developer-modal-container {
+        max-width: 100%;
+    }
 }
 
 /* Small Mobile */
@@ -2128,6 +2527,18 @@ ul, ol {
     .featured-grid {
         grid-template-columns: repeat(2, 1fr);
     }
+    
+    .developer-stats-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+    
+    .developer-stat-card {
+        padding: var(--spacing-sm);
+    }
+    
+    .developer-stat-value {
+        font-size: 1.25rem;
+    }
 }
 
 /* ==========================================================
@@ -2139,7 +2550,9 @@ ul, ol {
     .expanded-overlay,
     .modal-overlay,
     .notification-toast,
-    .developer-login-btn {
+    .developer-login-btn,
+    .developer-login-modal,
+    .developer-section {
         display: none !important;
     }
     
