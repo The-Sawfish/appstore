@@ -283,6 +283,13 @@
                     <div class="status-dot online"></div>
                     <span>Connected</span>
                 </div>
+                <button id="developer-login-button" class="developer-login-btn" title="Developer Login">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                        <circle cx="12" cy="7" r="4"/>
+                    </svg>
+                    <span class="developer-status-text">Developer</span>
+                </button>
             </div>
         </nav>
     </aside>
@@ -503,6 +510,41 @@
             <section class="page-header">
                 <h2>Games</h2>
                 <p>Explore our curated collection of school-friendly browser games. From puzzle games to platformers, sandbox simulations to racing games, there's something for everyone. All games have been reviewed to ensure they are appropriate for school environments.</p>
+            </section>
+
+            <!-- Featured Games Section -->
+            <section class="featured-section">
+                <h3 class="section-title">Featured</h3>
+                <div class="featured-grid">
+                    <div class="featured-card" data-app="minecraft">
+                        <img src="icons/minecraft.png" alt="Minecraft Web" loading="lazy">
+                        <div class="featured-content">
+                            <h4>Minecraft Web</h4>
+                            <p>Iconic sandbox building</p>
+                        </div>
+                    </div>
+                    <div class="featured-card" data-app="sandboxels">
+                        <img src="icons/sandboxels.png" alt="Sandboxels" loading="lazy">
+                        <div class="featured-content">
+                            <h4>Sandboxels</h4>
+                            <p>500+ physics elements</p>
+                        </div>
+                    </div>
+                    <div class="featured-card" data-app="retrobowl">
+                        <img src="icons/retrobowl.png" alt="Retro Bowl" loading="lazy">
+                        <div class="featured-content">
+                            <h4>Retro Bowl</h4>
+                            <p>Classic football action</p>
+                        </div>
+                    </div>
+                    <div class="featured-card" data-app="run3">
+                        <img src="icons/run3.png" alt="Run 3" loading="lazy">
+                        <div class="featured-content">
+                            <h4>Run 3</h4>
+                            <p>Space tunnel runner</p>
+                        </div>
+                    </div>
+                </div>
             </section>
 
             <section class="game-categories">
@@ -761,6 +803,41 @@
                 <p>Explore browser-based operating system environments. These simulations provide educational experiences with desktop operating system concepts, complete with window management, file systems, and applications running entirely in your browser.</p>
             </section>
 
+            <!-- Featured OS Section -->
+            <section class="featured-section">
+                <h3 class="section-title">Featured</h3>
+                <div class="featured-grid">
+                    <div class="featured-card" data-app="novaos">
+                        <img src="icons/novaos.png" alt="NovaOS" loading="lazy">
+                        <div class="featured-content">
+                            <h4>NovaOS</h4>
+                            <p>Full browser-based desktop</p>
+                        </div>
+                    </div>
+                    <div class="featured-card" data-app="winripen">
+                        <img src="icons/winripen.png" alt="WinRipen" loading="lazy">
+                        <div class="featured-content">
+                            <h4>WinRipen</h4>
+                            <p>Windows-inspired web OS</p>
+                        </div>
+                    </div>
+                    <div class="featured-card" data-app="plutoos">
+                        <img src="icons/plutoos.png" alt="PlutoOS" loading="lazy">
+                        <div class="featured-content">
+                            <h4>PlutoOS</h4>
+                            <p>Modern experimental web OS</p>
+                        </div>
+                    </div>
+                    <div class="featured-card" data-app="ripenos">
+                        <img src="icons/ripenos.png" alt="Ripenos" loading="lazy">
+                        <div class="featured-content">
+                            <h4>Ripenos</h4>
+                            <p>Lightweight modular framework</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             <section class="os-notice">
                 <div class="notice-icon">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -770,8 +847,8 @@
                     </svg>
                 </div>
                 <div class="notice-content">
-                    <h3>Preview Mode Notice</h3>
-                    <p>OS previews shown below are non-interactive due to iframe restrictions. For the full experience, open the OS in a new tab or install the Sawfish App Store to your Home Screen.</p>
+                    <h3>Open in New Tab</h3>
+                    <p>For the full interactive experience with all OS features, click the "Open App" button to launch each operating system in a new browser tab. This provides the complete window management and functionality.</p>
                 </div>
             </section>
 
@@ -788,12 +865,6 @@
                             <span class="rating-value" data-avg-rating="novaos">—</span>
                         </div>
                     </div>
-                    <div class="os-preview-container">
-                        <iframe src="https://runnova.github.io/NovaOS/" title="NovaOS Preview" loading="lazy"></iframe>
-                        <div class="preview-overlay">
-                            <span>Install to Home Screen for full interaction</span>
-                        </div>
-                    </div>
                 </article>
 
                 <article class="app-card" data-app="winripen">
@@ -806,12 +877,6 @@
                         <div class="card-rating">
                             <span class="stars">★★★★☆</span>
                             <span class="rating-value" data-avg-rating="winripen">—</span>
-                        </div>
-                    </div>
-                    <div class="os-preview-container">
-                        <iframe src="https://ripenos.web.app/WinRipen/index.html" title="WinRipen Preview" loading="lazy"></iframe>
-                        <div class="preview-overlay">
-                            <span>Install to Home Screen for full interaction</span>
                         </div>
                     </div>
                 </article>
@@ -828,12 +893,6 @@
                             <span class="rating-value" data-avg-rating="plutoos">—</span>
                         </div>
                     </div>
-                    <div class="os-preview-container">
-                        <iframe src="https://pluto-app.zeon.dev" title="PlutoOS Preview" loading="lazy"></iframe>
-                        <div class="preview-overlay">
-                            <span>Install to Home Screen for full interaction</span>
-                        </div>
-                    </div>
                 </article>
 
                 <article class="app-card" data-app="ripenos">
@@ -846,12 +905,6 @@
                         <div class="card-rating">
                             <span class="stars">★★★★☆</span>
                             <span class="rating-value" data-avg-rating="ripenos">—</span>
-                        </div>
-                    </div>
-                    <div class="os-preview-container">
-                        <iframe src="https://ripenos.web.app/Ripenos/" title="Ripenos Preview" loading="lazy"></iframe>
-                        <div class="preview-overlay">
-                            <span>Install to Home Screen for full interaction</span>
                         </div>
                     </div>
                 </article>
@@ -868,7 +921,7 @@
             <section class="changelog-meta">
                 <div class="meta-card">
                     <div class="meta-label">Current Version</div>
-                    <div class="meta-value" id="changelog-version">1.0.0</div>
+                    <div class="meta-value" id="changelog-version">1.1.0</div>
                 </div>
                 <div class="meta-card">
                     <div class="meta-label">Last Updated</div>
@@ -876,12 +929,53 @@
                 </div>
                 <div class="meta-card">
                     <div class="meta-label">Total Changes</div>
-                    <div class="meta-value">47</div>
+                    <div class="meta-value">59</div>
                 </div>
             </section>
 
             <section class="changelog-timeline">
                 <article class="changelog-entry latest">
+                    <div class="entry-header">
+                        <div class="entry-version">v1.1.0</div>
+                        <div class="entry-date">January 6, 2026</div>
+                        <div class="entry-badge major">Major Release</div>
+                    </div>
+                    <div class="entry-content">
+                        <h4>New Features</h4>
+                        <ul>
+                            <li>Implemented Firebase Firestore integration for cloud-synced ratings and reviews across all devices</li>
+                            <li>Added real-time review updates that sync instantly when new reviews are submitted</li>
+                            <li>Introduced Developer Mode with password protection (password: 120622) for official responses</li>
+                            <li>Developer responses now feature special styling with developer badges for clear identification</li>
+                            <li>Added Featured sections to Games and OS tabs highlighting top content</li>
+                            <li>Enhanced UI with new Featured grid layout on Games and OS pages</li>
+                            <li>Removed iframe previews from OS tab for cleaner, faster page loading</li>
+                            <li>Added developer login button to sidebar for easy access to developer features</li>
+                            <li>Improved rating distribution visualization with visual progress bars</li>
+                            <li>Added automatic average rating calculations with real-time updates</li>
+                        </ul>
+                        <h4>Improvements</h4>
+                        <ul>
+                            <li>Optimized database queries for faster review loading</li>
+                            <li>Enhanced offline support with local storage fallback when Firebase is unavailable</li>
+                            <li>Improved review submission with instant feedback notifications</li>
+                            <li>Streamlined OS page with focus on content rather than embedded previews</li>
+                            <li>Enhanced mobile responsive design for featured content grids</li>
+                            <li>Improved accessibility with proper ARIA labels on developer mode elements</li>
+                            <li>Better error handling for network connectivity issues</li>
+                        </ul>
+                        <h4>Bug Fixes</h4>
+                        <ul>
+                            <li>Fixed issues with duplicate review entries when submitting</li>
+                            <li>Resolved rating calculation errors for apps with no reviews</li>
+                            <li>Fixed timestamp display formatting issues</li>
+                            <li>Resolved memory leak in real-time review subscriptions</li>
+                            <li>Fixed CSS styling issues on developer response badges</li>
+                        </ul>
+                    </div>
+                </article>
+
+                <article class="changelog-entry">
                     <div class="entry-header">
                         <div class="entry-version">v1.0.0</div>
                         <div class="entry-date">January 6, 2026</div>
@@ -1031,7 +1125,8 @@
                             Rate your favorite apps and leave reviews to help other students
                             discover great content. All ratings and reviews are stored in the
                             cloud and sync across all devices. Please leave honest and helpful
-                            reviews that benefit the community.
+                            reviews that benefit the community. Developers can respond to reviews
+                            when logged in with developer mode.
                         </p>
                     </div>
                     
@@ -1155,68 +1250,57 @@
                     functionality, Web Components for modular architecture, and CSS Custom Properties for theming. 
                     The application employs progressive enhancement strategies, ensuring that core functionality 
                     works across all modern browsers while providing enhanced features where supported. Performance 
-                    optimization techniques including code splitting, lazy loading, and efficient caching ensure 
-                    the tool remains responsive even on lower-powered devices common in educational settings.
+                    optimization is a priority, with careful attention to memory management and efficient rendering 
+                    to ensure the tools remain responsive even when processing large amounts of data.
                 </p>
                 <p>
-                    Security architecture ensures that all tools operate within browser sandbox constraints, 
-                    preventing access to sensitive system resources while maximizing available functionality. 
-                    The sandbox implementation has been thoroughly audited to identify and close potential 
-                    vulnerabilities, ensuring that students can experiment freely without risk of compromising 
-                    their devices or data. All execution occurs locally within the browser, with no data 
-                    transmitted to external servers unless explicitly requested by the user.
-                </p>
-                <p>
-                    The modular architecture allows for easy extension with new tools and features. A documented 
-                    API enables developers to create additional utilities that integrate seamlessly with the 
-                    existing suite. This extensibility has fostered a community of contributors who regularly 
-                    add new tools and improve existing ones, ensuring the suite remains current with evolving 
-                    development practices and educational needs.
+                    The sandbox architecture ensures that all tools operate safely within browser security boundaries. 
+                    While users can inspect and analyze any webpage, they cannot modify the underlying pages or 
+                    access超出浏览器安全模型范围的功能. This design allows for powerful analysis capabilities while 
+                    maintaining the security guarantees that schools require. The sandbox also prevents tools from 
+                    interfering with each other, ensuring stable operation even during complex debugging sessions.
                 </p>
             </section>
             
-            <section class="description-educational">
-                <h3>Educational Value</h3>
+            <section class="description-use-cases">
+                <h3>Educational Applications</h3>
                 <p>
-                    Hack Stuff serves as an exceptional educational resource for computer science curricula, 
-                    providing hands-on experience with tools that students will encounter in professional settings. 
-                    By working with these utilities in a safe, controlled environment, students develop practical 
-                    skills that transfer directly to real-world development work. The platform supports self-directed 
-                    learning while also serving as an effective classroom tool for demonstrations and exercises.
+                    Hack Stuff serves as an exceptional educational platform for computer science curricula. 
+                    Students can use the HTML inspector to understand webpage structure, learning how real 
+                    websites are built from the ground up. The CSS analyzer provides hands-on experience with 
+                    styling concepts that might otherwise remain abstract. By seeing how browser engines actually 
+                    resolve style conflicts, students develop intuitive understanding of cascade mechanics.
                 </p>
                 <p>
-                    Teachers have incorporated Hack Stuff into courses covering web development, computer science 
-                    fundamentals, and digital literacy. The tools support various teaching methodologies including 
-                    guided exploration, problem-based learning, and project-based instruction. Detailed documentation 
-                    and tutorial materials help educators integrate the platform into their curricula effectively.
-                </p>
-            </section>
-            
-            <section class="description-usage">
-                <h3>Usage Guidelines</h3>
-                <p>
-                    Access to certain advanced features may be restricted based on school network policies or 
-                    device management configurations. The tool is designed to work within these constraints while 
-                    still providing as much functionality as possible. Users should consult with their school's 
-                    technology department if specific features are unavailable, as network administrators may be 
-                    able to adjust settings to enable additional functionality for educational purposes.
+                    Programming courses benefit from the JavaScript debugging capabilities, allowing students 
+                    to step through code execution and understand program flow. The console provides an interactive 
+                    environment for experimentation and learning, supporting the exploratory learning approach 
+                    that research shows is most effective for programming education. Teachers can demonstrate 
+                    concepts in real-time and students can verify their understanding through hands-on experimentation.
                 </p>
                 <p>
-                    Use of these tools should align with school policies and be limited to legitimate educational 
-                    purposes. The platform includes usage logging capabilities that administrators can enable to 
-                    track feature utilization and identify students who may benefit from additional training or 
-                    guidance. Responsible use of powerful tools is an important skill that students develop through 
-                    their engagement with this platform.
+                    Network monitoring tools help students understand how web applications communicate, providing 
+                    concrete visualization of HTTP requests and responses. This knowledge is essential for 
+                    understanding modern web architecture and API design. Students can watch how web applications 
+                    load resources, communicate with backends, and handle user interactions, building mental models 
+                    of web system architecture.
                 </p>
             </section>
             
-            <section class="description-links">
-                <h3>Additional Resources</h3>
-                <ul>
-                    <li>Documentation: <a href="https://the-sawfish.github.io/hack/" target="_blank" rel="noopener noreferrer">Official Documentation</a></li>
-                    <li>Source Code: <a href="https://github.com/the-sawfish/hack" target="_blank" rel="noopener noreferrer">GitHub Repository</a></li>
-                    <li>Community: <a href="#" target="_blank" rel="noopener noreferrer">Discussion Forum</a></li>
-                </ul>
+            <section class="description-limitations">
+                <h3>Limitations and Considerations</h3>
+                <p>
+                    While Hack Stuff provides genuine development utilities, certain limitations apply due to 
+                    browser security boundaries. Users cannot modify external websites, access restricted system 
+                    resources, or perform actions that would violate browser security policies. These limitations 
+                    are intentional and necessary for safe operation in school environments.
+                </p>
+                <p>
+                    Some advanced debugging features available in native development environments are not 
+                    available in browser-based tools. Memory profiling is limited, and certain low-level 
+                    system interactions are not possible. However, for educational purposes and front-end 
+                    development, the available tools provide excellent coverage of essential functionality.
+                </p>
             </section>
         </article>
 
@@ -1227,116 +1311,75 @@
                 <div class="app-header-info">
                     <h2>Sawfish Game Portal</h2>
                     <p class="developer">By Sawfish Developer Group</p>
-                    <p class="category-tag">Category: Games Hub / Launcher</p>
+                    <p class="category-tag">Category: Games Hub</p>
                 </div>
             </section>
             
             <section class="description-overview">
                 <h3>Overview</h3>
                 <p>
-                    The Sawfish Game Portal represents a significant advancement in how students access and 
-                    discover browser-based games within educational environments. Acting as a unified launcher 
-                    and collection point for all approved games available through the Sawfish ecosystem, the 
-                    portal eliminates the need for students to bookmark and manage dozens of individual game 
-                    links. Instead, everything is available from one beautifully designed, intelligently 
-                    organized interface that makes finding the perfect game for any moment effortless.
+                    The Sawfish Game Portal serves as a unified launcher and collection point for all approved 
+                    browser-based games available through the Sawfish ecosystem. Rather than bookmarking dozens 
+                    of individual game links, students can access everything from one beautifully designed, 
+                    organized interface. Each game has been carefully reviewed to ensure it meets school-appropriate 
+                    standards while still providing engaging entertainment for students during breaks and free periods.
                 </p>
                 <p>
-                    The portal's design philosophy centers on the belief that students deserve easy access to 
-                    quality entertainment that enhances their breaks without compromising educational values. 
-                    Every game in the collection has undergone careful review to ensure it meets school-appropriate 
-                    standards, contains no excessive advertising, and operates efficiently on school hardware. 
-                    This curation process ensures that the gaming experience is consistently positive and 
-                    appropriate for the educational context.
+                    The portal solves the problem of game discovery and organization by presenting a curated 
+                    collection in an attractive, easy-to-navigate format. Games are automatically organized 
+                    by category, popularity, and recommended age appropriateness. The interface provides 
+                    quick access to game details, user ratings, and direct launch capabilities. Students 
+                    can see which games their friends are playing and discover new titles based on community 
+                    recommendations.
                 </p>
                 <p>
-                    Beyond simple game access, the portal provides sophisticated organization and discovery 
-                    features that help students find games matching their interests and available time. The 
-                    recommendation engine learns from play patterns to suggest new titles, while the achievement 
-                    system tracks progress across all games in a unified view. Social features allow students to 
-                    see what their friends are playing and share their favorite discoveries, creating a sense of 
-                    community around the gaming experience.
+                    The launcher itself demonstrates modern web development techniques, serving as an 
+                    educational example of what browser-based applications can achieve. Students interested 
+                    in web development can examine the source code to learn about progressive web app patterns, 
+                    efficient asset loading, and responsive design implementation. The open-source nature of 
+                    the project encourages learning and contribution.
                 </p>
             </section>
             
             <section class="description-features">
-                <h3>Key Features and Capabilities</h3>
+                <h3>Core Features</h3>
                 <p>
-                    The sophisticated categorization system represents one of the portal's most valuable 
-                    features. Games are organized by multiple classification schemes including genre (puzzle, 
-                    platformer, simulation, arcade, educational), gameplay style (single-player, competitive, 
-                    cooperative), session length (quick 5-minute games, extended sessions), and mood (relaxing, 
-                    challenging, creative, competitive). This multi-dimensional organization helps students find 
-                    appropriate games quickly regardless of their specific needs at any moment.
+                    The game categorization system automatically organizes games by genre, difficulty level, 
+                    and playtime requirements. Categories include puzzle games, platformers, simulation games, 
+                    arcade classics, and educational content. Each game card displays important information 
+                    including average playtime, difficulty rating, and user ratings from the Sawfish community. 
+                    The interface supports filtering and search, making it easy to find specific games or 
+                    discover new titles matching particular interests.
                 </p>
                 <p>
-                    Each game card displays comprehensive information to help students make informed choices. 
-                    Average playtime estimates help students select games that fit their available break period. 
-                    Difficulty ratings provide transparency about the skill level required, preventing frustration 
-                    from games that are too easy or too hard. Community ratings give social proof of quality, while 
-                    category tags enable filtering by specific interests. Screenshots and brief descriptions provide 
-                    additional context that helps students understand what they're getting into before committing 
-                    to a game.
+                    Progress tracking capabilities allow students to maintain game histories across sessions 
+                    and devices. High scores, achievements, and completion statistics are stored in the cloud, 
+                    ensuring students can return to their progress regardless of which device they use. This 
+                    persistent progress system encourages continued engagement and goal-oriented play.
                 </p>
                 <p>
-                    The unified achievement and progress system tracks accomplishments across all games in the 
-                    collection. Students can see their total achievements, compare progress with friends, and work 
-                    toward completion percentages for each game. This system adds long-term engagement to games that 
-                    might otherwise be played once and forgotten, as students return to complete challenges and 
-                    earn recognition for their accomplishments. Leaderboards for various achievements create 
-                    friendly competition that motivates continued play.
-                </p>
-                <p>
-                    Personalized recommendations analyze play history and preferences to suggest new games that 
-                    align with individual tastes. The recommendation engine considers factors including preferred 
-                    genres, session length patterns, achievement completion rates, and explicit user ratings. 
-                    Recommendations are presented unobtrusively and can be easily dismissed if they don't interest 
-                    the student, ensuring the feature enhances rather than intrudes upon the experience.
+                    The social features enable students to see what games are popular among their peers, 
+                    compare high scores with friends, and share discoveries. Friend systems and activity 
+                    feeds create community around gaming while maintaining appropriate privacy controls 
+                    for school environments. Students can recommend games to each other and discover new 
+                    titles through trusted peer recommendations.
                 </p>
             </section>
             
-            <section class="description-curation">
-                <h3>Game Curation Process</h3>
+            <section class="description-catalog">
+                <h3>Game Catalog</h3>
                 <p>
-                    All games available through the portal have undergone a rigorous approval process designed 
-                    to ensure educational appropriateness and quality standards. The curation team evaluates games 
-                    across multiple dimensions including content safety (no violence, inappropriate themes, or 
-                    mature content), advertising practices (no excessive ads, no deceptive monetization), 
-                    educational value (potential for skill development or learning), and technical quality 
-                    (performance, reliability, compatibility).
+                    The portal includes carefully curated games that have been vetted for school appropriateness. 
+                    Each game undergoes review for educational value, age-appropriateness, and technical quality 
+                    before being added to the collection. The review process considers factors including violence 
+                    levels, advertising presence, data collection practices, and overall educational merit. This 
+                    careful curation ensures parents and educators can feel confident about student access.
                 </p>
                 <p>
-                    New game submissions enter a review queue where they are evaluated against these criteria. 
-                    Submissions that meet all standards are added to the collection with full feature support. 
-                    Games that nearly meet standards may be added with age restrictions or recommended session 
-                    limits. Substantially non-compliant games receive detailed feedback explaining why they were 
-                    not approved and what changes might enable future approval. This constructive approach encourages 
-                    high-quality submissions while maintaining collection standards.
-                </p>
-                <p>
-                    Existing games are periodically re-evaluated to ensure continued compliance, particularly 
-                    after content updates from developers. Games that receive major updates undergo expedited 
-                    re-review to verify that changes maintain safety standards. Students and teachers can report 
-                    concerns about games, triggering investigation that may result in restriction or removal if 
-                    issues are confirmed.
-                </p>
-            </section>
-            
-            <section class="description-performance">
-                <h3>Performance and Compatibility</h3>
-                <p>
-                    The portal has been optimized for the diverse hardware and network conditions found in 
-                    educational environments. Games are tested across multiple device types including older 
-                    Chromebooks, iPads, Windows laptops, and desktop computers to ensure broad compatibility. 
-                    Network optimization ensures games load quickly even on bandwidth-constrained connections, 
-                    with aggressive caching and intelligent prefetching minimizing wait times.
-                </p>
-                <p>
-                    All game data syncs across devices through the Sawfish account system, so students can start 
-                    a game on one device and continue on another without losing progress. This cross-device 
-                    synchronization is particularly valuable in BYOD environments where students may use different 
-                    devices at school and home. The sync system uses efficient delta updates to minimize bandwidth 
-                    usage while ensuring data integrity.
+                    Regular content updates expand the game catalog with new titles that meet quality and 
+                    appropriateness standards. Community feedback influences addition priorities, with popular 
+                    requests receiving consideration for inclusion. The curation team actively monitors games 
+                    for changing content and removes any titles that no longer meet standards.
                 </p>
             </section>
         </article>
@@ -1348,116 +1391,43 @@
                 <div class="app-header-info">
                     <h2>Draw a Circle</h2>
                     <p class="developer">By Sawfish Developer Group</p>
-                    <p class="category-tag">Category: Games / Skill / Reflex</p>
+                    <p class="category-tag">Category: Games / Skill</p>
                 </div>
             </section>
             
             <section class="description-overview">
                 <h3>Overview</h3>
                 <p>
-                    Draw a Circle stands as a masterclass in elegant game design, presenting players with an 
-                    elegantly simple premise that hides surprising depth and endless replayability. The objective 
-                    is deceptively straightforward: draw the most perfect circle possible using only your finger 
-                    or mouse, with the game's sophisticated geometric analysis algorithms evaluating your 
-                    creation across multiple precision metrics. What begins as a casual attempt at drawing quickly 
-                    evolves into an addictive pursuit of perfection, with players returning repeatedly to 
-                    improve their scores and master the subtle techniques required for circle-drawing excellence.
+                    Draw a Circle is a deceptively simple yet endlessly engaging reflex and precision challenge 
+                    that tests your ability to create the most perfect circle possible using only your finger 
+                    or mouse. The game tracks the geometry of your drawing in real-time, analyzing every curve 
+                    and angle to determine how close you came to mathematical perfection. Higher scores require 
+                    smoother, more consistent movements without hesitation or jagged corrections.
                 </p>
                 <p>
-                    The game represents a perfect synthesis of accessibility and challenge. Players of any age 
-                    or skill level can immediately understand the goal and begin playing, yet the path to mastery 
-                    offers nearly unlimited room for improvement. This design philosophy ensures that the game 
-                    remains engaging whether played casually during a short break or seriously by players pursuing 
-                    world-leading scores. The learning curve is continuous, with small improvements in technique 
-                    yielding measurable results that encourage continued practice.
-                </p>
-                <p>
-                    Beyond its entertainment value, Draw a Circle serves as an engaging tool for developing fine 
-                    motor control, patience, and the understanding of geometric precision. The game's mathematical 
-                    foundation provides genuine insight into the nature of circularity, helping players develop 
-                    intuitive understanding of concepts from geometry and physics. Educational applications range 
-                    from elementary students learning about shapes to professionals seeking to improve handwriting 
-                    or drawing skills.
+                    The appeal of Draw a Circle lies in its immediate feedback and universal accessibility. 
+                    Anyone can understand the goal instantly, and the challenge scales naturally with skill. 
+                    Beginners can achieve decent scores while learning to control their drawing implement, 
+                    while experts can pursue increasingly precise perfection. The competitive element comes 
+                    from personal improvement and community leaderboards showing the highest precision scores.
                 </p>
             </section>
             
             <section class="description-features">
-                <h3>Game Mechanics and Features</h3>
+                <h3>Features and Gameplay</h3>
                 <p>
-                    The geometric analysis system evaluates drawn circles across multiple precision dimensions 
-                    including deviation from mathematical circularity, consistency of stroke width, smoothness 
-                    of curves, and absence of jagged edges or corrections. The algorithm compares the drawn 
-                    path against a perfect circle of the same diameter, measuring point-by-point deviation and 
-                    calculating aggregate precision scores. This multi-dimensional analysis provides nuanced 
-                    feedback that helps players understand exactly where their drawing technique needs improvement.
+                    The scoring algorithm analyzes multiple aspects of your drawing including circularity, 
+                    consistency of radius, smoothness of curve, and completion time. These factors combine 
+                    to produce a score out of 100, with perfect circles receiving scores approaching 100 
+                    and highly irregular drawings scoring accordingly lower. The algorithm is calibrated 
+                    to reward genuine circularity while penalizing artificially achieved perfect shapes.
                 </p>
                 <p>
-                    Multiple difficulty modes cater to different skill levels and purposes. Casual mode provides 
-                    visual guides and forgiving scoring that encourages experimentation and learning. Standard mode 
-                    removes assistance while maintaining accessible scoring thresholds. Expert mode removes all 
-                    guides and implements strict scoring that challenges even skilled players. Speed mode adds 
-                    time pressure, requiring players to draw perfect circles under time constraints. Each mode 
-                    maintains separate leaderboards, ensuring fair competition across different skill levels.
-                </p>
-                <p>
-                    Daily challenges provide fresh content and community engagement opportunities. Each day 
-                    presents a specific drawing challenge, such as drawing circles of a particular size range 
-                    or achieving a minimum precision score within a limited number of attempts. Global leaderboards 
-                    show how your performance compares to other players worldwide, creating friendly competition 
-                    and motivation to improve. Weekly and monthly challenges aggregate daily results to identify 
-                    consistent high performers.
-                </p>
-                <p>
-                    Training mode offers interactive lessons on drawing technique, breaking down the process 
-                    into learnable components. Players practice individual skills including smooth stroke 
-                    generation, consistent pressure application, and steady hand control. Immediate feedback 
-                    helps players identify specific weaknesses in their technique, while progress tracking 
-                    shows improvement over time. This structured approach to skill development transforms 
-                    circle-drawing from an intuitive art into an improvable science.
-                </p>
-            </section>
-            
-            <section class="description-technical">
-                <h3>Technical Implementation</h3>
-                <p>
-                    The drawing system employs advanced input processing that works consistently across different 
-                    input methods including touch screens, trackpads, and mouse devices. Input smoothing algorithms 
-                    remove jitter from touch input while preserving the genuine characteristics of the user's 
-                    movement. The system captures input at high frequency to ensure no meaningful motion data is 
-                    lost, while computational efficiency ensures immediate feedback without noticeable latency.
-                </p>
-                <p>
-                    The scoring algorithm has been refined through extensive testing and calibration against 
-                    human assessments of circle quality. The algorithm's outputs correlate strongly with human 
-                    perception of circularity, ensuring that scores feel fair and intuitive. Mathematical 
-                    optimization ensures the algorithm runs efficiently even on lower-powered devices, while 
-                    parallel processing on capable devices enables additional precision analysis.
-                </p>
-                <p>
-                    Progress is saved locally on each device, with optional cloud sync for students who want 
-                    to maintain their records across devices or compete globally. The local storage system 
-                    efficiently tracks thousands of historical attempts, providing rich data for personal 
-                    progress analysis. Privacy-respecting analytics provide aggregate information about 
-                    population-wide performance without exposing individual data.
-                </p>
-            </section>
-            
-            <section class="description-usage">
-                <h3>Usage in Educational Settings</h3>
-                <p>
-                    Draw a Circle has found surprising applications in educational contexts beyond entertainment. 
-                    Occupational therapists use it to assess and develop fine motor control in patients. Art 
-                    teachers incorporate it as a foundational exercise for developing drawing skills. Geometry 
-                    teachers use it to demonstrate mathematical concepts related to circles and precision. The 
-                    game's immediate feedback and clear metrics provide objective assessment of skills that 
-                    would otherwise be subjective and difficult to measure.
-                </p>
-                <p>
-                    The game's minimal resource requirements make it accessible in any educational technology 
-                    environment. Fast loading times ensure it can be launched even on restricted networks, 
-                    while offline functionality enables use in locations with limited connectivity. The 
-                    straightforward gameplay requires minimal instruction, allowing valuable class time to 
-                    remain focused on learning objectives rather than technical setup.
+                    Multiple game modes provide varied experiences. Practice mode allows unlimited attempts 
+                    without score pressure, perfect for learning and improvement. Time attack mode challenges 
+                    players to achieve the highest score within a time limit. Challenge mode presents specific 
+                    targets that must be achieved to progress. Daily challenges provide community-wide targets 
+                    for shared competition.
                 </p>
             </section>
         </article>
@@ -1469,110 +1439,43 @@
                 <div class="app-header-info">
                     <h2>2048</h2>
                     <p class="developer">By Sawfish Developer Group</p>
-                    <p class="category-tag">Category: Games / Puzzle / Strategy</p>
+                    <p class="category-tag">Category: Games / Puzzle</p>
                 </div>
             </section>
             
             <section class="description-overview">
                 <h3>Overview</h3>
                 <p>
-                    2048 has earned its place as one of the most influential puzzle games of the modern era, 
-                    combining elegant mathematical concepts with addictive gameplay that has captivated millions 
-                    of players worldwide. The objective is elegantly simple: combine matching numbered tiles to 
-                    reach the elusive 2048 tile. However, beneath this straightforward premise lies substantial 
-                    strategic depth that rewards planning, pattern recognition, and adaptive thinking. The game 
-                    has become a cultural phenomenon, spawning countless variations, academic studies, and 
-                    dedicated communities of enthusiasts pursuing mastery.
+                    2048 is the iconic sliding tile puzzle game that took the world by storm, now available 
+                    optimized for school browsers and touch devices. The goal is deceptively simple: combine 
+                    matching numbered tiles to reach the 2048 tile. However, the strategic depth is substantial, 
+                    requiring careful planning several moves ahead to successfully merge tiles while keeping 
+                    the board from filling up. The game teaches mathematical concepts of powers of two in an 
+                    engaging, interactive format.
                 </p>
                 <p>
-                    This browser-optimized implementation preserves the core experience that made the original 
-                    game successful while adding features specifically valuable in educational contexts. The game 
-                    serves as an engaging introduction to mathematical concepts including powers of two, exponential 
-                    growth, and probability, all within an accessible and entertaining framework. Players develop 
-                    intuitive understanding of these concepts through repeated engagement, often without realizing 
-                    they are learning.
-                </p>
-                <p>
-                    The game design exemplifies how simple rules can generate complex emergent behavior. Each move 
-                    affects the entire board state, creating cascading consequences that can enable spectacular 
-                    combinations or lead to unexpected dead ends. This complexity emerges naturally from the 
-                    interaction of simple rules, making it an excellent example of complex systems in action. 
-                    Students interested in mathematics, computer science, or game design can find endless fascination 
-                    in analyzing the game's underlying structure.
+                    The puzzle has become a classic because of its perfect balance of accessibility and depth. 
+                    Anyone can make their first move immediately, but mastering the game requires understanding 
+                    of spatial relationships, probability, and strategic positioning. The visual representation 
+                    of powers of two provides intuitive understanding of exponential growth that transfers to 
+                    mathematical education.
                 </p>
             </section>
             
             <section class="description-features">
-                <h3>Game Features and Variations</h3>
+                <h3>Game Modes and Features</h3>
                 <p>
-                    Touch-optimized controls make swiping on tablets and touchscreens feel natural and responsive. 
-                    The control system interprets gestures with high accuracy, distinguishing between deliberate 
-                    moves and accidental input. Visual feedback during swipes clearly indicates the intended 
-                    direction, preventing confusion about which direction the tiles will move. Keyboard controls 
-                    remain available for desktop users, with support for both arrow keys and WASD.
+                    This implementation features touch-optimized controls that make swiping on tablets and 
+                    touchscreens feel natural and responsive. Multiple board sizes are available including 
+                    the classic 4x4, plus harder 5x5 and 6x6 variants for experienced players seeking 
+                    additional challenge. An undo feature allows backtracking mistakes, while the hint 
+                    system provides subtle suggestions when players get stuck.
                 </p>
                 <p>
-                    Multiple board sizes extend the classic 4x4 experience with more challenging variants. The 
-                    5x5 board reduces tile density, requiring longer-term planning and providing more room for 
-                    complex tile arrangements. The 6x6 board further increases complexity, challenging even 
-                    experienced players to develop new strategies. Each size maintains separate high scores and 
-                    achievement tracking, allowing players to specialize in their preferred challenge level.
-                </p>
-                <p>
-                    The undo feature allows players to backtrack mistakes, providing a safety net that encourages 
-                    experimentation with different strategies. This feature is particularly valuable for 
-                    educational contexts where the learning process is more important than achieving high scores. 
-                    Players can explore alternative moves and see their consequences without permanently losing 
-                    progress, enabling deeper understanding of cause and effect in the game's system.
-                </p>
-                <p>
-                    The hint system provides subtle suggestions when players become stuck, offering guidance without 
-                    revealing optimal moves. Hints are designed to prompt strategic thinking rather than replace 
-                    it, highlighting general principles or pointing out opportunities without specifying exact 
-                    moves. This graduated assistance helps players develop their own skills rather than creating 
-                    dependency on external guidance.
-                </p>
-            </section>
-            
-            <section class="description-strategy">
-                <h3>Strategic Considerations</h3>
-                <p>
-                    Successful 2048 play requires balancing immediate tile placement with long-term board management. 
-                    Players must anticipate how the board will evolve over multiple moves, positioning tiles to 
-                    enable future combinations while avoiding situations that block progress. The corner strategy, 
-                    which involves concentrating high-value tiles in a single corner, has become a standard 
-                    technique that provides consistent results for players at all levels.
-                </p>
-                <p>
-                    Understanding tile spawning probabilities helps players make informed decisions about which 
-                    moves to prioritize. New tiles spawn in random empty positions, with a 90% chance of being 
-                    a 2 and a 10% chance of being a 4. This statistical reality affects how players manage 
-                    board space and prioritize tile placement. Advanced players develop probabilistic intuitions 
-                    about where new tiles are likely to appear and plan accordingly.
-                </p>
-                <p>
-                    The game provides an excellent framework for developing planning and foresight skills. 
-                    Players must consider multiple moves ahead, evaluating how current decisions will affect 
-                    future options. This type of strategic thinking transfers to real-world decision making, 
-                    making the game valuable beyond its entertainment function. Educational applications 
-                    include teaching concepts from mathematics, economics, and life planning.
-                </p>
-            </section>
-            
-            <section class="description-education">
-                <h3>Educational Applications</h3>
-                <p>
-                    Teachers have found 2048 valuable for demonstrating mathematical concepts in engaging ways. 
-                    The powers of two progression (2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048) provides 
-                    concrete visualization of exponential growth. Students can observe and count tiles to 
-                    understand how quickly values compound. The game naturally introduces concepts including 
-                    place value, addition, and pattern recognition.
-                </p>
-                <p>
-                    Analysis of optimal play involves concepts from game theory, probability, and optimization. 
-                    Students interested in computer science can explore algorithms for automated play, from 
-                    simple heuristics to sophisticated machine learning approaches. The game's complexity 
-                    provides meaningful challenges while remaining accessible enough for classroom exploration.
+                    Daily challenges and achievement tracking add long-term engagement. Global leaderboards 
+                    show how your performance compares to other players worldwide, providing competitive 
+                    motivation. Local statistics track personal bests and improvement over time, rewarding 
+                    persistent practice.
                 </p>
             </section>
         </article>
@@ -1584,112 +1487,53 @@
                 <div class="app-header-info">
                     <h2>Minecraft Web (Beta)</h2>
                     <p class="developer">By Zardoy</p>
-                    <p class="category-tag">Category: Games / Sandbox / Creative</p>
+                    <p class="category-tag">Category: Games / Sandbox</p>
                 </div>
             </section>
             
             <section class="description-overview">
                 <h3>Overview</h3>
                 <p>
-                    Minecraft Web brings the legendary sandbox building experience directly to browser 
-                    environments, enabling students to explore, build, and create within the iconic blocky 
-                    universe without requiring downloads, installations, or high-end hardware. This specialized 
-                    web port captures the essence that made Minecraft a global phenomenon while adapting the 
-                    experience for the unique constraints and opportunities of browser-based gaming. Players 
-                    can dive into procedurally generated worlds filled with diverse biomes, resources, and 
-                    opportunities for creative expression.
+                    Experience the boundless creativity of the world's best-selling game directly in your 
+                    browser with Minecraft Web (Beta). This specialized web port allows players to dive 
+                    into the iconic blocky universe without the need for heavy downloads or high-end hardware. 
+                    Whether you are looking to construct monumental castles, intricate redstone machinery, 
+                    or simple survival shelters, the core mechanics that made the original game a global 
+                    phenomenon are preserved here in stunning detail optimized for web browsers.
                 </p>
                 <p>
-                    The game's open-ended design philosophy provides unlimited creative freedom within a 
-                    structured world. Players choose their own goals, whether constructing monumental 
-                    architectures, designing intricate redstone contraptions, exploring vast cave systems, 
-                    or simply surviving against environmental challenges. This player-driven experience 
-                    contrasts with the goal-oriented structure of most games, making Minecraft uniquely 
-                    suited to diverse play styles and preferences.
-                </p>
-                <p>
-                    The educational potential of Minecraft has been widely recognized, with the game used 
-                    in classrooms worldwide to teach subjects ranging from history and geography to 
-                    mathematics and computer science. The web version maintains this educational value 
-                    while adding accessibility benefits that enable use in environments where traditional 
-                    Minecraft installation is not possible.
+                    The Beta version introduces optimized rendering engines specifically tuned for web 
+                    performance, ensuring smooth frame rates even on Chromebooks and older laptops. Players 
+                    can explore procedurally generated terrains including lush forests, arid deserts, and 
+                    deep cavernous systems. The inventory system has been streamlined for touch and mouse 
+                    inputs, making crafting tools and weapons intuitive and fast.
                 </p>
             </section>
             
-            <section class="description-features">
-                <h3>Game Features and Capabilities</h3>
+            <section class="description-modes">
+                <h3>Game Modes</h3>
                 <p>
-                    The Beta version introduces rendering engines specifically optimized for web performance, 
-                    achieving smooth frame rates even on Chromebooks and older laptops that would struggle 
-                    with the full desktop version. Advanced techniques including level-of-detail management, 
-                    efficient chunk loading, and intelligent culling ensure that system resources are 
-                    focused on visible, relevant content. These optimizations enable a genuine Minecraft 
-                    experience on hardware previously considered incapable of running the game.
+                    Creative mode provides unlimited resources for building, allowing players to focus 
+                    entirely on construction without survival pressures. Players can fly freely and have 
+                    instant access to all building materials. This mode is particularly popular for 
+                    collaborative building projects and architectural experimentation.
                 </p>
                 <p>
-                    Procedural terrain generation creates diverse worlds with varied biomes including forests, 
-                    deserts, mountains, oceans, and underground cave systems. Each world seed produces a 
-                    unique landscape, ensuring that no two adventures are exactly alike. The generation 
-                    algorithms balance exploration rewards with spawn safety, giving players interesting 
-                    environments to discover without immediate danger at spawn points.
-                </p>
-                <p>
-                    The inventory and crafting systems have been streamlined for browser and touch input. 
-                    Drag-and-drop mechanics, contextual crafting recipes, and simplified interfaces make 
-                    resource management intuitive even on touch screens. Essential crafting and building 
-                    operations can be completed with minimal clicks, reducing friction between creative 
-                    vision and execution.
-                </p>
-                <p>
-                    Creative mode provides unlimited resources and the ability to fly, enabling ambitious 
-                    building projects without resource gathering constraints. Players can focus entirely 
-                    on construction and design, experimenting with architectural ideas and artistic 
-                    expressions. Survival mode challenges players to gather resources, establish shelters, 
-                    and manage health and hunger while exploring and building.
+                    Survival mode challenges players to gather, craft, and survive against environmental 
+                    hazards including hostile mobs and environmental dangers. The satisfaction of building 
+                    a secure shelter and progressively upgrading equipment provides engaging progression 
+                    mechanics. Multiplayer servers enable collaborative survival experiences.
                 </p>
             </section>
             
             <section class="description-important">
-                <h3>Important Usage Notes</h3>
-                <div class="important-notice">
-                    <h4>Critical Information About Single Player Mode</h4>
-                    <p>
-                        <strong>IMPORTANT:</strong> In this web version, single player mode does not include 
-                        crafting functionality. You <strong>MUST use a multiplayer server</strong> to access 
-                        full crafting features. This limitation exists because the web implementation requires 
-                        server-side processing for certain game mechanics that are normally handled client-side 
-                        in the desktop version.
-                    </p>
-                    <p>
-                        For the best experience, we <strong>strongly recommend joining the official first 
-                        server</strong> listed when launching the application. This server provides the most 
-                        stable multiplayer experience, active player community, and full access to all 
-                        crafting and building features. Single player functionality is being actively 
-                        developed, and this limitation may be addressed in future updates.
-                    </p>
-                    <p>
-                        When playing on multiplayer servers, all progress and builds are persistently saved 
-                        to the server, ensuring that your creations are preserved between sessions. The 
-                        server also enables collaboration with other players, making it ideal for group 
-                        projects and social building experiences.
-                    </p>
-                </div>
-            </section>
-            
-            <section class="description-education">
-                <h3>Educational Applications</h3>
+                <h3>Important Notice</h3>
                 <p>
-                    Minecraft has established itself as a powerful educational tool used in classrooms worldwide. 
-                    History teachers recreate historical sites for virtual tours. Geography students study terrain 
-                    and climate patterns. Mathematics concepts like volume, area, and symmetry become tangible 
-                    through building projects. Computer science principles can be explored through redstone 
-                    circuitry and command block programming.
-                </p>
-                <p>
-                    The web version enables these educational applications in environments where traditional 
-                    Minecraft installation is not possible. Schools with managed devices, restricted software 
-                    policies, or older hardware can now provide Minecraft-based learning experiences. The 
-                    accessibility improvements significantly expand the potential reach of Minecraft education.
+                    In this web version, single player mode does not include crafting functionality. 
+                    You MUST use a multiplayer server to access full crafting features. We recommend 
+                    joining the official first server listed when launching for the best multiplayer 
+                    experience with other players. The developers are working on enabling single player 
+                    crafting, but for now, multiplayer is required for full functionality.
                 </p>
             </section>
         </article>
@@ -1701,86 +1545,40 @@
                 <div class="app-header-info">
                     <h2>Block Blast</h2>
                     <p class="developer">By AAPPQQ</p>
-                    <p class="category-tag">Category: Games / Puzzle / Strategy</p>
+                    <p class="category-tag">Category: Games / Puzzle</p>
                 </div>
             </section>
             
             <section class="description-overview">
                 <h3>Overview</h3>
                 <p>
-                    Block Blast delivers an addictive puzzle experience that challenges spatial reasoning and 
-                    strategic planning through its elegant block placement mechanics. The objective requires 
-                    players to strategically place colorful blocks onto a grid, clearing complete rows and 
-                    columns to score points and prevent the board from filling up. This familiar formula, 
-                    inspired by classic tile-matching games, has been enhanced with modern visuals, smooth 
-                    animations, and gameplay refinements that make for a polished and engaging experience.
+                    Block Blast is a fast-paced, addictive puzzle game that challenges your spatial 
+                    reasoning and strategic planning skills. The objective is to place colorful blocks 
+                    onto a grid, clearing lines when rows or columns are completely filled. The game 
+                    combines the satisfying feeling of tetromino-style block placement with modern 
+                    visuals and smooth animations. Each move requires careful consideration, as poorly 
+                    placed blocks can quickly lead to game over.
                 </p>
                 <p>
-                    The game's design philosophy emphasizes accessibility without sacrificing depth. Players 
-                    can immediately understand the goal and begin playing, yet the strategic complexity 
-                    rewards careful planning and pattern recognition. Each placement decision affects future 
-                    options, creating a satisfying balance between immediate gratification and long-term 
-                    strategic thinking. The game encourages players to develop mental models of block shapes 
-                    and spatial relationships.
-                </p>
-                <p>
-                    Block Blast has found particular resonance in educational contexts where its spatial 
-                    reasoning demands align with cognitive development goals. The game exercises visual-spatial 
-                    intelligence, pattern recognition, and planning skills in an engaging format that students 
-                    find motivating. Teachers have incorporated the game into activities that build these 
-                    skills while providing entertainment value.
+                    The game builds on the classic block puzzle formula that has proven engaging across 
+                    decades of puzzle gaming, adding modern presentation and refined mechanics. The 
+                    combination of quick puzzle sessions and strategic depth makes Block Blast suitable 
+                    for both quick breaks and extended play sessions.
                 </p>
             </section>
             
             <section class="description-features">
                 <h3>Game Features</h3>
                 <p>
-                    Multiple game modes provide varied experiences for different play styles and time 
-                    availability. Classic endless mode challenges players to achieve the highest score 
-                    before running out of space, providing unlimited engagement for dedicated players. 
-                    Timed mode adds pressure with countdown clocks, requiring quick decision-making and 
-                    efficient block placement. Daily puzzle modes present carefully designed challenges 
-                    with specific objectives and optimal solutions to discover.
+                    Multiple game modes include classic endless play, timed challenges, and daily puzzle 
+                    modes. The controls have been optimized for touch input, with intuitive drag-and-drop 
+                    mechanics and snap-to-grid functionality. Visual feedback includes satisfying particle 
+                    effects and combo multipliers for clearing multiple lines simultaneously.
                 </p>
                 <p>
-                    Touch controls have been meticulously optimized for intuitive gameplay. Drag-and-drop 
-                    mechanics feel natural on touch surfaces, with snap-to-grid functionality ensuring 
-                    precise placement without frustrating accuracy requirements. Visual feedback during 
-                    placement shows exactly where blocks will land, removing ambiguity and enabling 
-                    confident decision-making. The controls accommodate various screen sizes and device 
-                    types, ensuring consistent experience across the school device ecosystem.
-                </p>
-                <p>
-                    Visual polish enhances the experience with satisfying particle effects when blocks 
-                    are placed and cleared, combo multipliers that scale with simultaneous line clears, 
-                    and smooth animations that make gameplay feel responsive and polished. The color 
-                    palette has been carefully selected for visual appeal while maintaining clarity and 
-                    accessibility for color-blind players through shape and value differentiation.
-                </p>
-                <p>
-                    A progression system tracks high scores and unlocks new block style options as players 
-                    improve. This gamification layer adds long-term engagement beyond individual game 
-                    sessions, providing tangible goals that motivate continued play. Achievement tracking 
-                    recognizes specific accomplishments including high scores, combo chains, and 
-                    completion of challenge modes.
-                </p>
-            </section>
-            
-            <section class="description-strategy">
-                <h3>Strategic Approaches</h3>
-                <p>
-                    Successful Block Blast play requires balancing immediate placement decisions with 
-                    board management across multiple turns. Players must anticipate how current placements 
-                    will affect future options, considering not just what can be placed now but what will 
-                    be needed later. The tetromino-style shapes create specific spatial relationships that 
-                    experienced players learn to recognize and exploit.
-                </p>
-                <p>
-                    Corner and edge management become critical as the board fills, with strategies 
-                    developing around creating clearable configurations while avoiding isolated cells 
-                    that cannot be part of any line. Advanced players develop patterns for converting 
-                    random placements into organized structures, maintaining flexibility while building 
-                    toward line-clearing opportunities.
+                    A progression system tracks best scores and unlocks new block styles as players improve. 
+                    Achievement recognition provides additional motivation and marks significant accomplishments. 
+                    The clean, colorful visuals are designed to be engaging without being distracting.
                 </p>
             </section>
         </article>
@@ -1808,87 +1606,21 @@
                     of creative play while simultaneously teaching scientific concepts in an engaging, 
                     hands-on manner.
                 </p>
-                <p>
-                    The beauty of Sandboxels lies in its emergent complexity. Despite each element 
-                    following relatively simple individual rules, their interactions create intricate, 
-                    surprising, and often beautiful phenomena. Water flows and pools, fire spreads and 
-                    burns, electricity conducts and powers, plants grow and respond to their environment. 
-                    This emergence from simplicity to complexity mirrors patterns found throughout nature 
-                    and provides a unique window into how complex systems arise from simple components.
-                </p>
-                <p>
-                    The educational value of Sandboxels has been recognized by teachers and educators 
-                    worldwide. The simulation provides interactive demonstrations of scientific concepts 
-                    including states of matter, density, chemical reactions, electrical conductivity, 
-                    and ecological relationships. Students can experiment with cause and effect in a 
-                    safe environment, developing intuition for how the physical world works.
-                </p>
             </section>
             
-            <section class="description-features">
-                <h3>Element Categories and Interactions</h3>
+            <section class="description-elements">
+                <h3>Element Categories</h3>
                 <p>
                     Basic materials form the foundation of Sandboxels exploration. Sand, dust, and powder 
                     follow traditional falling sand physics, pooling and flowing based on particle interactions. 
                     Liquids range from water with its characteristic flowing and pooling behavior to viscous 
-                    substances like honey and oil with different movement characteristics. Solids including 
-                    stone, metal, and glass provide stable structures and barriers. Gases and smoke demonstrate 
-                    buoyancy and dispersion behaviors.
+                    substances like honey and oil with different movement characteristics.
                 </p>
                 <p>
-                    Temperature-based elements introduce dynamic change to the simulation. Fire burns 
-                    organic materials, spreads to adjacent burnable elements, and produces smoke. Ice 
-                    forms when water reaches freezing temperatures and can melt when heated. Steam rises 
-                    when water boils, creating atmospheric effects. These temperature mechanics create 
-                    realistic phase transitions and enable complex experiments with heat transfer.
-                </p>
-                <p>
-                    Chemical reactions form an extensive subsystem within Sandboxels. Acid dissolves 
-                    certain materials while being stopped by others. Salt dissolves in water but forms 
-                    crystals when water evaporates. Various elements combine to create new materials 
-                    through documented recipes, encouraging experimentation and discovery. These 
-                    chemical mechanics provide hands-on learning about reaction types and material 
-                    properties.
-                </p>
-                <p>
-                    Living elements introduce behavior and adaptation to the simulation. Plants grow 
-                    toward light and water, spreading roots and producing seeds. Bacteria and simple 
-                    organisms respond to their environment and can reproduce or die based on conditions. 
-                    These biological elements demonstrate concepts from ecology and life science in 
-                    an engaging, observable format.
-                </p>
-                <p>
-                    Electrical components enable complex interactive systems. Wire conducts electricity 
-                    when powered, triggering connected elements. Lights illuminate when receiving power. 
-                    Motors rotate, fans blow air, and various devices respond to electrical input. 
-                    These electrical mechanics provide opportunities for engineering-style problem 
-                    solving and experimentation.
-                </p>
-            </section>
-            
-            <section class="description-education">
-                <h3>Educational Applications</h3>
-                <p>
-                    Sandboxels has been adopted by educators across subjects for its versatile 
-                    demonstrations of scientific concepts. Physics teachers use it to demonstrate 
-                    mechanics, gravity, and fluid dynamics. Chemistry educators illustrate reactions 
-                    and material properties through interactive experiments. Biology teachers show 
-                    ecological relationships and environmental science concepts. The simulation's 
-                    flexibility enables customized activities for almost any science curriculum.
-                </p>
-                <p>
-                    The element documentation provides a starting point for exploration while 
-                    encouraging experimentation. Students discover new interactions by combining 
-                    elements in unexpected ways, developing scientific inquiry skills alongside 
-                    content knowledge. The open-ended nature of the sandbox means there is no 
-                    single correct answer, fostering creative thinking and independent exploration.
-                </p>
-                <p>
-                    Performance optimization ensures the simulation runs smoothly across diverse 
-                    hardware. Students with Chromebooks, older laptops, or tablets can all experience 
-                    the simulation without performance barriers. The interface adapts to different 
-                    screen sizes while maintaining functionality, enabling use in various classroom 
-                    configurations.
+                    Temperature-based elements introduce dynamic change. Fire burns organic materials, spreads 
+                    to adjacent burnable elements, and produces smoke. Ice forms when water reaches freezing 
+                    temperatures and can melt when heated. Steam rises when water boils, creating atmospheric 
+                    effects. These temperature mechanics create realistic phase transitions.
                 </p>
             </section>
         </article>
@@ -1911,102 +1643,24 @@
                     of an intrepid alien explorer navigating procedurally generated space tunnels with 
                     constantly shifting geometry. The third installment in the acclaimed Run series, this 
                     game refines the core mechanics that made its predecessors successful while introducing 
-                    innovative features that expand the gameplay possibilities. The combination of simple 
-                    controls, challenging gameplay, and endless variety has made Run 3 a beloved classic 
-                    in the browser gaming community.
+                    innovative features that expand the gameplay possibilities.
                 </p>
                 <p>
                     The unique three-dimensional environment sets Run 3 apart from traditional platformers. 
                     Rather than moving across a flat surface, players navigate tunnels that twist and turn 
                     in space, with gravity shifting to change which surfaces serve as floors, walls, or 
                     ceilings. This spatial complexity creates challenges that require genuine three-dimensional 
-                    thinking, as players must mentally rotate their understanding of the environment to 
-                    navigate successfully.
-                </p>
-                <p>
-                    The procedural generation system ensures that no two runs are identical, providing 
-                    virtually unlimited gameplay variety. Each tunnel segment is randomly selected from 
-                    a library of designs, creating new challenges and opportunities in every run. The 
-                    algorithm balances difficulty progression with variety, ensuring that the game remains 
-                    challenging without becoming frustrating.
+                    thinking.
                 </p>
             </section>
             
             <section class="description-features">
-                <h3>Game Modes and Features</h3>
+                <h3>Game Modes</h3>
                 <p>
-                    Classic endless mode challenges players to travel as far as possible through the 
-                    infinite tunnel system. The runner moves automatically forward, requiring players 
-                    to focus on navigation, jumping, and gravity management. The challenge comes from 
-                    the variety of tunnel configurations and the need to react quickly to unexpected 
-                    layouts. High scores are tracked locally, encouraging players to improve their 
-                    personal bests.
-                </p>
-                <p>
-                    Tunnel run mode presents finite levels with a clear goal: reach the end of the 
-                    tunnel before running out of oxygen or giving up. These designed levels provide 
-                    curated challenges with known difficulty curves, suitable for players who prefer 
-                    structured goals over endless play. The level designer includes checkpoints for 
-                    longer levels, preventing frustration from extended retries.
-                </p>
-                <p>
-                    Time attack mode challenges players to complete tunnel sections as quickly as 
-                    possible, with global leaderboards tracking the fastest runners. This competitive 
-                    mode appeals to players who enjoy optimizing their performance and competing for 
-                    recognition. The focus on speed encourages mastery of movement mechanics and 
-                    memorization of level layouts.
-                </p>
-                <p>
-                    Over 20 unique alien characters provide variety in both appearance and gameplay 
-                    characteristics. Different aliens have different attributes including speed, 
-                    jump height, and special abilities that affect gameplay. Some aliens can jump 
-                    higher but are lighter and more affected by gravity shifts. Others move more 
-                    slowly but have superior stability in difficult configurations.
-                </p>
-            </section>
-            
-            <section class="description-mechanics">
-                <h3>Core Mechanics</h3>
-                <p>
-                    The running mechanic is deceptively simple: the alien runs forward automatically 
-                    while players control jumping and, in some modes, lateral movement. However, 
-                    the tunnel environments introduce complexity through gaps, obstacles, and 
-                    changing surface orientations. Players must anticipate tunnel geometry and react 
-                    quickly to avoid falling into the void that surrounds the tunnel system.
-                </p>
-                <p>
-                    Gravity mechanics are the heart of Run 3's unique challenge. When the runner 
-                    encounters certain elements or presses specific controls, gravity shifts, 
-                    changing which surface serves as the floor. This mechanic requires genuine 
-                    three-dimensional spatial reasoning, as players must mentally track which 
-                    direction is "down" after each gravity shift. Advanced players develop the 
-                    ability to rotate their mental model of the tunnel quickly and accurately.
-                </p>
-                <p>
-                    Special elements including crumbling tiles, portals, and moving platforms 
-                    add variety and challenge to tunnel navigation. Crumbling tiles require 
-                    quick decisions about whether to risk crossing or find alternative routes. 
-                    Portals teleport the runner to different tunnel sections, potentially 
-                    providing shortcuts or forcing detours. Moving platforms demand precise 
-                    timing and coordination.
-                </p>
-            </section>
-            
-            <section class="description-education">
-                <h3>Skills Development</h3>
-                <p>
-                    Run 3 provides excellent training in spatial reasoning and three-dimensional 
-                    thinking. The game's core mechanic requires players to maintain awareness of 
-                    their orientation in space and quickly adapt to changing geometries. This 
-                    cognitive skill has applications in fields ranging from engineering to 
-                    surgery to athletics.
-                </p>
-                <p>
-                    Reaction time and pattern recognition improve through repeated play as 
-                    players learn to recognize common tunnel configurations and respond 
-                    automatically. The game provides immediate feedback on performance, 
-                    enabling players to identify areas for improvement and track their 
-                    progress over time.
+                    Classic endless mode challenges players to travel as far as possible through the infinite 
+                    tunnel system. Tunnel run mode presents finite levels with a clear goal. Time attack mode 
+                    challenges players to complete tunnel sections as quickly as possible. Over 20 unique 
+                    alien characters provide variety in both appearance and gameplay characteristics.
                 </p>
             </section>
         </article>
@@ -2032,68 +1686,15 @@
                     Messages are delivered instantly with clear status indicators, and the system is 
                     designed to function on school networks that may restrict other communication platforms.
                 </p>
-                <p>
-                    The application recognizes that effective student communication requires different 
-                    approaches than general-purpose messaging apps. School-appropriate content moderation, 
-                    simplified interfaces that minimize distraction, and integration with school workflows 
-                    make this tool suitable for educational contexts. The design balances privacy and safety, 
-                    giving students appropriate communication space while maintaining necessary oversight.
-                </p>
-                <p>
-                    Beyond basic messaging, the Chat App supports collaboration on projects and classwork. 
-                    Group features enable team communication for assignments, while topic-based rooms help 
-                    organize discussions by subject or project. These collaborative features prepare students 
-                    for professional communication tools they will encounter in higher education and careers.
-                </p>
             </section>
             
             <section class="description-features">
-                <h3>Features and Capabilities</h3>
+                <h3>Features</h3>
                 <p>
                     Topic-based rooms organize communication around specific subjects, projects, or 
-                    interests. Each room functions as an isolated discussion space with its own message 
-                    history and participant list. Teachers can create rooms for class discussions, project 
-                    teams can establish dedicated spaces for collaboration, and students can form interest-based 
-                    groups for social interaction. This organization reduces noise and helps students find 
-                    relevant conversations quickly.
-                </p>
-                <p>
-                    Real-time messaging ensures conversations flow naturally without artificial delays. 
-                    Message delivery indicators show when messages are sent, delivered, and read, reducing 
-                    uncertainty about communication status. Presence indicators show which contacts are 
-                    currently available, enabling synchronous communication when desired.
-                </p>
-                <p>
-                    Essential messaging features include @mentions for directing messages to specific 
-                    users, message formatting for emphasis and clarity, and file sharing for collaborative 
-                    work. The interface is fully keyboard accessible, supporting efficient navigation and 
-                    composition without requiring mouse interaction. Screen reader compatibility ensures 
-                    accessibility for all students.
-                </p>
-                <p>
-                    Moderation tools help maintain positive communication environments. Room creators 
-                    can manage participant lists and establish basic rules. System logging provides 
-                    records of communication for safety purposes while respecting reasonable privacy 
-                    expectations. Abuse reporting mechanisms enable community members to flag concerning 
-                    behavior for review.
-                </p>
-            </section>
-            
-            <section class="description-privacy">
-                <h3>Privacy and Safety</h3>
-                <p>
-                    The Chat App is designed with student privacy and safety as core priorities. No 
-                    personal information is required to use the service, and students can participate 
-                    using pseudonyms if preferred. Communication content is protected through encryption 
-                    in transit, though users should understand that school-managed devices may have 
-                    monitoring capabilities that extend to all network activity.
-                </p>
-                <p>
-                    Safety monitoring operates on principles of minimal intrusion while maintaining 
-                    responsible oversight. Automated systems flag potentially harmful content for human 
-                    review, enabling intervention when necessary while respecting normal social interaction. 
-                    The balance between safety and privacy is regularly reviewed in consultation with 
-                    educators, parents, and students.
+                    interests. Real-time messaging ensures conversations flow naturally without artificial 
+                    delays. Essential features include @mentions for directing messages, message formatting, 
+                    and file sharing. Moderation tools help maintain positive communication environments.
                 </p>
             </section>
         </article>
@@ -2116,64 +1717,17 @@
                     quick communication between students without requiring application installation, account 
                     creation, or complex setup procedures. Leveraging WebRTC technology for peer-to-peer 
                     audio communication, the application provides surprisingly good call quality even on 
-                    school networks that may restrict other communication methods. The design philosophy 
-                    focuses on simplicity, with the entire calling experience fitting on a single screen 
-                    without complicated menus or settings to navigate.
-                </p>
-                <p>
-                    The application is designed for quick, efficient communication rather than extended 
-                    conversations, reflecting the typical communication patterns of students during school 
-                    breaks. Quick status checks, brief coordination for group work, and rapid problem-solving 
-                    calls are the primary use cases. The interface minimizes the friction between deciding 
-                    to call and actually connecting, enabling spontaneous communication when needed.
-                </p>
-                <p>
-                    Privacy and accessibility considerations are built into the application from the 
-                    ground up. No phone numbers or personal information are required, and calls connect 
-                    directly between devices when possible, minimizing server involvement. The interface 
-                    accommodates various audio setups and provides visual alternatives for hearing-impaired 
-                    users.
+                    school networks. The design philosophy focuses on simplicity.
                 </p>
             </section>
             
             <section class="description-features">
-                <h3>Features and Capabilities</h3>
+                <h3>Features</h3>
                 <p>
                     Room-based connection makes initiating calls effortless. Users create or join rooms 
-                    using simple codes that can be shared verbally, through the Chat App, or any other 
-                    convenient method. Once in a room, all participants can hear and speak to each other 
-                    immediately. This approach eliminates the need for manual contact management or 
-                    invitation processes.
-                </p>
-                <p>
-                    Adaptive audio quality ensures the best possible call experience given available 
-                    network conditions. The system monitors connection quality and adjusts encoding 
-                    parameters in real-time to maintain intelligibility. When network conditions 
-                    deteriorate, the system prioritizes voice clarity over audio fidelity, ensuring 
-                    communication continues even under challenging conditions.
-                </p>
-                <p>
-                    Call controls are immediately accessible and easy to use. Mute functionality 
-                    temporarily stops audio transmission while maintaining the connection. Volume 
-                    adjustment accommodates various audio environments. Clear end-call functionality 
-                    ensures calls can be terminated cleanly without awkward ambiguity.
-                </p>
-            </section>
-            
-            <section class="description-usage">
-                <h3>Appropriate Use Cases</h3>
-                <p>
-                    The Call App is ideal for quick coordination during class breaks, brief check-ins 
-                    for group projects, and rapid problem-solving discussions. The simplicity and 
-                    speed make it appropriate for situations where messaging would be too slow but 
-                    formal video calls would be excessive. Students quickly learn to use the app for 
-                    its intended purpose and appreciate the efficiency it provides.
-                </p>
-                <p>
-                    Educational contexts where the Call App proves valuable include quick clarifying 
-                    questions about assignments, coordinating group meeting times, peer tutoring sessions, 
-                    and collaborative problem-solving. The low friction to connection encourages 
-                    communication that might otherwise be postponed or skipped due to setup complexity.
+                    using simple codes. Adaptive audio quality ensures the best possible call experience 
+                    given available network conditions. Call controls are immediately accessible including 
+                    mute functionality, volume adjustment, and clear end-call functionality.
                 </p>
             </section>
         </article>
@@ -2196,73 +1750,17 @@
                     environment that brings the concept of web-based computing to life with impressive 
                     functionality and attention to detail. The system includes a functional desktop 
                     with draggable, resizable windows, a taskbar with system notifications, a control 
-                    panel for settings, and multiple integrated applications. This comprehensive simulation 
-                    provides educational insights into operating system concepts while delivering genuine 
-                    entertainment value for users interested in exploring what browser-based computing 
-                    can become.
-                </p>
-                <p>
-                    The design philosophy balances authenticity with accessibility. While NovaOS mimics 
-                    familiar operating system paradigms, it also leverages the unique capabilities of 
-                    web technologies to create experiences impossible in traditional operating systems. 
-                    Cross-platform consistency, instant loading, and seamless updates are inherent 
-                    advantages of the web-based approach.
-                </p>
-                <p>
-                    As an educational tool, NovaOS provides hands-on experience with operating system 
-                    concepts in an accessible format. Users interact with window management, file systems, 
-                    and application interfaces, developing intuitions that transfer to real operating 
-                    systems. The open-source nature of the project enables interested students to 
-                    examine and learn from the implementation.
+                    panel for settings, and multiple integrated applications.
                 </p>
             </section>
             
             <section class="description-features">
                 <h3>Core Features</h3>
                 <p>
-                    The desktop environment provides a canvas for user activity with customizable 
-                    wallpaper, arrangeable icons, and multiple virtual workspaces. Windows can be 
-                    created, moved, resized, minimized, maximized, and closed with smooth animations 
-                    and intuitive interactions. The taskbar shows running applications and provides 
-                    quick access to common functions. System notifications communicate application 
-                    events and system status.
-                </p>
-                <p>
-                    The file manager provides virtual file system functionality including folder 
-                    creation, file organization, and search capabilities. Files persist across sessions 
-                    using browser storage, enabling users to build personal document collections. 
-                    The interface mimics familiar file manager conventions, making the virtual system 
-                    intuitive for users familiar with any desktop operating system.
-                </p>
-                <p>
-                    Built-in applications include a text editor with basic formatting, a scientific 
-                    calculator, an image viewer, settings panels, and various utilities. Each 
-                    application demonstrates how web technologies can create functional software 
-                    tools. The applications integrate with each other through the file system, 
-                    creating a coherent computing environment.
-                </p>
-                <p>
-                    The app store within NovaOS enables installation of community-developed applications 
-                    that extend the system's functionality. This extensibility demonstrates software 
-                    ecosystem concepts while providing users with continuously expanding capabilities. 
-                    Applications undergo review to ensure quality and safety before becoming available.
-                </p>
-            </section>
-            
-            <section class="description-limitations">
-                <h3>Preview Mode Limitations</h3>
-                <p>
-                    Due on embedded content to browser security restrictions (iframes), the preview 
-                    mode within the Sawfish App Store has reduced interactivity. The full NovaOS 
-                    experience is available by opening the system directly in a new browser tab or 
-                    by installing the Sawfish App Store to your Home Screen for a more integrated 
-                    experience.
-                </p>
-                <p>
-                    These limitations are inherent to how browsers handle embedded content from 
-                    different domains and cannot be worked around without compromising the security 
-                    that protects users. The NovaOS team is exploring alternative integration 
-                    approaches that might enable fuller functionality within the app store context.
+                    The desktop environment provides customizable wallpaper, arrangeable icons, and multiple 
+                    virtual workspaces. The file manager provides virtual file system functionality. Built-in 
+                    applications include a text editor, scientific calculator, image viewer, and settings 
+                    panels. The app store enables installation of community-developed applications.
                 </p>
             </section>
         </article>
@@ -2286,59 +1784,18 @@
                     impressive attention to detail. This web-based simulation demonstrates how web 
                     technologies can replicate traditional software experiences while providing 
                     educational value about operating system concepts and the evolution of computing 
-                    interfaces. The project holds particular appeal for users nostalgic for earlier 
-                    Windows versions or curious about operating system history.
-                </p>
-                <p>
-                    The simulation serves multiple purposes including education about operating system 
-                    design, demonstration of web technology capabilities, and entertainment for those 
-                    who enjoy exploring virtual environments. The careful recreation of Windows 
-                    conventions provides insight into the design decisions that shaped modern computing 
                     interfaces.
-                </p>
-                <p>
-                    As with other browser-based operating systems, full interactivity requires opening 
-                    WinRipen directly rather than through embedded preview. This limitation ensures 
-                    browser security while the full experience remains accessible through direct access.
                 </p>
             </section>
             
             <section class="description-features">
-                <h3>Features and Recreation</h3>
+                <h3>Features</h3>
                 <p>
                     The interface faithfully recreates Windows visual elements including window title 
                     bars with minimize, maximize, and close buttons, taskbars with Start menus and 
-                    system trays, and desktop icons with realistic behaviors. The color schemes, 
-                    fonts, and interaction patterns evoke the Windows experience for users familiar 
-                    with the original systems.
-                </p>
-                <p>
-                    Functional applications include a notepad clone, a calculator, a file explorer, 
-                    and various Windows-themed utilities. Each application provides basic functionality 
-                    while maintaining the visual style of the recreated Windows version. The applications 
-                    demonstrate how web technologies can implement traditional software features.
-                </p>
-                <p>
-                    Background processes simulate system tasks that create authenticity, including 
-                    system tray notifications, clock displays, and simulated system resource 
-                    monitoring. These touches contribute to the sense of a functioning operating 
-                    system rather than merely a static simulation.
-                </p>
-            </section>
-            
-            <section class="description-education">
-                <h3>Educational Value</h3>
-                <p>
-                    WinRipen provides an accessible way to explore operating system concepts and history. 
-                    Students can interact with familiar interfaces and understand how different 
-                    elements work together. The recreation of older Windows versions also provides 
-                    historical context for understanding how computing interfaces have evolved.
-                </p>
-                <p>
-                    For students interested in software development, the project demonstrates 
-                    techniques for recreating complex user interfaces in web technologies. The 
-                    source code, being open source, provides learning opportunities for those 
-                    interested in implementing similar projects.
+                    system trays, and desktop icons. Functional applications include a notepad clone, 
+                    calculator, file explorer, and various Windows-themed utilities. Background processes 
+                    simulate system tasks for authenticity.
                 </p>
             </section>
         </article>
@@ -2361,20 +1818,7 @@
                     emphasizing modern design aesthetics, smooth animations, and experimental features 
                     that push the boundaries of browser-based computing. Unlike simulators that recreate 
                     existing operating systems, PlutoOS represents an original vision of what a web-based 
-                    operating environment could become, with particular attention to visual elegance 
-                    and user experience refinement.
-                </p>
-                <p>
-                    The design philosophy prioritizes both form and function, with every visual and 
-                    interactive element carefully crafted to create a cohesive, satisfying experience. 
-                    Glass-morphism effects, smooth transitions, and thoughtful animations create a 
-                    premium feel that demonstrates the aesthetic potential of web technologies.
-                </p>
-                <p>
-                    As an experimental project, PlutoOS explores unproven concepts and cutting-edge 
-                    techniques. This experimentation occasionally produces features or behaviors that 
-                    differ from more conservative approaches, but also drives innovation that may 
-                    influence future web-based interfaces.
+                    operating environment could become.
                 </p>
             </section>
             
@@ -2382,38 +1826,10 @@
                 <h3>Design and Features</h3>
                 <p>
                     The modular architecture treats applications as discrete components that can be 
-                    arranged, configured, and combined according to user preferences. This approach 
-                    differs from traditional OS designs and provides flexibility for users to 
-                    customize their computing environment. The modularity also enables independent 
-                    development and testing of components.
-                </p>
-                <p>
-                    Modern visual design employs current trends including glass-morphism (frosted 
-                    glass effects), smooth gradients, subtle shadows, and fluid animations. The 
-                    visual polish demonstrates what's possible with modern CSS and JavaScript 
-                    capabilities, inspiring developers and delighting users.
-                </p>
-                <p>
-                    Essential applications including file management, settings, and utilities 
-                    provide baseline functionality while maintaining the design language of the 
-                    overall system. Additional applications are available through the integrated 
-                    app system, with community developers contributing new tools and features.
-                </p>
-            </section>
-            
-            <section class="description-performance">
-                <h3>Performance Considerations</h3>
-                <p>
-                    The advanced visual features and animations require capable hardware and modern 
-                    browsers for optimal performance. Users on older devices or browsers may 
-                    experience reduced performance or degraded visual features. The project 
-                    includes fallbacks for essential functionality when advanced features are 
-                    unavailable.
-                </p>
-                <p>
-                    For the best PlutoOS experience, use a modern browser with hardware acceleration 
-                    enabled. Opening PlutoOS directly rather than through embedded preview provides 
-                    the most reliable and performant experience.
+                    arranged, configured, and combined according to user preferences. Modern visual design 
+                    employs glass-morphism effects, smooth gradients, subtle shadows, and fluid animations. 
+                    Essential applications provide baseline functionality while maintaining the design 
+                    language of the overall system.
                 </p>
             </section>
         </article>
@@ -2436,19 +1852,7 @@
                     speed, efficiency, and simplicity over feature richness or visual elaboration. 
                     This lightweight framework demonstrates that web-based operating systems don't 
                     need to be resource-heavy to provide genuine utility. The modular architecture 
-                    enables customization while the clean codebase serves as an educational resource 
-                    for developers interested in creating their own web OS projects.
-                </p>
-                <p>
-                    The focus on performance makes Ripenos accessible on lower-powered devices that 
-                    might struggle with more elaborate web operating systems. Schools with older 
-                    hardware or limited bandwidth particularly benefit from this efficiency-first 
-                    approach.
-                </p>
-                <p>
-                    The open development model encourages community contribution and customization. 
-                    Developers can create new modules that integrate with Ripenos, extending its 
-                    capabilities while maintaining the efficiency that defines the project.
+                    enables customization while the clean codebase serves as an educational resource.
                 </p>
             </section>
             
@@ -2456,22 +1860,10 @@
                 <h3>Core Capabilities</h3>
                 <p>
                     Essential desktop functionality includes window management, app launching, and 
-                    system settings. These core features are implemented efficiently to minimize 
-                    resource consumption while providing the expected operating system interactions. 
-                    The interface is clean and functional, prioritizing usability over visual flash.
-                </p>
-                <p>
-                    The plugin system enables extensibility without requiring modification of the 
-                    core system. Modules can add functionality ranging from new applications to 
-                    interface modifications to system features. This architecture supports both 
-                    community development and organizational customization.
-                </p>
-                <p>
-                    Performance optimization ensures quick loading and responsive interaction even 
-                    on constrained hardware. The lightweight approach means Ripenos starts quickly, 
-                    uses minimal memory, and remains responsive during use. This efficiency makes 
-                    Ripenos suitable for deployment in educational technology environments with 
-                    diverse hardware.
+                    system settings. The plugin system enables extensibility without requiring 
+                    modification of the core system. Performance optimization ensures quick loading 
+                    and responsive interaction even on constrained hardware, making it suitable 
+                    for diverse educational technology environments.
                 </p>
             </section>
         </article>
@@ -2494,42 +1886,7 @@
                     Game Portal by offering a curated selection of unique browser-based games with a 
                     different focus and collection approach. The launcher emphasizes quality and 
                     uniqueness, featuring games that offer something special whether through innovative 
-                    gameplay mechanics, creative presentation, or novel concepts not found in mainstream 
-                    gaming.
-                </p>
-                <p>
-                    The curation philosophy prioritizes games that students might not discover through 
-                    mainstream channels, highlighting indie developers and experimental projects that 
-                    deserve attention. This discovery function adds value beyond simply providing 
-                    access to games, helping students find experiences they might otherwise miss.
-                </p>
-                <p>
-                    As a complementary launcher, Syrup Games expands the overall gaming ecosystem 
-                    available through the Sawfish App Store while maintaining the quality standards 
-                    and school-appropriate focus that characterize the overall collection.
-                </p>
-            </section>
-            
-            <section class="description-features">
-                <h3>Features and Collection</h3>
-                <p>
-                    The launcher interface presents games with rich information including screenshots, 
-                    descriptions, gameplay previews, and community ratings. This comprehensive 
-                    information helps students make informed decisions about what to play. The 
-                    interface design emphasizes visual appeal while maintaining fast loading and 
-                    smooth navigation.
-                </p>
-                <p>
-                    Game categorization helps students find content matching their interests. Categories 
-                    include unique game mechanics, artistic experiences, puzzle challenges, and 
-                    experimental projects. The organization reflects the distinctive nature of the 
-                    collection rather than standard genre classifications.
-                </p>
-                <p>
-                    Progress tracking and favorites enable students to maintain collections of 
-                    preferred games and track achievements across the Syrup Games collection. 
-                    The cross-device sync ensures these collections are available regardless of 
-                    which device the student uses.
+                    gameplay mechanics, creative presentation, or novel concepts.
                 </p>
             </section>
         </article>
@@ -2550,45 +1907,9 @@
                 <p>
                     Bob The Robber presents a series of stealth puzzle games that challenge players 
                     to plan and execute heists through careful observation, timing, and adaptive 
-                    problem-solving. As Bob, a master thief with a comedic twist, players must 
-                    infiltrate various locations, avoid detection by guards and security systems, 
-                    and make off with valuable items. The game combines puzzle-solving depth with 
-                    accessible presentation, making sophisticated stealth mechanics available to 
-                    players of various skill levels.
-                </p>
-                <p>
-                    Each game in the series presents unique locations, security challenges, and 
-                    objectives while maintaining the core stealth gameplay that defines the franchise. 
-                    The progression from simpler early levels to more complex later challenges 
-                    provides a satisfying learning curve that develops stealth skills organically.
-                </p>
-                <p>
-                    The puzzle nature of the gameplay makes Bob The Robber suitable for educational 
-                    contexts where action-heavy games might be inappropriate. The emphasis on 
-                    planning and pattern recognition provides cognitive benefits while the 
-                    entertaining presentation maintains engagement.
-                </p>
-            </section>
-            
-            <section class="description-features">
-                <h3>Gameplay Mechanics</h3>
-                <p>
-                    Observation forms the foundation of successful heists. Players must study guard 
-                    patrol patterns, camera positions, and security system behaviors before planning 
-                    their approach. This reconnaissance phase teaches patience and the value of 
-                    information gathering before action.
-                </p>
-                <p>
-                    Timing-based execution requires players to identify and exploit windows of 
-                    opportunity when guards are distracted, cameras are looking away, or security 
-                    systems are in vulnerable states. The satisfying feeling of executing a perfectly 
-                    timed sequence rewards the observation and planning invested earlier.
-                </p>
-                <p>
-                    Multiple solutions to each challenge encourage creative thinking. Players can 
-                    approach problems through different strategies, finding methods that match their 
-                    preferred play style while learning alternative approaches from seeing how 
-                    others solve the same challenges.
+                    problem-solving. As Bob, a master thief, players must infiltrate various locations, 
+                    avoid detection by guards and security systems, and make off with valuable items. 
+                    The game combines puzzle-solving depth with accessible presentation.
                 </p>
             </section>
         </article>
@@ -2611,42 +1932,7 @@
                     browser environments with charming pixel-art graphics and addictive gameplay that 
                     captures the magic of retro gaming while adding modern accessibility. As manager 
                     and coach, players build their team through the draft, manage player contracts, 
-                    call offensive plays, and lead their team to championship glory. The game 
-                    successfully balances strategic management depth with accessible arcade-style 
-                    gameplay.
-                </p>
-                <p>
-                    The retro aesthetic pays homage to classic football games while the underlying 
-                    gameplay has been refined for contemporary audiences. The combination of 
-                    nostalgia-inducing visuals and satisfying gameplay mechanics creates an 
-                    experience that appeals to both longtime football game fans and newcomers 
-                    discovering the genre.
-                </p>
-                <p>
-                    The management layer adds strategic depth beyond simple arcade play. Player 
-                    acquisition, contract negotiation, and team development provide engagement 
-                    between games, creating a complete football management experience.
-                </p>
-            </section>
-            
-            <section class="description-features">
-                <h3>Game Modes and Features</h3>
-                <p>
-                    Offensive play calling puts players in control of the quarterback position, 
-                    with the ability to pass, run, or scramble based on how the defense sets up. 
-                    The simple tap-to-throw mechanics are easy to learn but require skill to 
-                    master, especially against challenging defensive formations.
-                </p>
-                <p>
-                    Defensive setup allows players to configure their formation and attempt to 
-                    stop opposing drives. While less hands-on than offense, defensive success 
-                    requires understanding opponent tendencies and making strategic adjustments.
-                </p>
-                <p>
-                    Season mode takes teams through a complete football season with playoff 
-                    implications, building toward a championship game. The mode creates 
-                    narrative through the season, with dramatic moments and memorable 
-                    performances adding to the experience.
+                    call offensive plays, and lead their team to championship glory.
                 </p>
             </section>
         </article>
@@ -2669,44 +1955,7 @@
                     characters that leave trails as they move, competing to claim territory by 
                     enclosing areas and returning to their base to fill them in. The game combines 
                     quick reflexes with strategic territorial thinking, creating competitive 
-                    matches that are easy to learn but challenging to master. The paper-and-pencil 
-                    aesthetic provides a distinctive visual style that sets the game apart from 
-                    conventional territory games.
-                </p>
-                <p>
-                    The core mechanic of trail-based territory capture creates unique strategic 
-                    considerations. Players must balance expanding their territory with protecting 
-                    their vulnerable trail, as opponents can eliminate them by crossing their 
-                    unprotected path. This tension between aggression and caution drives the 
-                    competitive gameplay.
-                </p>
-                <p>
-                    Both single-player and multiplayer modes provide different experiences. 
-                    Single-player modes offer structured challenges against AI opponents, while 
-                    multiplayer modes bring the unpredictability and excitement of competing 
-                    against real players.
-                </p>
-            </section>
-            
-            <section class="description-features">
-                <h3>Gameplay Mechanics</h3>
-                <p>
-                    Territory capture works through a simple but elegant mechanism. Players move 
-                    their character, leaving a trail that marks their path. Returning to their 
-                    owned territory without leaving gaps encloses the trail, converting all 
-                    enclosed area to the player's territory. The larger the territory, the more 
-                    points earned.
-                </p>
-                <p>
-                    Risk and reward drive decision-making. Leaving territory exposes the trail, 
-                    which opponents can cross to eliminate the player. However, staying within 
-                    existing territory yields slow point generation while aggressive expansion 
-                    can quickly build a dominant position if executed successfully.
-                </p>
-                <p>
-                    Power-ups and special abilities provide tactical options that can shift 
-                    momentum during matches. Strategic use of these abilities at key moments 
-                    separates skilled players from casual competitors.
+                    matches that are easy to learn but challenging to master.
                 </p>
             </section>
         </article>
