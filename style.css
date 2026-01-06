@@ -1,7 +1,7 @@
 /* ==========================================================
    SAWFISH APP STORE — STYLE SYSTEM
    Dark / Modern / Apple App Store Inspired / PWA-Optimized
-   Version: 1.0.0
+   Version: 1.1.0
    Author: Eric Zhu / Sawfish Developer Group
 ========================================================== */
 
@@ -63,6 +63,7 @@ ul, ol {
     --bg-tertiary: #1b1f26;
     --bg-elevated: #1f2430;
     --bg-surface: #252a33;
+    --bg-elevated-blue: rgba(77, 163, 255, 0.08);
     
     /* Accent Colors */
     --accent-primary: #4da3ff;
@@ -81,6 +82,7 @@ ul, ol {
     --warning: #fbbf24;
     --error: #f87171;
     --info: #60a5fa;
+    --developer-accent: #a78bfa;
     
     /* Border Colors */
     --border-subtle: rgba(255, 255, 255, 0.06);
@@ -93,6 +95,7 @@ ul, ol {
     --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.4);
     --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.5);
     --shadow-glow: 0 0 40px rgba(77, 163, 255, 0.15);
+    --shadow-developer: 0 0 20px rgba(167, 139, 250, 0.2);
     
     /* Spacing */
     --spacing-xs: 4px;
@@ -558,6 +561,50 @@ ul, ol {
     box-shadow: 0 0 8px var(--success);
 }
 
+/* Developer Login Button */
+.developer-login-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--radius-md);
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: all var(--transition-fast);
+    margin-top: var(--spacing-sm);
+    border: 1px solid var(--border-subtle);
+}
+
+.developer-login-btn:hover {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    border-color: var(--border-light);
+}
+
+.developer-login-btn.logged-in {
+    background: rgba(167, 139, 250, 0.1);
+    border-color: rgba(167, 139, 250, 0.3);
+    color: var(--developer-accent);
+}
+
+.developer-login-btn.logged-in:hover {
+    background: rgba(167, 139, 250, 0.15);
+    border-color: rgba(167, 139, 250, 0.5);
+}
+
+.developer-login-btn svg {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+}
+
+.developer-status-text {
+    flex: 1;
+    text-align: left;
+}
+
 /* ==========================================================
    MAIN CONTENT
 ========================================================== */
@@ -842,6 +889,69 @@ ul, ol {
 }
 
 /* ==========================================================
+   FEATURED SECTIONS (Games & OS Pages)
+========================================================== */
+.featured-section {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    margin-bottom: var(--spacing-lg);
+}
+
+.section-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-md);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.featured-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--spacing-sm);
+}
+
+.featured-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-md);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.featured-card:hover {
+    background: var(--bg-tertiary);
+    border-color: var(--border-light);
+    transform: translateY(-2px);
+}
+
+.featured-card img {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-md);
+    margin-bottom: var(--spacing-sm);
+}
+
+.featured-content h4 {
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: var(--spacing-xs);
+}
+
+.featured-content p {
+    font-size: 0.75rem;
+    color: var(--text-tertiary);
+}
+
+/* ==========================================================
    GAMES PAGE
 ========================================================== */
 .page-header {
@@ -988,36 +1098,6 @@ ul, ol {
     font-size: 0.85rem;
     color: var(--text-secondary);
     margin-bottom: 0;
-}
-
-.os-preview-container {
-    position: relative;
-    height: 180px;
-    margin-top: var(--spacing-md);
-    border-radius: var(--radius-md);
-    overflow: hidden;
-    background: var(--bg-main);
-}
-
-.os-preview-container iframe {
-    width: 100%;
-    height: 100%;
-    border: none;
-    opacity: 0.6;
-    pointer-events: none;
-}
-
-.preview-overlay {
-    position: absolute;
-    inset: 0;
-    background: rgba(11, 13, 16, 0.8);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--text-secondary);
-    font-size: 0.8rem;
-    text-align: center;
-    padding: var(--spacing-md);
 }
 
 /* ==========================================================
@@ -1489,6 +1569,12 @@ ul, ol {
     margin-bottom: var(--spacing-md);
 }
 
+.comment-item.developer-response {
+    background: var(--bg-elevated-blue);
+    border-left: 3px solid var(--developer-accent);
+    padding-left: calc(var(--spacing-md) + 10px);
+}
+
 .comment-header {
     display: flex;
     justify-content: space-between;
@@ -1515,9 +1601,26 @@ ul, ol {
     font-size: 0.8rem;
 }
 
+.developer-response .comment-avatar {
+    background: rgba(167, 139, 250, 0.2);
+    color: var(--developer-accent);
+}
+
 .comment-name {
     font-weight: 600;
     font-size: 0.9rem;
+}
+
+.developer-badge {
+    background: linear-gradient(135deg, var(--developer-accent) 0%, #8b5cf6 100%);
+    color: var(--text-inverse);
+    padding: 2px 8px;
+    border-radius: var(--radius-sm);
+    font-size: 0.65rem;
+    font-weight: 700;
+    margin-left: var(--spacing-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .comment-date {
@@ -1803,6 +1906,29 @@ ul, ol {
 }
 
 /* ==========================================================
+   NOTIFICATION TOAST
+========================================================== */
+.notification-toast {
+    position: fixed;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--accent-primary);
+    color: var(--text-inverse);
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    z-index: 2000;
+    animation: slideUp 0.3s ease;
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+/* ==========================================================
    SCROLLBARS
 ========================================================== */
 ::-webkit-scrollbar {
@@ -1835,7 +1961,8 @@ ul, ol {
     
     .sidebar-header h2,
     .nav-item span,
-    .sidebar-footer span {
+    .sidebar-footer span,
+    .developer-status-text {
         display: none;
     }
     
@@ -1861,6 +1988,14 @@ ul, ol {
     .featured-card {
         flex-direction: column;
         text-align: center;
+    }
+    
+    .developer-login-btn {
+        justify-content: center;
+    }
+    
+    .featured-grid {
+        grid-template-columns: repeat(2, 1fr);
     }
 }
 
@@ -1960,6 +2095,10 @@ ul, ol {
     .rating-bars {
         display: none;
     }
+    
+    .featured-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
 
 /* Small Mobile */
@@ -1985,6 +2124,10 @@ ul, ol {
     .card-rating {
         display: none;
     }
+    
+    .featured-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
 
 /* ==========================================================
@@ -1994,7 +2137,9 @@ ul, ol {
     .sidebar-nav,
     .pwa-banner,
     .expanded-overlay,
-    .modal-overlay {
+    .modal-overlay,
+    .notification-toast,
+    .developer-login-btn {
         display: none !important;
     }
     
@@ -2035,3 +2180,7 @@ a:focus-visible {
         --border-light: rgba(255, 255, 255, 0.5);
     }
 }
+
+/* ==========================================================
+   END OF STYLES
+========================================================== */
