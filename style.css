@@ -797,6 +797,10 @@ ul, ol {
     color: #fbbf24;
     font-size: 0.8rem;
     letter-spacing: 1px;
+    display: inline-flex;
+    align-items: center;
+    overflow: hidden;
+    max-width: 100%;
 }
 
 .rating-value {
