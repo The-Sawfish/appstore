@@ -1,10 +1,16 @@
 // ============================================================
 // SAWFISH APP STORE - APPLICATION JAVASCRIPT
 // Full Logic for PWA, Navigation, Ratings, Reviews, Firestore
-// Enhanced Developer Mode with Analytics, App Management, Announcements
+// Enhanced with Firebase Authentication, Profile Pictures, Search
 // Author: Eric Zhu / Sawfish Developer Group
-// Date: January 6, 2026
+// Date: January 8, 2026
 // ============================================================
+
+// ============================================================
+// VERSION CONFIGURATION
+// ============================================================
+const APP_VERSION = '1.2.0';
+const VERSION_CHECK_URL = '/update/version.json';
 
 // ============================================================
 // FIREBASE CONFIGURATION
@@ -20,27 +26,994 @@ const firebaseConfig = {
 
 // Initialize Firebase
 let db;
+let auth;
+let storage;
 let app;
 
 try {
     if (typeof firebase !== 'undefined') {
         app = firebase.initializeApp(firebaseConfig);
         db = firebase.firestore();
+        auth = firebase.auth();
+        storage = firebase.storage();
         console.log('Firebase initialized successfully');
     } else {
-        console.warn('Firebase SDK not loaded - ratings will use local storage fallback');
+        console.warn('Firebase SDK not loaded - limited functionality available');
     }
 } catch (error) {
     console.error('Firebase initialization failed:', error);
 }
 
 // ============================================================
-// FIRESTORE COMMENTS MODULE
-// Handles cloud-synced ratings and reviews
+// USER AUTHENTICATION SYSTEM
+// ============================================================
+const UserAuth = {
+    currentUser: null,
+    userProfile: null,
+    isDeveloperMode: false,
+    DEVELOPER_USERNAME: 'Developer',
+    DEVELOPER_PASSWORD: '120622',
+    
+    // Initialize authentication
+    init: function() {
+        this.loadUserSession();
+        this.setupAuthListeners();
+        this.updateAuthUI();
+    },
+    
+    // Load user session from storage
+    loadUserSession: function() {
+        try {
+            const storedUser = localStorage.getItem('sawfish_user');
+            const storedProfile = localStorage.getItem('sawfish_profile');
+            
+            if (storedUser) {
+                this.currentUser = JSON.parse(storedUser);
+            }
+            
+            if (storedProfile) {
+                this.userProfile = JSON.parse(storedProfile);
+            }
+            
+            // Check developer mode
+            const devSession = sessionStorage.getItem('developer_logged_in');
+            this.isDeveloperMode = devSession === 'true';
+        } catch (error) {
+            console.error('Error loading session:', error);
+        }
+    },
+    
+    // Save user session
+    saveUserSession: function() {
+        try {
+            if (this.currentUser) {
+                localStorage.setItem('sawfish_user', JSON.stringify(this.currentUser));
+            }
+            if (this.userProfile) {
+                localStorage.setItem('sawfish_profile', JSON.stringify(this.userProfile));
+            }
+        } catch (error) {
+            console.error('Error saving session:', error);
+        }
+    },
+    
+    // Clear user session
+    clearSession: function() {
+        this.currentUser = null;
+        this.userProfile = null;
+        this.isDeveloperMode = false;
+        localStorage.removeItem('sawfish_user');
+        localStorage.removeItem('sawfish_profile');
+        sessionStorage.removeItem('developer_logged_in');
+    },
+    
+    // Setup authentication event listeners
+    setupAuthListeners: function() {
+        // Login form submission
+        const loginForm = document.getElementById('login-form');
+        if (loginForm) {
+            loginForm.addEventListener('submit', (e) => this.handleLogin(e));
+        }
+        
+        // Signup form submission
+        const signupForm = document.getElementById('signup-form');
+        if (signupForm) {
+            signupForm.addEventListener('submit', (e) => this.handleSignup(e));
+        }
+        
+        // Password reset form
+        const resetForm = document.getElementById('reset-form');
+        if (resetForm) {
+            resetForm.addEventListener('submit', (e) => this.handlePasswordReset(e));
+        }
+        
+        // Auth modal tabs
+        this.setupAuthTabs();
+        
+        // Logout button
+        const logoutBtn = document.getElementById('logout-btn');
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', () => this.handleLogout());
+        }
+        
+        // Profile picture upload
+        const profileUpload = document.getElementById('profile-picture-upload');
+        if (profileUpload) {
+            profileUpload.addEventListener('change', (e) => this.handleProfilePictureUpload(e));
+        }
+    },
+    
+    // Setup auth modal tabs
+    setupAuthTabs: function() {
+        const tabBtns = document.querySelectorAll('.auth-tab-btn');
+        const tabContents = document.querySelectorAll('.auth-tab-content');
+        
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tab = btn.dataset.authTab;
+                
+                tabBtns.forEach(b => b.classList.remove('active'));
+                tabContents.forEach(c => c.classList.remove('active'));
+                
+                btn.classList.add('active');
+                const targetContent = document.getElementById(`${tab}-content`);
+                if (targetContent) targetContent.classList.add('active');
+            });
+        });
+    },
+    
+    // Handle login
+    handleLogin: async function(event) {
+        event.preventDefault();
+        
+        const emailInput = document.getElementById('login-email');
+        const passwordInput = document.getElementById('login-password');
+        const errorDiv = document.getElementById('login-error');
+        const submitBtn = document.getElementById('login-submit');
+        
+        const email = emailInput?.value.trim();
+        const password = passwordInput?.value;
+        
+        if (!email || !password) {
+            this.showError(errorDiv, 'Please enter both email and password');
+            return;
+        }
+        
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Signing in...';
+        
+        try {
+            // Check for developer backdoor first
+            if (email === this.DEVELOPER_USERNAME && password === this.DEVELOPER_PASSWORD) {
+                this.isDeveloperMode = true;
+                sessionStorage.setItem('developer_logged_in', 'true');
+                this.currentUser = {
+                    uid: 'developer',
+                    email: null,
+                    displayName: this.DEVELOPER_USERNAME,
+                    isDeveloper: true
+                };
+                this.userProfile = {
+                    username: this.DEVELOPER_USERNAME,
+                    avatarUrl: null
+                };
+                this.saveUserSession();
+                this.closeAuthModal();
+                this.updateAuthUI();
+                showNotification('Developer mode activated');
+                return;
+            }
+            
+            // Firebase authentication
+            if (auth) {
+                const userCredential = await auth.signInWithEmailAndPassword(email, password);
+                const user = userCredential.user;
+                
+                // Get or create user profile
+                await this.getOrCreateUserProfile(user);
+                
+                this.saveUserSession();
+                this.closeAuthModal();
+                this.updateAuthUI();
+                showNotification('Welcome back!');
+            } else {
+                this.showError(errorDiv, 'Authentication service unavailable');
+            }
+        } catch (error) {
+            console.error('Login error:', error);
+            let errorMessage = 'Login failed. Please try again.';
+            
+            switch (error.code) {
+                case 'auth/user-not-found':
+                    errorMessage = 'No account found with this email';
+                    break;
+                case 'auth/wrong-password':
+                    errorMessage = 'Incorrect password';
+                    break;
+                case 'auth/invalid-email':
+                    errorMessage = 'Invalid email address';
+                    break;
+                case 'auth/user-disabled':
+                    errorMessage = 'This account has been disabled';
+                    break;
+                case 'auth/too-many-requests':
+                    errorMessage = 'Too many failed attempts. Please try again later';
+                    break;
+            }
+            
+            this.showError(errorDiv, errorMessage);
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Sign In';
+        }
+    },
+    
+    // Handle signup
+    handleSignup: async function(event) {
+        event.preventDefault();
+        
+        const nameInput = document.getElementById('signup-name');
+        const emailInput = document.getElementById('signup-email');
+        const passwordInput = document.getElementById('signup-password');
+        const confirmInput = document.getElementById('signup-confirm');
+        const errorDiv = document.getElementById('signup-error');
+        const submitBtn = document.getElementById('signup-submit');
+        
+        const name = nameInput?.value.trim();
+        const email = emailInput?.value.trim();
+        const password = passwordInput?.value;
+        const confirm = confirmInput?.value;
+        
+        if (!name || !email || !password || !confirm) {
+            this.showError(errorDiv, 'Please fill in all fields');
+            return;
+        }
+        
+        if (password.length < 6) {
+            this.showError(errorDiv, 'Password must be at least 6 characters');
+            return;
+        }
+        
+        if (password !== confirm) {
+            this.showError(errorDiv, 'Passwords do not match');
+            return;
+        }
+        
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Creating account...';
+        
+        try {
+            if (auth) {
+                // Create user
+                const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+                const user = userCredential.user;
+                
+                // Update profile with name
+                await user.updateProfile({ displayName: name });
+                
+                // Send email verification
+                await user.sendEmailVerification();
+                
+                // Create user profile in Firestore
+                this.userProfile = {
+                    username: name,
+                    email: email,
+                    avatarUrl: null,
+                    createdAt: new Date().toISOString(),
+                    bio: '',
+                    totalRatings: 0
+                };
+                
+                await this.saveUserProfile(user.uid);
+                
+                this.currentUser = {
+                    uid: user.uid,
+                    email: user.email,
+                    displayName: name,
+                    emailVerified: user.emailVerified,
+                    isDeveloper: false
+                };
+                
+                this.saveUserSession();
+                this.closeAuthModal();
+                this.updateAuthUI();
+                showNotification('Account created! Please check your email for verification.');
+            } else {
+                this.showError(errorDiv, 'Authentication service unavailable');
+            }
+        } catch (error) {
+            console.error('Signup error:', error);
+            let errorMessage = 'Signup failed. Please try again.';
+            
+            switch (error.code) {
+                case 'auth/email-already-in-use':
+                    errorMessage = 'An account with this email already exists';
+                    break;
+                case 'auth/invalid-email':
+                    errorMessage = 'Invalid email address';
+                    break;
+                case 'auth/weak-password':
+                    errorMessage = 'Password is too weak';
+                    break;
+            }
+            
+            this.showError(errorDiv, errorMessage);
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Create Account';
+        }
+    },
+    
+    // Handle password reset
+    handlePasswordReset: async function(event) {
+        event.preventDefault();
+        
+        const emailInput = document.getElementById('reset-email');
+        const errorDiv = document.getElementById('reset-error');
+        const successDiv = document.getElementById('reset-success');
+        const submitBtn = document.getElementById('reset-submit');
+        
+        const email = emailInput?.value.trim();
+        
+        if (!email) {
+            this.showError(errorDiv, 'Please enter your email address');
+            return;
+        }
+        
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Sending...';
+        
+        try {
+            if (auth) {
+                await auth.sendPasswordResetEmail(email);
+                successDiv.textContent = `Password reset email sent to ${email}`;
+                successDiv.classList.remove('hidden');
+                errorDiv.classList.add('hidden');
+                showNotification('Password reset email sent!');
+            } else {
+                this.showError(errorDiv, 'Authentication service unavailable');
+            }
+        } catch (error) {
+            console.error('Password reset error:', error);
+            let errorMessage = 'Failed to send reset email';
+            
+            if (error.code === 'auth/user-not-found') {
+                errorMessage = 'No account found with this email';
+            }
+            
+            this.showError(errorDiv, errorMessage);
+            successDiv.classList.add('hidden');
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Send Reset Link';
+        }
+    },
+    
+    // Handle logout
+    handleLogout: async function() {
+        try {
+            if (auth && this.currentUser && !this.isDeveloperMode) {
+                await auth.signOut();
+            }
+            
+            this.clearSession();
+            this.updateAuthUI();
+            showNotification('Logged out successfully');
+            
+            // Switch to home tab
+            switchTab('home');
+        } catch (error) {
+            console.error('Logout error:', error);
+            showNotification('Logout failed');
+        }
+    },
+    
+    // Get or create user profile from Firestore
+    getOrCreateUserProfile: async function(user) {
+        if (!db) return;
+        
+        try {
+            const doc = await db.collection('users').doc(user.uid).get();
+            
+            if (doc.exists) {
+                this.userProfile = doc.data();
+            } else {
+                // Create new profile
+                this.userProfile = {
+                    username: user.displayName || user.email.split('@')[0],
+                    email: user.email,
+                    avatarUrl: null,
+                    createdAt: new Date().toISOString(),
+                    bio: '',
+                    totalRatings: 0
+                };
+                await this.saveUserProfile(user.uid);
+            }
+        } catch (error) {
+            console.error('Error getting user profile:', error);
+        }
+    },
+    
+    // Save user profile to Firestore
+    saveUserProfile: async function(uid) {
+        if (!db || !this.userProfile) return;
+        
+        try {
+            await db.collection('users').doc(uid).set(this.userProfile, { merge: true });
+        } catch (error) {
+            console.error('Error saving user profile:', error);
+        }
+    },
+    
+    // Handle profile picture upload
+    handleProfilePictureUpload: async function(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        
+        const preview = document.getElementById('profile-picture-preview');
+        const status = document.getElementById('profile-upload-status');
+        
+        if (!this.currentUser) {
+            showNotification('Please log in to upload a profile picture');
+            return;
+        }
+        
+        try {
+            status.textContent = 'Uploading...';
+            status.classList.remove('hidden');
+            
+            // Upload to Firebase Storage
+            if (storage && !this.isDeveloperMode) {
+                const storageRef = storage.ref(`profiles/${this.currentUser.uid}/avatar`);
+                await storageRef.put(file);
+                const downloadUrl = await storageRef.getDownloadURL();
+                
+                // Update profile
+                this.userProfile.avatarUrl = downloadUrl;
+                await this.saveUserProfile(this.currentUser.uid);
+                
+                // Update Firebase user
+                if (auth.currentUser) {
+                    await auth.currentUser.updateProfile({ photoURL: downloadUrl });
+                }
+            } else {
+                // For developer mode, use base64
+                const reader = new FileReader();
+                reader.onload = async (e) => {
+                    this.userProfile.avatarUrl = e.target.result;
+                    this.saveUserSession();
+                };
+                reader.readAsDataURL(file);
+            }
+            
+            // Update preview
+            if (preview) {
+                preview.src = this.userProfile.avatarUrl || this.getDefaultAvatar();
+            }
+            
+            status.textContent = 'Profile picture updated!';
+            showNotification('Profile picture updated!');
+        } catch (error) {
+            console.error('Upload error:', error);
+            status.textContent = 'Upload failed. Please try again.';
+        }
+    },
+    
+    // Get default avatar URL
+    getDefaultAvatar: function() {
+        const username = this.userProfile?.username || 'User';
+        const initial = username.charAt(0).toUpperCase();
+        return `data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="#4da3ff"/><text x="50" y="50" text-anchor="middle" dy="0.35em" fill="white" font-size="50" font-family="sans-serif">${initial}</text></svg>`)}`;
+    },
+    
+    // Show error message
+    showError: function(errorDiv, message) {
+        if (errorDiv) {
+            errorDiv.textContent = message;
+            errorDiv.classList.remove('hidden');
+            
+            setTimeout(() => {
+                errorDiv.classList.add('hidden');
+            }, 5000);
+        }
+    },
+    
+    // Open auth modal
+    openAuthModal: function() {
+        const modal = document.getElementById('auth-modal');
+        if (modal) {
+            modal.classList.remove('hidden');
+            modal.setAttribute('aria-hidden', 'false');
+        }
+    },
+    
+    // Close auth modal
+    closeAuthModal: function() {
+        const modal = document.getElementById('auth-modal');
+        if (modal) {
+            modal.classList.add('hidden');
+            modal.setAttribute('aria-hidden', 'true');
+            
+            // Reset forms
+            const forms = modal.querySelectorAll('form');
+            forms.forEach(f => f.reset());
+            
+            document.getElementById('login-error')?.classList.add('hidden');
+            document.getElementById('signup-error')?.classList.add('hidden');
+            document.getElementById('reset-success')?.classList.add('hidden');
+        }
+    },
+    
+    // Update auth UI based on login state
+    updateAuthUI: function() {
+        const loggedOutUI = document.getElementById('auth-logged-out');
+        const loggedInUI = document.getElementById('auth-logged-in');
+        const profileName = document.getElementById('profile-name');
+        const profileEmail = document.getElementById('profile-email');
+        const profilePicture = document.getElementById('profile-picture-img');
+        const profilePicturePreview = document.getElementById('profile-picture-preview');
+        
+        if (this.currentUser) {
+            // Logged in state
+            if (loggedOutUI) loggedOutUI.classList.add('hidden');
+            if (loggedInUI) loggedInUI.classList.remove('hidden');
+            
+            const name = this.userProfile?.username || this.currentUser.displayName || 'User';
+            const email = this.userProfile?.email || this.currentUser.email || '';
+            
+            if (profileName) profileName.textContent = name;
+            if (profileEmail) profileEmail.textContent = email;
+            
+            const avatarUrl = this.userProfile?.avatarUrl || this.getDefaultAvatar();
+            if (profilePicture) profilePicture.src = avatarUrl;
+            if (profilePicturePreview) profilePicturePreview.src = avatarUrl;
+            
+            // Update login button in nav
+            const loginBtn = document.getElementById('nav-login-btn');
+            if (loginBtn) {
+                loginBtn.innerHTML = `
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                        <circle cx="12" cy="7" r="4"/>
+                    </svg>
+                    <span>${name}</span>
+                `;
+                loginBtn.onclick = () => switchTab('profile');
+            }
+        } else {
+            // Logged out state
+            if (loggedOutUI) loggedOutUI.classList.remove('hidden');
+            if (loggedInUI) loggedInUI.classList.add('hidden');
+            
+            // Reset login button
+            const loginBtn = document.getElementById('nav-login-btn');
+            if (loginBtn) {
+                loginBtn.innerHTML = `
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                        <circle cx="12" cy="7" r="4"/>
+                    </svg>
+                    <span>Login</span>
+                `;
+                loginBtn.onclick = () => this.openAuthModal();
+            }
+        }
+    },
+    
+    // Check if user is logged in
+    isLoggedIn: function() {
+        return this.currentUser !== null;
+    },
+    
+    // Check if user can rate (must be logged in)
+    canRate: function() {
+        return this.isLoggedIn() || this.isDeveloperMode;
+    },
+    
+    // Get username for reviews
+    getReviewUsername: function() {
+        if (this.isDeveloperMode) return 'Developer';
+        return this.userProfile?.username || this.currentUser?.displayName || 'Anonymous';
+    },
+    
+    // Get user avatar for reviews
+    getReviewAvatar: function() {
+        if (this.isDeveloperMode) return null;
+        return this.userProfile?.avatarUrl;
+    }
+};
+
+// ============================================================
+// MINECRAFT RE-GUEST WARNING SYSTEM
+// ============================================================
+const MinecraftReGuest = {
+    MINECRAFT_APP_ID: 'minecraft',
+    
+    // Check if app requires re-guest
+    requiresReGuest: function(appId) {
+        return appId === this.MINECRAFT_APP_ID;
+    },
+    
+    // Show re-guest warning modal
+    showWarning: function(appId, appName, appLink) {
+        const overlay = document.getElementById('minecraft-warning-overlay');
+        if (!overlay) return;
+        
+        const title = document.getElementById('minecraft-warning-title');
+        const message = document.getElementById('minecraft-warning-message');
+        const launchBtn = document.getElementById('minecraft-launch-btn');
+        const cancelBtn = document.getElementById('minecraft-cancel-btn');
+        
+        if (title) title.textContent = `${appName} - Multiplayer Notice`;
+        if (message) {
+            message.innerHTML = `
+                <p><strong>Multiplayer requires re-guesting to work properly.</strong></p>
+                <p>To play multiplayer in ${appName}, you need to refresh/re-guest the game page. This is necessary because:</p>
+                <ul>
+                    <li>Multiplayer sessions require fresh network connections</li>
+                    <li>Cached data can interfere with server communication</li>
+                    <li>Server authentication needs to be re-established</li>
+                </ul>
+                <p>Click "Launch Game" to open the game, then refresh the page when you want to play multiplayer.</p>
+            `;
+        }
+        
+        if (launchBtn) {
+            launchBtn.onclick = () => {
+                window.open(appLink, '_blank');
+                this.closeWarning();
+            };
+        }
+        
+        if (cancelBtn) {
+            cancelBtn.onclick = () => this.closeWarning();
+        }
+        
+        overlay.classList.remove('hidden');
+        overlay.setAttribute('aria-hidden', 'false');
+    },
+    
+    // Close the warning modal
+    closeWarning: function() {
+        const overlay = document.getElementById('minecraft-warning-overlay');
+        if (overlay) {
+            overlay.classList.add('hidden');
+            overlay.setAttribute('aria-hidden', 'true');
+        }
+    }
+};
+
+// ============================================================
+// OFFLINE TAG SYSTEM
+// ============================================================
+const OfflineTagSystem = {
+    OFFLINE_APPS: ['circle', 'blockblast'],
+    HACK_SITE_PASSWORD: '0128',
+    
+    // Check if app has offline tag
+    isOfflineApp: function(appId) {
+        return this.OFFLINE_APPS.includes(appId);
+    },
+    
+    // Show hack site password toast
+    showHackPassword: function(appId, appName) {
+        showNotification(`${appName}: Hack site password is ${this.HACK_SITE_PASSWORD}`);
+    }
+};
+
+// ============================================================
+// COMMUNITY BOARD / FORUM SYSTEM
+// ============================================================
+const CommunityBoard = {
+    COLLECTION_NAME: 'sawfish_community_posts',
+    unsubscribe: null,
+    
+    // Initialize community board
+    init: function() {
+        this.setupPostForm();
+        this.loadPosts();
+    },
+    
+    // Setup post form submission
+    setupPostForm: function() {
+        const form = document.getElementById('community-post-form');
+        if (!form) return;
+        
+        const submitBtn = form.querySelector('#community-submit-btn');
+        const textarea = form.querySelector('#community-post-input');
+        
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const content = textarea?.value.trim();
+            if (!content) {
+                showNotification('Please enter a message');
+                return;
+            }
+            
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Posting...';
+            }
+            
+            try {
+                await this.createPost(content);
+                if (textarea) textarea.value = '';
+                showNotification('Message posted!');
+            } catch (error) {
+                console.error('Error posting:', error);
+                showNotification('Failed to post message');
+            } finally {
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Post';
+                }
+            }
+        });
+    },
+    
+    // Create a new post
+    createPost: async function(content) {
+        if (!db) {
+            // Local storage fallback
+            const posts = JSON.parse(localStorage.getItem('sawfish_community_posts') || '[]');
+            const newPost = {
+                id: Date.now().toString(),
+                content: content,
+                author: UserAuth.isLoggedIn() ? UserAuth.getReviewUsername() : 'Anonymous',
+                isAdmin: DeveloperMode.isLoggedIn,
+                timestamp: new Date().toISOString(),
+                type: DeveloperMode.isLoggedIn ? 'admin_alert' : 'chat'
+            };
+            posts.unshift(newPost);
+            localStorage.setItem('sawfish_community_posts', JSON.stringify(posts));
+            this.renderPosts(posts);
+            return;
+        }
+        
+        try {
+            const post = {
+                content: content,
+                author: UserAuth.isLoggedIn() ? UserAuth.getReviewUsername() : 'Anonymous',
+                isAdmin: DeveloperMode.isLoggedIn,
+                timestamp: new Date().toISOString(),
+                type: DeveloperMode.isLoggedIn ? 'admin_alert' : 'chat'
+            };
+            
+            await db.collection(this.COLLECTION_NAME).add(post);
+        } catch (error) {
+            console.error('Error creating post in Firestore:', error);
+            // Fallback to local storage
+            const posts = JSON.parse(localStorage.getItem('sawfish_community_posts') || '[]');
+            const newPost = {
+                id: Date.now().toString(),
+                content: content,
+                author: UserAuth.isLoggedIn() ? UserAuth.getReviewUsername() : 'Anonymous',
+                isAdmin: DeveloperMode.isLoggedIn,
+                timestamp: new Date().toISOString(),
+                type: DeveloperMode.isLoggedIn ? 'admin_alert' : 'chat'
+            };
+            posts.unshift(newPost);
+            localStorage.setItem('sawfish_community_posts', JSON.stringify(posts));
+            this.renderPosts(posts);
+        }
+    },
+    
+    // Load all posts
+    loadPosts: function() {
+        if (!db) {
+            // Use local storage
+            const posts = JSON.parse(localStorage.getItem('sawfish_community_posts') || '[]');
+            this.renderPosts(posts);
+            return;
+        }
+        
+        try {
+            // Real-time listener
+            this.unsubscribe = db.collection(this.COLLECTION_NAME)
+                .orderBy('timestamp', 'desc')
+                .limit(100)
+                .onSnapshot(
+                    (snapshot) => {
+                        const posts = snapshot.docs.map(doc => ({
+                            id: doc.id,
+                            ...doc.data()
+                        }));
+                        this.renderPosts(posts);
+                    },
+                    (error) => {
+                        console.error('Error loading posts:', error);
+                        // Fallback to local storage
+                        const posts = JSON.parse(localStorage.getItem('sawfish_community_posts') || '[]');
+                        this.renderPosts(posts);
+                    }
+                );
+        } catch (error) {
+            console.error('Error setting up posts listener:', error);
+            const posts = JSON.parse(localStorage.getItem('sawfish_community_posts') || '[]');
+            this.renderPosts(posts);
+        }
+    },
+    
+    // Render posts to the community feed
+    renderPosts: function(posts) {
+        const container = document.getElementById('community-feed');
+        if (!container) return;
+        
+        if (!posts || posts.length === 0) {
+            container.innerHTML = `
+                <div class="community-empty">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                    </svg>
+                    <h3>No messages yet</h3>
+                    <p>Be the first to post a message!</p>
+                </div>
+            `;
+            return;
+        }
+        
+        container.innerHTML = posts.map(post => {
+            const isAdmin = post.isAdmin === true;
+            const isAnonymous = !UserAuth.isLoggedIn() && post.author === 'Anonymous';
+            const postClass = isAdmin ? 'community-post admin' : 'community-post';
+            const avatar = isAdmin ? 'A' : (post.author === 'Anonymous' ? '?' : post.author.charAt(0).toUpperCase());
+            
+            return `
+                <article class="${postClass}">
+                    <div class="community-post-header">
+                        <div class="community-post-author">
+                            <div class="community-post-avatar ${isAdmin ? 'admin' : ''}">${escapeHtml(avatar)}</div>
+                            <div class="community-post-info">
+                                <span class="community-post-name">
+                                    ${escapeHtml(post.author)}
+                                    ${isAdmin ? '<span class="admin-badge">Admin</span>' : ''}
+                                    ${isAnonymous ? '<span class="anonymous-badge">Anonymous</span>' : ''}
+                                </span>
+                                <span class="community-post-date">${formatDate(post.timestamp)}</span>
+                            </div>
+                        </div>
+                        ${isAdmin ? '<span class="post-type-badge">Announcement</span>' : ''}
+                    </div>
+                    <div class="community-post-content">${escapeHtml(post.content)}</div>
+                </article>
+            `;
+        }).join('');
+    },
+    
+    // Cleanup on unload
+    cleanup: function() {
+        if (this.unsubscribe) {
+            this.unsubscribe();
+        }
+    }
+};
+
+// ============================================================
+// SEARCH FUNCTIONALITY
+// ============================================================
+const SearchSystem = {
+    searchIndex: [],
+    
+    init: function() {
+        this.buildSearchIndex();
+        this.setupSearchListeners();
+    },
+    
+    // Build search index from app data
+    buildSearchIndex: function() {
+        this.searchIndex = Object.entries(appData).map(([id, app]) => ({
+            id,
+            name: app.name.toLowerCase(),
+            developer: app.developer.toLowerCase(),
+            description: app.description.toLowerCase(),
+            category: app.category.toLowerCase(),
+            tags: `${app.name} ${app.developer} ${app.category}`.toLowerCase()
+        }));
+    },
+    
+    // Setup search event listeners
+    setupSearchListeners: function() {
+        const searchInput = document.getElementById('search-input');
+        const searchResults = document.getElementById('search-results');
+        
+        if (searchInput) {
+            searchInput.addEventListener('input', (e) => {
+                this.performSearch(e.target.value, searchResults);
+            });
+            
+            searchInput.addEventListener('focus', () => {
+                if (searchInput.value.length > 0) {
+                    this.performSearch(searchInput.value, searchResults);
+                }
+            });
+        }
+        
+        // Close search when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.search-container') && searchResults) {
+                searchResults.classList.add('hidden');
+            }
+        });
+    },
+    
+    // Perform search
+    performSearch: function(query, resultsContainer) {
+        if (!resultsContainer) return;
+        
+        if (query.length < 2) {
+            resultsContainer.classList.add('hidden');
+            return;
+        }
+        
+        const results = this.searchIndex.filter(item => {
+            return item.name.includes(query.toLowerCase()) ||
+                   item.developer.includes(query.toLowerCase()) ||
+                   item.tags.includes(query.toLowerCase());
+        }).slice(0, 10);
+        
+        if (results.length === 0) {
+            resultsContainer.innerHTML = '<div class="search-no-results">No apps found</div>';
+        } else {
+            resultsContainer.innerHTML = results.map(result => {
+                const app = appData[result.id];
+                return `
+                    <div class="search-result-item" data-app="${result.id}">
+                        <img src="${app.icon}" alt="${app.name}" class="search-result-icon">
+                        <div class="search-result-info">
+                            <span class="search-result-name">${app.name}</span>
+                            <span class="search-result-category">${app.category}</span>
+                        </div>
+                        <span class="search-result-rating" data-avg-rating="${result.id}">—</span>
+                    </div>
+                `;
+            }).join('');
+            
+            // Add click handlers
+            resultsContainer.querySelectorAll('.search-result-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    const appId = item.dataset.app;
+                    if (appId) {
+                        openExpandedApp(appId);
+                        resultsContainer.classList.add('hidden');
+                        document.getElementById('search-input').value = '';
+                    }
+                });
+            });
+            
+            // Load ratings for results
+            this.loadResultRatings();
+        }
+        
+        resultsContainer.classList.remove('hidden');
+    },
+    
+    // Load ratings for search results
+    loadResultRatings: async function() {
+        const ratingElements = document.querySelectorAll('.search-result-rating');
+        
+        for (const element of ratingElements) {
+            const appId = element.dataset.avgRating;
+            try {
+                const avgRating = await FirestoreComments.getAverageRating(appId);
+                if (avgRating !== null && avgRating !== undefined) {
+                    element.textContent = avgRating.toFixed(1);
+                } else {
+                    element.textContent = '—';
+                }
+            } catch (error) {
+                element.textContent = '—';
+            }
+        }
+    }
+};
+
+// ============================================================
+// FIRESTORE RATINGS MODULE
 // ============================================================
 const FirestoreComments = {
     // Save a review to Firestore
-    saveReview: async function(appId, rating, comment, userName, isDeveloper = false) {
+    saveReview: async function(appId, rating, comment, userName, isDeveloper = false, userAvatar = null) {
         if (!db) {
             console.warn('Firestore not available, using local storage fallback');
             return RatingsLocalStorage.saveRating(appId, rating, comment, userName);
@@ -52,16 +1025,25 @@ const FirestoreComments = {
                 rating: rating,
                 comment: comment,
                 user: userName || 'Anonymous',
+                userAvatar: userAvatar,
                 isDeveloper: isDeveloper,
                 timestamp: new Date().toISOString()
             };
             
             await db.collection('reviews').add(review);
+            
+            // Update user's total ratings
+            if (UserAuth.currentUser && !isDeveloper) {
+                const userRef = db.collection('users').doc(UserAuth.currentUser.uid);
+                await userRef.update({
+                    totalRatings: firebase.firestore.FieldValue.increment(1)
+                });
+            }
+            
             console.log('Review saved to Firestore:', review);
             return review;
         } catch (error) {
             console.error('Error saving to Firestore:', error);
-            // Fallback to local storage
             return RatingsLocalStorage.saveRating(appId, rating, comment, userName);
         }
     },
@@ -91,7 +1073,6 @@ const FirestoreComments = {
     // Subscribe to real-time updates for an app's reviews
     subscribeToReviews: function(appId, callback) {
         if (!db) {
-            // Use local storage polling as fallback
             const localReviews = RatingsLocalStorage.getAppRatings(appId);
             callback(localReviews);
             return () => {};
@@ -111,7 +1092,6 @@ const FirestoreComments = {
                     },
                     (error) => {
                         console.error('Firestore subscription error:', error);
-                        // Fallback to local storage on error
                         callback(RatingsLocalStorage.getAppRatings(appId));
                     }
                 );
@@ -135,7 +1115,7 @@ const FirestoreComments = {
                 .get();
             
             if (snapshot.empty) {
-                return null; // Return null to indicate no reviews
+                return null;
             }
             
             let sum = 0;
@@ -318,163 +1298,46 @@ const RatingsLocalStorage = {
 };
 
 // ============================================================
+// NUMERIC RATING DISPLAY SYSTEM
+// ============================================================
+function getNumericRatingDisplay(rating) {
+    if (rating === null || rating === undefined || isNaN(rating)) {
+        return '<span class="rating-na">—</span>';
+    }
+    
+    const formattedRating = rating.toFixed(1);
+    
+    // Color based on rating
+    let colorClass = 'rating-poor';
+    if (rating >= 4.5) colorClass = 'rating-excellent';
+    else if (rating >= 3.5) colorClass = 'rating-good';
+    else if (rating >= 2.5) colorClass = 'rating-average';
+    
+    return `<span class="numeric-rating ${colorClass}">${formattedRating}</span>`;
+}
+
+// ============================================================
 // DEVELOPER MODE MODULE
-// Enhanced with Analytics, App Management, Announcements, Moderation
 // ============================================================
 const DeveloperMode = {
     isLoggedIn: false,
     DEVELOPER_PASSWORD: '120622',
     
-    // Initialize developer mode
     init: function() {
-        // Check if already logged in from previous session
         if (sessionStorage.getItem('developer_logged_in') === 'true') {
             this.isLoggedIn = true;
-            this.updateLoginButton();
         }
-        
-        // Set up login button listener
-        const loginBtn = document.getElementById('developer-login-button');
-        if (loginBtn) {
-            loginBtn.addEventListener('click', () => this.toggleLogin());
-        }
-        
-        // Set up developer modal listeners
-        this.setupModalListeners();
-        
-        // Set up dashboard listeners
-        this.setupDashboardListeners();
+        this.updateLoginButton();
     },
     
-    // Setup developer modal event listeners
-    setupModalListeners: function() {
-        const modal = document.getElementById('developer-login-modal');
-        const cancelBtn = document.getElementById('developer-cancel');
-        const submitBtn = document.getElementById('developer-submit');
-        const passwordInput = document.getElementById('developer-password');
-        
-        if (cancelBtn) {
-            cancelBtn.addEventListener('click', () => this.closeLoginModal());
-        }
-        
-        if (submitBtn) {
-            submitBtn.addEventListener('click', () => this.submitPassword());
-        }
-        
-        if (passwordInput) {
-            passwordInput.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter') {
-                    this.submitPassword();
-                }
-            });
-        }
-        
-        // Close modal on backdrop click
-        const backdrop = modal?.querySelector('.modal-backdrop');
-        if (backdrop) {
-            backdrop.addEventListener('click', () => this.closeLoginModal());
-        }
-    },
-    
-    // Setup dashboard event listeners
-    setupDashboardListeners: function() {
-        // Close dashboard
-        const closeBtn = document.getElementById('developer-close-dashboard');
-        if (closeBtn) {
-            closeBtn.addEventListener('click', () => this.closeDashboard());
-        }
-        
-        // Dashboard navigation
-        const navBtns = document.querySelectorAll('.developer-nav-btn');
-        navBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                const tab = btn.dataset.developerTab;
-                this.switchDeveloperTab(tab);
-            });
-        });
-        
-        // Add new app button
-        const addAppBtn = document.getElementById('add-new-app-btn');
-        if (addAppBtn) {
-            addAppBtn.addEventListener('click', () => this.showAddAppForm());
-        }
-        
-        // Publish announcement button
-        const publishBtn = document.getElementById('publish-announcement');
-        if (publishBtn) {
-            publishBtn.addEventListener('click', () => this.publishAnnouncement());
-        }
-        
-        // Close announcement banner
-        const bannerClose = document.getElementById('announcement-close');
-        if (bannerClose) {
-            bannerClose.addEventListener('click', () => this.dismissAnnouncement());
-        }
-    },
-    
-    // Toggle login/logout
     toggleLogin: function() {
         if (this.isLoggedIn) {
             this.openDashboard();
         } else {
-            this.openLoginModal();
+            UserAuth.openAuthModal();
         }
     },
     
-    // Open login modal
-    openLoginModal: function() {
-        const modal = document.getElementById('developer-login-modal');
-        if (modal) {
-            modal.classList.remove('hidden');
-            modal.setAttribute('aria-hidden', 'false');
-            const passwordInput = document.getElementById('developer-password');
-            if (passwordInput) {
-                passwordInput.value = '';
-                passwordInput.focus();
-            }
-        }
-    },
-    
-    // Close login modal
-    closeLoginModal: function() {
-        const modal = document.getElementById('developer-login-modal');
-        if (modal) {
-            modal.classList.add('hidden');
-            modal.setAttribute('aria-hidden', 'true');
-        }
-    },
-    
-    // Submit password
-    submitPassword: function() {
-        const passwordInput = document.getElementById('developer-password');
-        const password = passwordInput?.value;
-        
-        if (password === this.DEVELOPER_PASSWORD) {
-            this.isLoggedIn = true;
-            sessionStorage.setItem('developer_logged_in', 'true');
-            this.closeLoginModal();
-            this.updateLoginButton();
-            this.openDashboard();
-            showNotification('Developer mode activated');
-            console.log('Developer logged in successfully');
-        } else if (password && password !== '') {
-            alert('Incorrect password. Please try again.');
-            passwordInput.value = '';
-            passwordInput.focus();
-        }
-    },
-    
-    // Log out
-    logout: function() {
-        this.isLoggedIn = false;
-        sessionStorage.removeItem('developer_logged_in');
-        this.closeDashboard();
-        this.updateLoginButton();
-        showNotification('Developer mode deactivated');
-        console.log('Developer logged out');
-    },
-    
-    // Open developer dashboard
     openDashboard: function() {
         const dashboard = document.getElementById('developer-dashboard');
         if (dashboard) {
@@ -487,7 +1350,6 @@ const DeveloperMode = {
         }
     },
     
-    // Close developer dashboard
     closeDashboard: function() {
         const dashboard = document.getElementById('developer-dashboard');
         if (dashboard) {
@@ -496,30 +1358,36 @@ const DeveloperMode = {
         }
     },
     
-    // Switch developer dashboard tab
-    switchDeveloperTab: function(tabName) {
-        // Update nav buttons
-        const navBtns = document.querySelectorAll('.developer-nav-btn');
-        navBtns.forEach(btn => {
-            if (btn.dataset.developerTab === tabName) {
-                btn.classList.add('active');
-            } else {
-                btn.classList.remove('active');
-            }
-        });
+    updateLoginButton: function() {
+        const btn = document.getElementById('developer-login-button');
+        if (!btn) return;
         
-        // Update content
-        const contents = document.querySelectorAll('.developer-tab-content');
-        contents.forEach(content => {
-            if (content.dataset.developerContent === tabName) {
-                content.classList.add('active');
-            } else {
-                content.classList.remove('active');
+        const statusText = btn.querySelector('.developer-status-text');
+        const icon = btn.querySelector('svg');
+        
+        if (this.isLoggedIn) {
+            btn.classList.add('logged-in');
+            if (statusText) statusText.textContent = 'Dashboard';
+            if (icon) {
+                icon.innerHTML = `<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>`;
             }
-        });
+        } else {
+            btn.classList.remove('logged-in');
+            if (statusText) statusText.textContent = 'Developer';
+            if (icon) {
+                icon.innerHTML = `<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>`;
+            }
+        }
     },
     
-    // Load analytics data
+    logout: function() {
+        this.isLoggedIn = false;
+        sessionStorage.removeItem('developer_logged_in');
+        this.closeDashboard();
+        this.updateLoginButton();
+        showNotification('Developer mode deactivated');
+    },
+    
     loadAnalytics: async function() {
         try {
             const [allReviews, totalApps] = await Promise.all([
@@ -527,11 +1395,9 @@ const DeveloperMode = {
                 Promise.resolve(Object.keys(appData).length)
             ]);
             
-            // Calculate statistics
             const totalReviews = allReviews.length;
             const developerResponses = allReviews.filter(r => r.isDeveloper).length;
             
-            // Calculate average rating
             let sum = 0;
             let count = 0;
             const appRatings = {};
@@ -548,13 +1414,11 @@ const DeveloperMode = {
             
             const avgRating = count > 0 ? (sum / count).toFixed(1) : '0.0';
             
-            // Update UI
             document.getElementById('stat-total-reviews').textContent = totalReviews;
             document.getElementById('stat-total-apps').textContent = totalApps;
             document.getElementById('stat-avg-rating').textContent = avgRating;
             document.getElementById('stat-developer-responses').textContent = developerResponses;
             
-            // Show top rated apps
             const topRatedContainer = document.getElementById('top-rated-apps');
             if (topRatedContainer) {
                 const topApps = Object.entries(appRatings)
@@ -572,7 +1436,7 @@ const DeveloperMode = {
                         return `
                             <div class="top-rated-item">
                                 <span class="top-rated-name">${appInfo ? appInfo.name : app.appId}</span>
-                                <span class="top-rated-stars">${getStarDisplay(app.avg)}</span>
+                                <span class="top-rated-rating">${getNumericRatingDisplay(app.avg)}</span>
                                 <span class="top-rated-count">(${app.count})</span>
                             </div>
                         `;
@@ -586,7 +1450,6 @@ const DeveloperMode = {
         }
     },
     
-    // Load app manager
     loadAppManager: function() {
         const appList = document.getElementById('app-manager-list');
         if (!appList) return;
@@ -610,7 +1473,6 @@ const DeveloperMode = {
         `).join('');
     },
     
-    // Add new app
     showAddAppForm: function() {
         const newAppId = prompt('Enter new app ID (lowercase, no spaces):');
         if (!newAppId) return;
@@ -623,7 +1485,6 @@ const DeveloperMode = {
         const appLink = prompt('Enter app URL:');
         if (!appLink) return;
         
-        // Create new app data
         appData[newAppId] = {
             name: appName,
             developer: appDeveloper || 'Unknown',
@@ -643,7 +1504,6 @@ const DeveloperMode = {
         this.loadAppManager();
     },
     
-    // Edit app
     editApp: function(appId) {
         const app = appData[appId];
         if (!app) return;
@@ -663,7 +1523,6 @@ const DeveloperMode = {
         showNotification(`App "${app.name}" updated successfully!`);
     },
     
-    // Delete app
     deleteApp: function(appId) {
         const app = appData[appId];
         if (!app) return;
@@ -675,7 +1534,6 @@ const DeveloperMode = {
         }
     },
     
-    // Load announcements
     loadAnnouncements: function() {
         const announcementList = document.getElementById('announcement-list');
         if (!announcementList) return;
@@ -696,7 +1554,6 @@ const DeveloperMode = {
         }
     },
     
-    // Publish announcement
     publishAnnouncement: function() {
         const titleInput = document.getElementById('announcement-title');
         const textInput = document.getElementById('announcement-text');
@@ -721,18 +1578,13 @@ const DeveloperMode = {
         
         localStorage.setItem('sawfish_announcements', JSON.stringify(announcements));
         
-        // Clear form
         titleInput.value = '';
         textInput.value = '';
         
         showNotification('Announcement published!');
         this.loadAnnouncements();
-        
-        // Show announcement banner
-        this.showAnnouncementBanner(title, type);
     },
     
-    // Delete announcement
     deleteAnnouncement: function(index) {
         const announcements = JSON.parse(localStorage.getItem('sawfish_announcements') || '[]');
         announcements.splice(index, 1);
@@ -741,43 +1593,6 @@ const DeveloperMode = {
         showNotification('Announcement deleted');
     },
     
-    // Show announcement banner
-    showAnnouncementBanner: function(title, type) {
-        const banner = document.getElementById('announcement-banner');
-        const textSpan = banner?.querySelector('.announcement-text');
-        const iconSpan = banner?.querySelector('.announcement-icon');
-        
-        if (banner && textSpan && iconSpan) {
-            banner.className = `announcement-banner ${type}`;
-            textSpan.textContent = title;
-            
-            // Set icon based on type
-            switch (type) {
-                case 'warning':
-                    iconSpan.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>';
-                    break;
-                case 'success':
-                    iconSpan.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>';
-                    break;
-                default:
-                    iconSpan.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>';
-            }
-            
-            banner.classList.remove('hidden');
-            banner.setAttribute('aria-hidden', 'false');
-        }
-    },
-    
-    // Dismiss announcement banner
-    dismissAnnouncement: function() {
-        const banner = document.getElementById('announcement-banner');
-        if (banner) {
-            banner.classList.add('hidden');
-            banner.setAttribute('aria-hidden', 'true');
-        }
-    },
-    
-    // Load moderation list
     loadModeration: async function() {
         const moderationList = document.getElementById('moderation-list');
         if (!moderationList) return;
@@ -793,7 +1608,7 @@ const DeveloperMode = {
                             <div class="moderation-info">
                                 <strong>${escapeHtml(review.user)}</strong>
                                 <span>on ${appInfo ? appInfo.name : review.appId}</span>
-                                <span class="moderation-rating">${'★'.repeat(review.rating)}</span>
+                                <span class="moderation-rating">${review.rating}/5</span>
                             </div>
                             <p class="moderation-comment">${escapeHtml(review.comment)}</p>
                             <span class="moderation-date">${formatDate(review.timestamp)}</span>
@@ -813,7 +1628,6 @@ const DeveloperMode = {
         }
     },
     
-    // Respond to a review
     respondToReview: function(reviewId, appId) {
         const response = prompt('Enter your developer response:');
         if (!response) return;
@@ -829,7 +1643,6 @@ const DeveloperMode = {
             });
     },
     
-    // Delete review by ID
     deleteReviewById: async function(reviewId) {
         if (!confirm('Are you sure you want to delete this review?')) return;
         
@@ -840,45 +1653,78 @@ const DeveloperMode = {
         } else {
             alert('Failed to delete review');
         }
+    }
+};
+
+// ============================================================
+// UPDATE CHECKER
+// ============================================================
+const UpdateChecker = {
+    init: async function() {
+        await this.checkForUpdates();
     },
     
-    // Update the login button UI
-    updateLoginButton: function() {
-        const btn = document.getElementById('developer-login-button');
-        if (!btn) return;
+    checkForUpdates: async function() {
+        try {
+            const response = await fetch(`${VERSION_CHECK_URL}?t=${Date.now()}`);
+            if (response.ok) {
+                const versionData = await response.json();
+                this.compareVersion(versionData);
+            }
+        } catch (error) {
+            console.log('Update check failed:', error);
+        }
+    },
+    
+    compareVersion: function(remoteData) {
+        const localVersion = APP_VERSION;
+        const remoteVersion = remoteData.version;
         
-        const statusText = btn.querySelector('.developer-status-text');
-        const icon = btn.querySelector('svg');
+        const updateBanner = document.getElementById('update-available-banner');
+        const updateVersion = document.getElementById('update-version');
+        const updateDescription = document.getElementById('update-description');
         
-        if (this.isLoggedIn) {
-            btn.classList.add('logged-in');
-            if (statusText) {
-                statusText.textContent = 'Dashboard';
-            }
-            if (icon) {
-                icon.innerHTML = `
-                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-                    <polyline points="16 17 21 12 16 7"/>
-                    <line x1="21" y1="12" x2="9" y2="12"/>
-                `;
-            }
-        } else {
-            btn.classList.remove('logged-in');
-            if (statusText) {
-                statusText.textContent = 'Developer';
-            }
-            if (icon) {
-                icon.innerHTML = `
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                    <circle cx="12" cy="7" r="4"/>
-                `;
+        if (this.isNewerVersion(remoteVersion, localVersion)) {
+            if (updateBanner) {
+                updateBanner.classList.remove('hidden');
+                if (updateVersion) updateVersion.textContent = `v${remoteVersion}`;
+                if (updateDescription) updateDescription.textContent = remoteData.description || 'A new version is available with improvements and fixes.';
             }
         }
     },
     
-    // Check if current review is from developer
-    isDeveloperReview: function(review) {
-        return review.isDeveloper === true;
+    isNewerVersion: function(remote, local) {
+        const remoteParts = remote.split('.').map(Number);
+        const localParts = local.split('.').map(Number);
+        
+        for (let i = 0; i < Math.max(remoteParts.length, localParts.length); i++) {
+            const remoteNum = remoteParts[i] || 0;
+            const localNum = localParts[i] || 0;
+            
+            if (remoteNum > localNum) return true;
+            if (remoteNum < localNum) return false;
+        }
+        
+        return false;
+    },
+    
+    dismissUpdate: function() {
+        const updateBanner = document.getElementById('update-available-banner');
+        if (updateBanner) {
+            updateBanner.classList.add('hidden');
+            localStorage.setItem('sawfish_update_dismissed', APP_VERSION);
+        }
+    },
+    
+    installUpdate: function() {
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.ready.then(registration => {
+                registration.waiting.postMessage({ type: 'SKIP_WAITING' });
+                window.addEventListener('swUpdated', () => {
+                    location.reload(true);
+                });
+            });
+        }
     }
 };
 
@@ -891,19 +1737,19 @@ const AppState = {
     currentPage: 'home',
     expandedApp: null,
     sidebarOpen: false,
-    reviewSubscriptions: {} // Store active subscriptions
+    reviewSubscriptions: {}
 };
 
 // ============================================================
-// APP DATA - Complete with new recommended apps
+// APP DATA - Complete with reorganized categories
 // ============================================================
 const appData = {
-    // Original Apps (1-18)
+    // Featured Apps (Home Page)
     hack: {
         name: "Hack Stuff",
         developer: "Sawfish Developer Group",
         icon: "icons/hack.png",
-        category: "Utilities / Experimental",
+        category: "Hacks",
         description: "Hack Stuff is a comprehensive collection of advanced utilities and experimental tools designed specifically for students and developers who need access to low-level functionality within their browser environment.",
         features: "The Hack Stuff suite includes HTML and CSS inspectors, JavaScript consoles, network request monitors, and various debugging utilities. It also features a collection of educational coding challenges, API testing tools, and data format converters.",
         additional: "Please note that access to certain advanced features may be restricted based on school network policies. All tools are designed to be safe and educational, with no malicious capabilities.",
@@ -921,6 +1767,30 @@ const appData = {
         link: "https://the-sawfish.github.io/game-portal/",
         screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Game+Portal+Home", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Game+Categories"]
     },
+    chat: {
+        name: "Chat App",
+        developer: "Jimeneutron",
+        icon: "icons/chat.png",
+        category: "Social / Messaging",
+        description: "Chat App provides a clean, efficient platform for real-time messaging designed specifically for student communication needs. Connect with classmates instantly in topic-based rooms.",
+        features: "The app features topic-based rooms where students can join discussions relevant to their classes, projects, or interests. Includes direct messaging, file sharing, and customizable chat backgrounds.",
+        additional: "The Chat App is designed to work within school network restrictions. All conversations are moderated and recorded for safety purposes. Students are expected to use the app responsibly.",
+        link: "https://jimeneutron.github.io/chatapp/",
+        screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Chat+App+Interface", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Chat+Rooms"]
+    },
+    call: {
+        name: "Call App",
+        developer: "Sawfish Developer Group",
+        icon: "icons/call.png",
+        category: "Social / Communication",
+        description: "Call App offers a fast, minimal browser-based voice calling interface that enables quick communication between students. Just share a room code and start talking.",
+        features: "The calling system supports direct calls between users who share a room code. Call quality adapts to network conditions, and the interface is designed for quick, efficient communication.",
+        additional: "The Call App is intended for quick, efficient communication. Please use responsibly and respect others. All calls are logged for safety and security purposes.",
+        link: "https://the-sawfish.github.io/call-app/?from=sawfish",
+        screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Call+App+Interface", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Call+Controls"]
+    },
+    
+    // Games
     circle: {
         name: "Draw a Circle",
         developer: "Sawfish Developer Group",
@@ -987,72 +1857,6 @@ const appData = {
         link: "https://the-sawfish.github.io/Run3Final/",
         screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Run+3+Gameplay", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Space+Tunnels"]
     },
-    chat: {
-        name: "Chat App",
-        developer: "Jimeneutron",
-        icon: "icons/chat.png",
-        category: "Social / Messaging",
-        description: "Chat App provides a clean, efficient platform for real-time messaging designed specifically for student communication needs. Connect with classmates instantly in topic-based rooms.",
-        features: "The app features topic-based rooms where students can join discussions relevant to their classes, projects, or interests. Includes direct messaging, file sharing, and customizable chat backgrounds.",
-        additional: "The Chat App is designed to work within school network restrictions. All conversations are moderated and recorded for safety purposes. Students are expected to use the app responsibly.",
-        link: "https://jimeneutron.github.io/chatapp/",
-        screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Chat+App+Interface", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Chat+Rooms"]
-    },
-    call: {
-        name: "Call App",
-        developer: "Sawfish Developer Group",
-        icon: "icons/call.png",
-        category: "Social / Communication",
-        description: "Call App offers a fast, minimal browser-based voice calling interface that enables quick communication between students. Just share a room code and start talking.",
-        features: "The calling system supports direct calls between users who share a room code. Call quality adapts to network conditions, and the interface is designed for quick, efficient communication.",
-        additional: "The Call App is intended for quick, efficient communication. Please use responsibly and respect others. All calls are logged for safety and security purposes.",
-        link: "https://the-sawfish.github.io/call-app/?from=sawfish",
-        screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Call+App+Interface", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Call+Controls"]
-    },
-    novaos: {
-        name: "NovaOS",
-        developer: "RunNova",
-        icon: "icons/novaos.png",
-        category: "Operating System",
-        description: "NovaOS is a full-featured browser-based desktop operating system environment that brings the concept of a web OS to life. Experience a complete desktop interface running entirely in your browser.",
-        features: "The OS features a customizable desktop with drag-and-drop widgets, window management with minimize/maximize/close, file manager, text editor, calculator, music player, and a built-in app store.",
-        additional: "For the full NovaOS experience, we recommend opening the OS directly in a new tab. This provides better performance and more screen space for the desktop environment.",
-        link: "https://runnova.github.io/NovaOS/",
-        screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=NovaOS+Desktop", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=NovaOS+Apps"]
-    },
-    winripen: {
-        name: "WinRipen",
-        developer: "Ripenos",
-        icon: "icons/winripen.png",
-        category: "Operating System",
-        description: "WinRipen is a web-based operating system that recreates the familiar look and feel of classic Windows operating systems. Relive the Windows experience right in your browser.",
-        features: "The OS features authentic-looking windows with title bars, minimize/maximize/close buttons, and resizing handles. Includes a start menu, taskbar, desktop icons, and several built-in applications.",
-        additional: "Due to browser security restrictions, full interaction with WinRipen requires opening it directly in a new tab. This provides access to all features without iframe limitations.",
-        link: "https://ripenos.web.app/WinRipen/index.html",
-        screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=WinRipen+Interface", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Windows+Apps"]
-    },
-    plutoos: {
-        name: "PlutoOS",
-        developer: "Zeon",
-        icon: "icons/plutoos.png",
-        category: "Operating System",
-        description: "PlutoOS represents a futuristic vision of what a web-based operating system could be, with a focus on modern design aesthetics and smooth user interactions. Experience the next generation of web operating systems.",
-        features: "The OS features a modular design with glass-morphism effects, smooth gradients, subtle shadows, and fluid animations. Includes customizable themes, widget support, and a sleek application launcher.",
-        additional: "PlutoOS is an experimental project that demonstrates the cutting edge of browser-based computing. While it's primarily for exploration, it shows what's possible with modern web technologies.",
-        link: "https://pluto-app.zeon.dev",
-        screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=PlutoOS+Modern+UI", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Fluid+Animations"]
-    },
-    ripenos: {
-        name: "Ripenos",
-        developer: "Ripenos",
-        icon: "icons/ripenos.png",
-        category: "Operating System",
-        description: "Ripenos is a lightweight, modular web-based operating system framework designed for speed and efficiency. Experience a clean, fast desktop environment in your browser.",
-        features: "The core OS provides essential desktop functionality including window management, app launching, system settings, and file management. Its modular architecture allows for easy customization and extension.",
-        additional: "Ripenos is particularly suitable for educational environments where performance on varied hardware is important. It loads quickly and runs smoothly even on older devices.",
-        link: "https://ripenos.web.app/Ripenos/",
-        screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Ripenos+Desktop", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Modular+Apps"]
-    },
     syrup: {
         name: "Syrup Games",
         developer: "Jimeneutron",
@@ -1097,9 +1901,54 @@ const appData = {
         link: "https://the-sawfish.github.io/seraph/games/paperio2/index.html",
         screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Paper+Io+2+Gameplay", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Territory+Capture"]
     },
+    hextris: {
+        name: "Hextris",
+        developer: "Hextris",
+        icon: "icons/hextris.png",
+        category: "Games / Puzzle",
+        description: "Hextris is a fast-paced puzzle game inspired by Tetris, played on a hexagonal grid. Rotate the hexagon to stack blocks and prevent the game from ending in this addictive challenge.",
+        features: "Features include addictive gameplay with increasing difficulty, colorful hexagonal visuals, high score tracking, combo multipliers, and smooth animations.",
+        additional: "Often hosted on GitHub Pages, making it less likely to be blocked by school filters. Perfect for quick gaming sessions during breaks.",
+        link: "https://hextris.io/",
+        screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Hextris+Gameplay", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Hexagonal+Puzzle"]
+    },
     
-    // NEW RECOMMENDED APPS (From GitHub and other sources)
-    // Apps #3 and #4 - Visible in normal tabs
+    // New Arcade Games (January 2026)
+    tinyfishing: {
+        name: "Tiny Fishing",
+        developer: "Kongregate",
+        icon: "icons/tinyfishing.png",
+        category: "Games / Arcade",
+        description: "Tiny Fishing is an addictive arcade game where you cast your line into the water and catch fish of various sizes. Upgrade your gear and discover new fishing spots as you progress.",
+        features: "Features include simple tap-to-cast mechanics, upgradeable fishing rods and lines, multiple fishing locations with different fish species, and satisfying catch animations.",
+        additional: "Perfect for quick gaming sessions during breaks. The colorful graphics and relaxing gameplay make it a great way to unwind between classes.",
+        link: "https://the-sawfish.github.io/legalizenuclearbombs5.github.io/games/Tiny%20Fishing",
+        screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Tiny+Fishing+Gameplay", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Catch+Fish"]
+    },
+    ovo: {
+        name: "OVO",
+        developer: "Madbox",
+        icon: "icons/ovo.png",
+        category: "Games / Platformer",
+        description: "OVO is a fast-paced platformer game featuring a small circular character navigating through obstacle courses. Jump, slide, and bounce your way through challenging levels.",
+        features: "Features include smooth parkour mechanics, challenging obstacle courses, time trial modes, and unlockable character skins. The controls are tight and responsive for precise platforming.",
+        additional: "OVO is known for its difficulty and rewarding gameplay. Master the mechanics to achieve fastest completion times and compete on leaderboards.",
+        link: "https://the-sawfish.github.io/legalizenuclearbombs5.github.io/games/ovo.html",
+        screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=OVO+Platformer", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Obstacle+Course"]
+    },
+    towerofdestiny: {
+        name: "Tower of Destiny",
+        developer: "Ketchapp",
+        icon: "icons/towerofdestiny.png",
+        category: "Games / Adventure",
+        description: "Tower of Destiny is an exciting adventure game where you build and ascend a tower while fighting enemies and collecting treasures. Upgrade your hero and conquer each floor.",
+        features: "Features include procedurally generated levels, diverse enemy types, power-ups and collectibles, hero upgrades and skill trees, and boss battles on certain floors.",
+        additional: "The tower keeps getting taller as you progress, offering new challenges and rewards. Perfect for fans of roguelike and tower defense games.",
+        link: "https://the-sawfish.github.io/legalizenuclearbombs5.github.io/games/Tower%20of%20Destiny",
+        screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Tower+of+Destiny", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Ascend+the+Tower"]
+    },
+    
+    // Educational / Productivity
     monkeytype: {
         name: "Monkeytype",
         developer: "Miodec",
@@ -1123,7 +1972,53 @@ const appData = {
         screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Lichess+Chess+Board", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Chess+Analysis"]
     },
     
-    // Apps #8 and #9 - Developer-only apps
+    // Operating Systems
+    novaos: {
+        name: "NovaOS",
+        developer: "RunNova",
+        icon: "icons/novaos.png",
+        category: "Operating System",
+        description: "NovaOS is a full-featured browser-based desktop operating system environment that brings the concept of a web OS to life. Experience a complete desktop interface running entirely in your browser.",
+        features: "The OS features a customizable desktop with drag-and-drop widgets, window management with minimize/maximize/close, file manager, text editor, calculator, music player, and a built-in app store.",
+        additional: "For the full NovaOS experience, we recommend opening the OS directly in a new tab. This provides better performance and more screen space for the desktop environment.",
+        link: "https://runnova.github.io/NovaOS/",
+        screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=NovaOS+Desktop", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=NovaOS+Apps"]
+    },
+    winripen: {
+        name: "WinRipen",
+        developer: "Ripenos",
+        icon: "icons/winripen.png",
+        category: "Operating System",
+        description: "WinRipen is a web-based operating system that recreates the familiar look and feel of classic Windows operating systems. Relive the Windows experience right in your browser.",
+        features: "The OS features authentic-looking windows with title bars, minimize/maximize/close buttons, and resizing handles. Includes a start menu, taskbar, desktop icons, and several built-in applications.",
+        additional: "Due to browser security restrictions, full interaction with WinRipen requires opening it directly in a new tab. This provides access to all features without iframe limitations.",
+        link: "https://ripenos.web.app/WinRipen/index.html",
+        screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=WinRipen+Interface", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Windows+Apps"]
+    },
+    plutoos: {
+        name: "PlutoOS",
+        developer: "Zeon",
+        icon: "icons/plutoos.png",
+        category: "Operating System",
+        description: "PlutoOS represents a futuristic vision of what a web-based operating system could be, with a focus on modern design aesthetics and smooth user interactions. Experience the next generation of web operating systems.",
+        features: "The OS features a modular design with glass-morphism effects, smooth gradients, subtle shadows, and fluid animations. Includes customizable themes, widget support, and a sleek application launcher.",
+        additional: "PlutoOS is an experimental project that demonstrates the cutting edge of browser-based computing. While it's primarily for exploration, it shows what's possible with modern web technologies.",
+        link: "https://pluto-app.zeon.dev",
+        screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=PlutoOS+Modern+UI", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Fluid+Animations"]
+    },
+    ripenos: {
+        name: "Ripenos",
+        developer: "Ripenos",
+        icon: "icons/ripenos.png",
+        category: "Operating System",
+        description: "Ripenos is a lightweight, modular web-based operating system framework designed for speed and efficiency. Experience a clean, fast desktop environment in your browser.",
+        features: "The core OS provides essential desktop functionality including window management, app launching, system settings, and file management. Its modular architecture allows for easy customization and extension.",
+        additional: "Ripenos is particularly suitable for educational environments where performance on varied hardware is important. It loads quickly and runs smoothly even on older devices.",
+        link: "https://ripenos.web.app/Ripenos/",
+        screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Ripenos+Desktop", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Modular+Apps"]
+    },
+    
+    // Developer Tools
     piskel: {
         name: "Piskel",
         developer: "Piskel Team",
@@ -1146,18 +2041,40 @@ const appData = {
         link: "https://vscode.dev/",
         screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=VS+Code+Editor", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Code+IntelliSense"]
     },
+    shadertoy: {
+        name: "ShaderToy",
+        developer: "ShaderToy Team",
+        icon: "icons/shadertoy.png",
+        category: "Developer Tools / Graphics",
+        description: "ShaderToy is the world's first platform for learning, sharing, and connecting with creative coders to create and share GLSL shaders. Create stunning visual effects with code.",
+        features: "Features include a powerful shader editor, thousands of example shaders, real-time preview, the ability to fork and modify other shaders, and a community to share your creations.",
+        additional: "Perfect for learning computer graphics, creating visual effects, or just exploring the creative possibilities of shader programming. Great for both beginners and experts.",
+        link: "https://www.shadertoy.com/",
+        screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=ShaderToy+Editor", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=GLSL+Shaders"]
+    },
     
-    // Additional apps for variety
-    spotifyweb: {
-        name: "Spotify Web",
-        developer: "Spotify",
-        icon: "icons/spotify.png",
-        category: "Media / Music",
-        description: "Stream millions of songs, podcasts, and audiobooks directly in your browser with Spotify Web Player. Discover new music and enjoy your favorite playlists anywhere.",
-        features: "Features include streaming quality options, playlist management, radio stations, podcast access, and social features to share music with friends.",
-        additional: "Requires a Spotify account. Free tier available with shuffle play only. Premium removes ads and enables on-demand playback.",
-        link: "https://open.spotify.com/",
-        screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Spotify+Web+Player", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Music+Library"]
+    // Productivity
+    photopea: {
+        name: "Photopea",
+        developer: "Ivan Kuckir",
+        icon: "icons/photopea.png",
+        category: "Productivity / Graphics",
+        description: "Photopea is a powerful online image editor that works directly in your browser without any installation. It supports PSD, AI, Sketch, and many other file formats.",
+        features: "Features include layer support, filters, adjustment layers, brushes, text tools, vector shapes, animation, and smart objects. Works offline once loaded.",
+        additional: "All processing happens in your browser - no uploads required, ensuring privacy. A great free alternative to Photoshop for basic to intermediate image editing needs.",
+        link: "https://www.photopea.com/",
+        screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Photopea+Interface", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Image+Editing"]
+    },
+    tiddlywiki: {
+        name: "TiddlyWiki",
+        developer: "TiddlyWiki Community",
+        icon: "icons/tiddlywiki.png",
+        category: "Productivity / Notes",
+        description: "TiddlyWiki is a unique personal wiki and non-linear notebook for capturing, organizing, and sharing your thoughts, ideas, and information in a flexible format.",
+        features: "Features include powerful linking between tiddlers, tagging system, rich text editing, plugins and themes, and the ability to save everything in a single HTML file.",
+        additional: "Completely self-contained - your entire wiki lives in one HTML file that you can back up, share, and access from anywhere. Perfect for notes, journals, and personal knowledge management.",
+        link: "https://tiddlywiki.com/",
+        screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=TiddlyWiki+Notebook", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Wiki+Organization"]
     },
     protonmail: {
         name: "Proton Mail",
@@ -1170,16 +2087,18 @@ const appData = {
         link: "https://mail.proton.me/",
         screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Proton+Mail+Interface", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Encrypted+Email"]
     },
-    tiddlywiki: {
-        name: "TiddlyWiki",
-        developer: "TiddlyWiki Community",
-        icon: "icons/tiddlywiki.png",
-        category: "Productivity / Notes",
-        description: "TiddlyWiki is a unique personal wiki and non-linear notebook for capturing, organizing, and sharing your thoughts, ideas, and information in a flexible format.",
-        features: "Features include powerful linking between tiddlers, tagging system, rich text editing, plugins and themes, and the ability to save everything in a single HTML file.",
-        additional: "Completely self-contained - your entire wiki lives in one HTML file that you can back up, share, and access from anywhere. Perfect for notes, journals, and personal knowledge management.",
-        link: "https://tiddlywiki.com/",
-        screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=TiddlyWiki+Notebook", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Wiki+Organization"]
+    
+    // Media & Social
+    spotifyweb: {
+        name: "Spotify Web",
+        developer: "Spotify",
+        icon: "icons/spotify.png",
+        category: "Media / Music",
+        description: "Stream millions of songs, podcasts, and audiobooks directly in your browser with Spotify Web Player. Discover new music and enjoy your favorite playlists anywhere.",
+        features: "Features include streaming quality options, playlist management, radio stations, podcast access, and social features to share music with friends.",
+        additional: "Requires a Spotify account. Free tier available with shuffle play only. Premium removes ads and enables on-demand playback.",
+        link: "https://open.spotify.com/",
+        screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Spotify+Web+Player", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Music+Library"]
     },
     neocities: {
         name: "Neocities",
@@ -1202,39 +2121,6 @@ const appData = {
         additional: "One of the best sources for staying informed about technology trends, startup news, and programming discussions. The community is known for thoughtful, in-depth conversations.",
         link: "https://news.ycombinator.com/",
         screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Hacker+News+Front+Page", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Tech+Discussions"]
-    },
-    shadertoy: {
-        name: "ShaderToy",
-        developer: "ShaderToy Team",
-        icon: "icons/shadertoy.png",
-        category: "Developer Tools / Graphics",
-        description: "ShaderToy is the world's first platform for learning, sharing, and connecting with creative coders to create and share GLSL shaders. Create stunning visual effects with code.",
-        features: "Features include a powerful shader editor, thousands of example shaders, real-time preview, the ability to fork and modify other shaders, and a community to share your creations.",
-        additional: "Perfect for learning computer graphics, creating visual effects, or just exploring the creative possibilities of shader programming. Great for both beginners and experts.",
-        link: "https://www.shadertoy.com/",
-        screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=ShaderToy+Editor", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=GLSL+Shaders"]
-    },
-    hextris: {
-        name: "Hextris",
-        developer: "Hextris",
-        icon: "icons/hextris.png",
-        category: "Games / Puzzle",
-        description: "Hextris is a fast-paced puzzle game inspired by Tetris, played on a hexagonal grid. Rotate the hexagon to stack blocks and prevent the game from ending in this addictive challenge.",
-        features: "Features include addictive gameplay with increasing difficulty, colorful hexagonal visuals, high score tracking, combo multipliers, and smooth animations.",
-        additional: "Often hosted on GitHub Pages, making it less likely to be blocked by school filters. Perfect for quick gaming sessions during breaks.",
-        link: "https://hextris.io/",
-        screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Hextris+Gameplay", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Hexagonal+Puzzle"]
-    },
-    photopea: {
-        name: "Photopea",
-        developer: "Ivan Kuckir",
-        icon: "icons/photopea.png",
-        category: "Productivity / Graphics",
-        description: "Photopea is a powerful online image editor that works directly in your browser without any installation. It supports PSD, AI, Sketch, and many other file formats.",
-        features: "Features include layer support, filters, adjustment layers, brushes, text tools, vector shapes, animation, and smart objects. Works offline once loaded.",
-        additional: "All processing happens in your browser - no uploads required, ensuring privacy. A great free alternative to Photoshop for basic to intermediate image editing needs.",
-        link: "https://www.photopea.com/",
-        screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Photopea+Interface", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Image+Editing"]
     }
 };
 
@@ -1274,8 +2160,12 @@ document.addEventListener('DOMContentLoaded', function() {
     checkFirstVisit();
     removeLoadingClass();
     
-    // Initialize developer mode
+    // Initialize modules
+    UserAuth.init();
     DeveloperMode.init();
+    SearchSystem.init();
+    UpdateChecker.init();
+    CommunityBoard.init();
     
     console.log('Sawfish App Store initialized');
 });
@@ -1355,6 +2245,9 @@ function setupEventListeners() {
     setupPWABannerListeners();
     setupCategoryTabListeners();
     setupServiceWorkerListeners();
+    setupDeveloperDashboardListeners();
+    setupAuthModalListeners();
+    setupOfflineTagListeners();
     
     window.matchMedia('(display-mode: standalone)').addEventListener('change', function(e) {
         AppState.isPWA = e.matches;
@@ -1380,29 +2273,8 @@ function setupNavigationListeners() {
 
 function setupCardListeners() {
     const cards = document.querySelectorAll('.app-card');
-    const featuredCards = document.querySelectorAll('.featured-card');
     
     cards.forEach(card => {
-        card.addEventListener('click', function() {
-            const appId = this.dataset.app;
-            if (appId) {
-                openExpandedApp(appId);
-            }
-        });
-        
-        card.setAttribute('tabindex', '0');
-        card.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                const appId = this.dataset.app;
-                if (appId) {
-                    openExpandedApp(appId);
-                }
-            }
-        });
-    });
-    
-    featuredCards.forEach(card => {
         card.addEventListener('click', function() {
             const appId = this.dataset.app;
             if (appId) {
@@ -1498,6 +2370,97 @@ function setupServiceWorkerListeners() {
     }
 }
 
+function setupDeveloperDashboardListeners() {
+    const closeBtn = document.getElementById('developer-close-dashboard');
+    if (closeBtn) {
+        closeBtn.addEventListener('click', () => DeveloperMode.closeDashboard());
+    }
+    
+    const navBtns = document.querySelectorAll('.developer-nav-btn');
+    navBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const tab = btn.dataset.developerTab;
+            switchDeveloperTab(tab);
+        });
+    });
+    
+    const addAppBtn = document.getElementById('add-new-app-btn');
+    if (addAppBtn) {
+        addAppBtn.addEventListener('click', () => DeveloperMode.showAddAppForm());
+    }
+    
+    const publishBtn = document.getElementById('publish-announcement');
+    if (publishBtn) {
+        publishBtn.addEventListener('click', () => DeveloperMode.publishAnnouncement());
+    }
+    
+    // Auth modal backdrop click
+    const authModal = document.getElementById('auth-modal');
+    const authBackdrop = authModal?.querySelector('.modal-backdrop');
+    if (authBackdrop) {
+        authBackdrop.addEventListener('click', () => UserAuth.closeAuthModal());
+    }
+    
+    // Developer login button
+    const devLoginBtn = document.getElementById('developer-login-button');
+    if (devLoginBtn) {
+        devLoginBtn.addEventListener('click', () => DeveloperMode.toggleLogin());
+    }
+}
+
+function setupAuthModalListeners() {
+    const forgotPasswordLink = document.getElementById('forgot-password-link');
+    if (forgotPasswordLink) {
+        forgotPasswordLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            document.querySelectorAll('.auth-tab-btn').forEach(btn => {
+                if (btn.dataset.authTab === 'reset') btn.click();
+            });
+        });
+    }
+    
+    const backToLoginLink = document.getElementById('back-to-login-link');
+    if (backToLoginLink) {
+        backToLoginLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            document.querySelectorAll('.auth-tab-btn').forEach(btn => {
+                if (btn.dataset.authTab === 'login') btn.click();
+            });
+        });
+    }
+    
+    // Close auth modal on Escape
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            const authModal = document.getElementById('auth-modal');
+            if (authModal && !authModal.classList.contains('hidden')) {
+                UserAuth.closeAuthModal();
+            }
+        }
+    });
+}
+
+function setupOfflineTagListeners() {
+    // Use event delegation for offline tags
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('offline-tag')) {
+            e.stopPropagation();
+            const appId = e.target.dataset.app;
+            const app = appData[appId];
+            if (app) {
+                OfflineTagSystem.showHackPassword(appId, app.name);
+            }
+        }
+    });
+    
+    // Prevent card click when clicking offline tag
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('offline-tag')) {
+            e.stopPropagation();
+        }
+    });
+}
+
 // ============================================================
 // NAVIGATION FUNCTIONS
 // ============================================================
@@ -1541,6 +2504,26 @@ function scrollToSection(sectionId) {
     }
 }
 
+function switchDeveloperTab(tabName) {
+    const navBtns = document.querySelectorAll('.developer-nav-btn');
+    navBtns.forEach(btn => {
+        if (btn.dataset.developerTab === tabName) {
+            btn.classList.add('active');
+        } else {
+            btn.classList.remove('active');
+        }
+    });
+    
+    const contents = document.querySelectorAll('.developer-tab-content');
+    contents.forEach(content => {
+        if (content.dataset.developerContent === tabName) {
+            content.classList.add('active');
+        } else {
+            content.classList.remove('active');
+        }
+    });
+}
+
 // ============================================================
 // EXPANDED APP VIEW
 // ============================================================
@@ -1552,6 +2535,12 @@ function openExpandedApp(appId) {
     }
     
     AppState.expandedApp = appId;
+    
+    // Check if this is Minecraft and show warning
+    if (appId === 'minecraft') {
+        minecraftWarningSystem.showWarning(app.name, app.link);
+        return;
+    }
     
     const content = buildExpandedContent(app, appId, 0, 0, {5:0,4:0,3:0,2:0,1:0});
     elements.expandedContentWrapper.innerHTML = content;
@@ -1582,21 +2571,12 @@ async function loadAppRatings(appId) {
         
         // Update main card grid
         const displayElement = document.querySelector(`[data-avg-rating="${appId}"]`);
-        const starsElement = document.querySelector(`[data-app-rating="${appId}"]`);
         
         if (displayElement) {
             if (avgRating === null || avgRating === undefined) {
-                displayElement.textContent = 'N/A';
+                displayElement.innerHTML = '<span class="rating-na">—</span>';
             } else {
-                displayElement.textContent = avgRating.toFixed(1);
-            }
-        }
-        
-        if (starsElement) {
-            if (avgRating === null || avgRating === undefined) {
-                starsElement.innerHTML = '<span class="rating-na">N/A</span>';
-            } else {
-                starsElement.innerHTML = getStarDisplay(avgRating);
+                displayElement.innerHTML = getNumericRatingDisplay(avgRating);
             }
         }
     } catch (error) {
@@ -1607,28 +2587,19 @@ async function loadAppRatings(appId) {
 function updateRatingDisplay(appId, avgRating, distribution, totalReviews) {
     const bigRating = document.querySelector(`#expanded-overlay .rating-big`);
     const ratingCount = document.querySelector(`#expanded-overlay .rating-count`);
-    const ratingStars = document.querySelector(`#expanded-overlay .rating-stars`);
     
     if (bigRating) {
         if (avgRating === null || avgRating === undefined) {
-            bigRating.textContent = 'N/A';
+            bigRating.innerHTML = '<span class="rating-na">—</span>';
             bigRating.classList.add('na-rating');
         } else {
-            bigRating.textContent = avgRating.toFixed(1);
+            bigRating.innerHTML = getNumericRatingDisplay(avgRating);
             bigRating.classList.remove('na-rating');
         }
     }
     
     if (ratingCount) {
         ratingCount.textContent = `${totalReviews} reviews`;
-    }
-    
-    if (ratingStars) {
-        if (avgRating === null || avgRating === undefined) {
-            ratingStars.innerHTML = '<span class="rating-na">No ratings yet</span>';
-        } else {
-            ratingStars.innerHTML = getStarDisplay(avgRating);
-        }
     }
     
     const ratingBarsContainer = document.querySelector(`#expanded-overlay .rating-bars`);
@@ -1638,8 +2609,6 @@ function updateRatingDisplay(appId, avgRating, distribution, totalReviews) {
 }
 
 function buildExpandedContent(app, appId, avgRating, totalReviews, distribution) {
-    const ratingStars = avgRating !== null && avgRating !== undefined ? getStarDisplay(avgRating) : '<span class="rating-na">No ratings yet</span>';
-    
     return `
         <article class="expanded-app" data-app="${appId}">
             <header class="expanded-app-header">
@@ -1693,9 +2662,8 @@ function buildExpandedContent(app, appId, avgRating, totalReviews, distribution)
                     <h3>Ratings & Reviews</h3>
                 </div>
                 <div class="rating-stats">
-                    <div class="rating-big">${avgRating !== null && avgRating !== undefined ? avgRating.toFixed(1) : 'N/A'}</div>
+                    <div class="rating-big">${avgRating !== null && avgRating !== undefined ? getNumericRatingDisplay(avgRating) : '<span class="rating-na">—</span>'}</div>
                     <div class="rating-details">
-                        <div class="rating-stars">${ratingStars}</div>
                         <div class="rating-count">${totalReviews} reviews</div>
                     </div>
                 </div>
@@ -1715,11 +2683,11 @@ function buildExpandedContent(app, appId, avgRating, totalReviews, distribution)
                     <div class="form-group">
                         <label>Your Rating</label>
                         <div class="rating-input" id="rating-input-${appId}">
-                            <button type="button" class="rating-star-btn" data-value="1">★</button>
-                            <button type="button" class="rating-star-btn" data-value="2">★</button>
-                            <button type="button" class="rating-star-btn" data-value="3">★</button>
-                            <button type="button" class="rating-star-btn" data-value="4">★</button>
-                            <button type="button" class="rating-star-btn" data-value="5">★</button>
+                            <button type="button" class="rating-num-btn" data-value="1">1</button>
+                            <button type="button" class="rating-num-btn" data-value="2">2</button>
+                            <button type="button" class="rating-num-btn" data-value="3">3</button>
+                            <button type="button" class="rating-num-btn" data-value="4">4</button>
+                            <button type="button" class="rating-num-btn" data-value="5">5</button>
                         </div>
                     </div>
                     <div class="form-group">
@@ -1731,39 +2699,6 @@ function buildExpandedContent(app, appId, avgRating, totalReviews, distribution)
             </section>
         </article>
     `;
-}
-
-function getStarDisplay(rating) {
-    if (rating === null || rating === undefined || isNaN(rating)) {
-        return '<span class="rating-na">N/A</span>';
-    }
-    
-    // Ensure rating is within bounds
-    rating = Math.max(0, Math.min(5, rating));
-    
-    // Calculate stars
-    const fullStars = Math.floor(rating);
-    const hasHalfStar = rating % 1 >= 0.5;
-    const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
-    
-    let stars = '';
-    
-    // Add full stars (fixed class name: 'filled' instead of 'full')
-    for (let i = 0; i < fullStars; i++) {
-        stars += '<span class="star filled">★</span>';
-    }
-    
-    // Add half star if needed
-    if (hasHalfStar) {
-        stars += '<span class="star half">★</span>';
-    }
-    
-    // Add empty stars
-    for (let i = 0; i < emptyStars; i++) {
-        stars += '<span class="star empty">★</span>';
-    }
-    
-    return stars;
 }
 
 function buildRatingBars(distribution, total) {
@@ -1806,27 +2741,14 @@ function closeExpandedApp() {
 // ============================================================
 function setupRatingForm(appId) {
     const form = document.getElementById(`comment-form-${appId}`);
-    const ratingBtns = form?.querySelectorAll('.rating-star-btn');
+    const ratingBtns = form?.querySelectorAll('.rating-num-btn');
     let selectedRating = 0;
     
     ratingBtns?.forEach(btn => {
         btn.addEventListener('click', function() {
             selectedRating = parseInt(this.dataset.value);
-            updateRatingDisplayStars(form, selectedRating);
+            updateRatingDisplayNumbers(form, selectedRating);
         });
-        
-        btn.addEventListener('mouseenter', function() {
-            const value = parseInt(this.dataset.value);
-            highlightStars(form, value);
-        });
-    });
-    
-    form?.addEventListener('mouseleave', function() {
-        if (selectedRating > 0) {
-            updateRatingDisplayStars(form, selectedRating);
-        } else {
-            clearStars(form);
-        }
     });
     
     form?.addEventListener('submit', function(e) {
@@ -1845,51 +2767,34 @@ function setupRatingForm(appId) {
             return;
         }
         
+        if (!UserAuth.canRate()) {
+            alert('Please log in to leave a review');
+            UserAuth.openAuthModal();
+            return;
+        }
+        
         submitReview(appId, selectedRating, comment);
     });
 }
 
-function updateRatingDisplayStars(form, rating) {
-    const btns = form.querySelectorAll('.rating-star-btn');
+function updateRatingDisplayNumbers(form, rating) {
+    const btns = form.querySelectorAll('.rating-num-btn');
     btns.forEach(btn => {
         const value = parseInt(btn.dataset.value);
         if (value <= rating) {
             btn.classList.add('active');
-            btn.textContent = '★';
         } else {
             btn.classList.remove('active');
-            btn.textContent = '☆';
         }
-    });
-}
-
-function highlightStars(form, rating) {
-    const btns = form.querySelectorAll('.rating-star-btn');
-    btns.forEach(btn => {
-        const value = parseInt(btn.dataset.value);
-        if (value <= rating) {
-            btn.classList.add('active');
-            btn.textContent = '★';
-        } else {
-            btn.classList.remove('active');
-            btn.textContent = '☆';
-        }
-    });
-}
-
-function clearStars(form) {
-    const btns = form.querySelectorAll('.rating-star-btn');
-    btns.forEach(btn => {
-        btn.classList.remove('active');
-        btn.textContent = '☆';
     });
 }
 
 async function submitReview(appId, rating, comment) {
     const isDeveloper = DeveloperMode.isLoggedIn;
-    const userName = isDeveloper ? 'Developer' : 'Anonymous';
+    const userName = UserAuth.getReviewUsername();
+    const userAvatar = UserAuth.getReviewAvatar();
     
-    const review = await FirestoreComments.saveReview(appId, rating, comment, userName, isDeveloper);
+    const review = await FirestoreComments.saveReview(appId, rating, comment, userName, isDeveloper, userAvatar);
     
     if (review) {
         showNotification(isDeveloper ? 'Developer response submitted!' : 'Review submitted successfully!');
@@ -1898,7 +2803,12 @@ async function submitReview(appId, rating, comment) {
         
         const textarea = document.getElementById(`comment-input-${appId}`);
         if (textarea) textarea.value = '';
-        clearStars(document.getElementById(`comment-form-${appId}`));
+        
+        // Clear rating selection
+        const form = document.getElementById(`comment-form-${appId}`);
+        if (form) {
+            form.querySelectorAll('.rating-num-btn').forEach(btn => btn.classList.remove('active'));
+        }
     } else {
         alert('Failed to submit review. Please try again.');
     }
@@ -1933,19 +2843,29 @@ function displayReviews(appId, reviews) {
     }
     
     container.innerHTML = reviews.map(review => {
-        const isDeveloperReview = DeveloperMode.isDeveloperReview(review);
+        const isDeveloperReview = review.isDeveloper === true;
         const reviewClass = isDeveloperReview ? 'comment-item developer-response' : 'comment-item';
+        
+        // Get avatar or use initial
+        let avatarHtml = '';
+        if (review.userAvatar) {
+            avatarHtml = `<img src="${review.userAvatar}" alt="${escapeHtml(review.user)}" class="comment-avatar-img">`;
+        } else if (isDeveloperReview) {
+            avatarHtml = `<div class="comment-avatar developer">D</div>`;
+        } else {
+            avatarHtml = `<div class="comment-avatar">${escapeHtml(review.user.charAt(0).toUpperCase())}</div>`;
+        }
         
         return `
             <div class="${reviewClass}">
                 <div class="comment-header">
                     <div class="comment-author">
-                        <div class="comment-avatar">${escapeHtml(review.user.charAt(0).toUpperCase())}</div>
+                        ${avatarHtml}
                         <span class="comment-name">${escapeHtml(review.user)}</span>
                         ${isDeveloperReview ? '<span class="developer-badge">Developer</span>' : ''}
                     </div>
                     <div>
-                        <span class="comment-rating">${getStarDisplay(review.rating)}</span>
+                        <span class="comment-rating">${review.rating}/5</span>
                         <span class="comment-date">${formatDate(review.timestamp)}</span>
                     </div>
                 </div>
@@ -1965,21 +2885,12 @@ async function loadAllRatings() {
         try {
             const avgRating = await FirestoreComments.getAverageRating(appId);
             const displayElement = document.querySelector(`[data-avg-rating="${appId}"]`);
-            const starsElement = document.querySelector(`[data-app-rating="${appId}"]`);
             
             if (displayElement) {
                 if (avgRating === null || avgRating === undefined) {
-                    displayElement.textContent = 'N/A';
+                    displayElement.innerHTML = '<span class="rating-na">—</span>';
                 } else {
-                    displayElement.textContent = avgRating.toFixed(1);
-                }
-            }
-            
-            if (starsElement) {
-                if (avgRating === null || avgRating === undefined) {
-                    starsElement.innerHTML = '<span class="rating-na">N/A</span>';
-                } else {
-                    starsElement.innerHTML = getStarDisplay(avgRating);
+                    displayElement.innerHTML = getNumericRatingDisplay(avgRating);
                 }
             }
         } catch (error) {
@@ -1997,10 +2908,15 @@ function filterGameCards(category) {
     const cards = document.querySelectorAll('.page[data-page="games"] .app-card');
     
     cards.forEach(card => {
+        const appId = card.dataset.app;
+        const app = appData[appId];
+        
         if (category === 'all') {
             card.style.display = '';
-        } else {
+        } else if (app && app.category.toLowerCase().includes(category.toLowerCase())) {
             card.style.display = '';
+        } else {
+            card.style.display = 'none';
         }
     });
 }
@@ -2120,12 +3036,11 @@ function showNotification(message) {
 }
 
 // ============================================================
-// GLOBAL FUNCTIONS (for inline HTML calls)
+// GLOBAL FUNCTIONS
 // ============================================================
 window.scrollToSection = scrollToSection;
 window.DeveloperMode = DeveloperMode;
+window.UserAuth = UserAuth;
+window.openExpandedApp = openExpandedApp;
 
-// ============================================================
-// END OF JAVASCRIPT
-// ============================================================
 console.log('Sawfish App Store JavaScript loaded successfully');
