@@ -2881,13 +2881,13 @@ const appData = {
     securecomms: {
         name: "Secure Communication",
         developer: "Jimeneutron",
-        icon: "icons/securecomms.png",
+        icon: "icons/IMG_0636.jpeg",
         category: "Miscellaneous / Tools",
         description: "Encrypt and decrypt messages securely. Protect your private conversations with military-grade encryption.",
         features: "AES-256 encryption, message encoding/decoding, secure key generation, and base64 conversion tools.",
         additional: "Learn about encryption and data security. Perfect for understanding how modern encryption works while keeping your messages private.",
         link: "https://jimeneutron.github.io/SecureCommunication/",
-        screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Secure+Communication", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Encryption+Tools"]
+        screenshots: ["IMG_0634.jpeg", "IMG_0635.jpeg"]
     },
     2048: {
         name: "2048",
