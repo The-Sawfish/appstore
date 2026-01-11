@@ -2533,7 +2533,7 @@ const appData = {
         features: "New Sleds, and difficult fast-paced.",
         additional: "It get harder later on.",
         link: "https://the-sawfish.github.io/Snow-Rider3D/",
-        screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Tower+of+Destiny", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Ascend+the+Tower"]
+        screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Snow+Rider", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Play+It+Stuff+IDK"]
     },
 
     novaos: {
@@ -2598,9 +2598,31 @@ const appData = {
         category: "Developer Tools / Code",
         description: "Visual Studio Code editor in your browser.",
         features: "Syntax highlighting, IntelliSense, Git integration.",
-        additional: "Requires a Microsoft account for full functionality.",
+        additonal: "Requires a Microsoft account for full functionality.",
         link: "https://vscode.dev/",
         screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=VS+Code+Editor", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Code+IntelliSense"]
+    },
+    vscodeweb: {
+        name: "Minimax",
+        developer: "Some China Company",
+        icon: "icons/minimax.png",
+        category: "Developer Tools / Code",
+        description: "Great AI for programming.",
+        features: "Own window, can self-host static files.",
+        additonal: "Much more 'instruction following' than ChatGPT",
+        link: "https://agent.minimax.io",
+        screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Minimax+Agent", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Code+IntelliSense"]
+    },
+    ripenos: {
+        name: "Ripenos",
+        developer: "Ripenos",
+        icon: "icons/ripenos.png",
+        category: "Operating System",
+        description: "Lightweight, modular web-based operating system framework.",
+        features: "Essential desktop functionality, modular architecture.",
+        additional: "Suitable for educational environments with varied hardware.",
+        link: "https://ripenos.web.app/Ripenos/",
+        screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Ripenos+Desktop", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Modular+Apps"]
     },
     shadertoy: {
         name: "ShaderToy",
