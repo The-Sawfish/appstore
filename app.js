@@ -2377,7 +2377,7 @@ const appData = {
         description: "Central launcher for all approved Sawfish games in one place.",
         features: "Browse games by category, see what's popular, quick launch any game.",
         additional: "This portal serves as your gateway to all the games available.",
-        link: "https://the-sawfish.github.io/portal/",
+        link: "https://the-sawfish.github.io/game-portal/",
         screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Game+Portal", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Game+Library"]
     },
     chat: {
@@ -2533,7 +2533,7 @@ const appData = {
         features: "New Sleds, and difficult fast-paced.",
         additional: "It get harder later on.",
         link: "https://the-sawfish.github.io/Snow-Rider3D/",
-        screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Snow+Rider", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Play+It+Stuff+IDK"]
+        screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Tower+of+Destiny", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Ascend+the+Tower"]
     },
 
     novaos: {
