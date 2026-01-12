@@ -652,13 +652,111 @@ ul, ol {
     text-align: left;
 }
 
-/* Developer Mode Nav Item */
-.nav-item.developer-only {
+/* Developer Nav Item - Hidden by default */
+.developer-nav-item {
     display: none;
 }
 
-.developer-mode-active .nav-item.developer-only {
+.developer-mode-active .developer-nav-item {
+    display: block;
+}
+
+/* Developer Tools Page Notice */
+.developer-notice {
     display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-md);
+    background: rgba(167, 139, 250, 0.1);
+    border: 1px solid rgba(167, 139, 250, 0.2);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+}
+
+.developer-notice .notice-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-md);
+    background: rgba(167, 139, 250, 0.2);
+    color: var(--developer-accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.developer-notice .notice-icon svg {
+    width: 20px;
+    height: 20px;
+}
+
+.developer-notice .notice-content h3 {
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: var(--spacing-xs);
+    color: var(--developer-accent);
+}
+
+.developer-notice .notice-content p {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin-bottom: 0;
+}
+
+/* ==========================================================
+   RE-GUEST BANNER STYLING
+========================================================== */
+.reguest-banner {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    background: rgba(251, 191, 36, 0.15);
+    border: 1px solid rgba(251, 191, 36, 0.3);
+    border-radius: var(--radius-sm);
+    margin-top: var(--spacing-sm);
+}
+
+.reguest-banner svg {
+    width: 16px;
+    height: 16px;
+    color: var(--warning);
+    flex-shrink: 0;
+}
+
+.reguest-banner span {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--warning);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.featured-reguest-banner {
+    position: absolute;
+    top: var(--spacing-sm);
+    right: var(--spacing-sm);
+    left: auto;
+    margin-top: 0;
+    z-index: 10;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    background: rgba(251, 191, 36, 0.9);
+    border: none;
+}
+
+.featured-reguest-banner svg {
+    width: 14px;
+    height: 14px;
+}
+
+.featured-reguest-banner span {
+    font-size: 0.65rem;
+    color: #000;
+}
+
+.featured-card {
+    position: relative;
+    z-index: 1;
 }
 
 /* ==========================================================
@@ -815,7 +913,8 @@ ul, ol {
 .card-icon img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
+    display: block;
 }
 
 .card-content h4 {
@@ -1135,6 +1234,11 @@ ul, ol {
     position: relative;
 }
 
+.featured-card.highlight .featured-icon {
+    width: 140px;
+    height: 140px;
+}
+
 .featured-icon {
     width: 100px;
     height: 100px;
@@ -1145,9 +1249,10 @@ ul, ol {
 }
 
 .featured-icon img {
-    width: 200%;
-    height: 200%;
-    object-fit: cover;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
 }
 
 .featured-info h3 {
@@ -3201,8 +3306,8 @@ ul, ol {
     }
     
     .featured-icon {
-        width: 200px;
-        height: 200px;
+        width: 80px;
+        height: 80px;
     }
     
     .featured-info h3 {
