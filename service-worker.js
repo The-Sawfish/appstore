@@ -4,9 +4,9 @@
    Version: 1.0.0
    ========================================================================== */
 
-const CACHE_NAME = 'sawfish-pwa-v1';
-const STATIC_CACHE_NAME = 'sawfish-static-v1';
-const DYNAMIC_CACHE_NAME = 'sawfish-dynamic-v1';
+const CACHE_NAME = 'sawfish-pwa-v3';
+const STATIC_CACHE_NAME = 'sawfish-static-v3';
+const DYNAMIC_CACHE_NAME = 'sawfish-dynamic-v3';
 
 // Assets to cache immediately on install
 const STATIC_ASSETS = [
