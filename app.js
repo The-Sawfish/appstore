@@ -2644,7 +2644,7 @@ const appData = {
         description: "Exciting adventure game where you build and ascend a tower.",
         features: "Procedurally generated levels, hero upgrades, boss battles.",
         additional: "The tower keeps getting taller as you progress.",
-        link: "https://the-sawfish.github.io/legalizenuclearbombs5.github.io/games/Tower%20of%20Destiny",
+        link: "https://natleef1.github.io/tower-of-destiny/",
         screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Tower+of+Destiny", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Ascend+the+Tower"]
     },
     novaos: {
