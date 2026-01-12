@@ -304,8 +304,18 @@
                         <span>Changelog</span>
                     </button>
                 </li>
-                <li class="developer-nav-item" style="display: none;">
-                    <button data-tab="developer" class="nav-item">
+                <li>
+                    <button data-tab="help" class="nav-item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+                            <line x1="12" y1="17" x2="12.01" y2="17"/>
+                        </svg>
+                        <span>Help</span>
+                    </button>
+                </li>
+                <li>
+                    <button data-tab="developer" class="nav-item developer-tab-btn" data-requires-dev="true">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <polyline points="16 18 22 12 16 6"/>
                             <polyline points="8 6 2 12 8 18"/>
@@ -322,14 +332,31 @@
                     <span class="profile-status-text" id="profile-status-text">Sign In</span>
                 </button>
                 
-                <!-- Developer Login Button -->
-                <button id="developer-login-button" class="developer-login-btn" title="Developer Login">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                        <circle cx="12" cy="7" r="4"/>
-                    </svg>
-                    <span class="developer-status-text">Developer</span>
-                </button>
+                <!-- Developer Access Section -->
+                <div class="developer-access-section">
+                    <div id="developer-logged-in-indicator" class="developer-indicator hidden">
+                        <div class="developer-indicator-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                                <polyline points="9 12 11 14 15 10"/>
+                            </svg>
+                        </div>
+                        <span class="developer-indicator-text">Developer Access</span>
+                        <button id="exit-developer-mode-btn" class="exit-developer-btn" title="Exit Developer Mode">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="18" y1="6" x2="6" y2="18"/>
+                                <line x1="6" y1="6" x2="18" y2="18"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <button id="developer-login-button" class="developer-login-btn" title="Developer Login">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                        </svg>
+                        <span class="developer-status-text">Developer</span>
+                    </button>
+                </div>
             </div>
         </nav>
     </aside>
@@ -338,7 +365,7 @@
     <main class="main-content">
         
         <!-- ================= HOME PAGE ================= -->
-        <main data-page="home" class="page visible">
+        <div data-page="home" class="page visible">
             <section class="home-hero">
                 <div class="hero-content">
                     <h2>Welcome to Sawfish App Store</h2>
@@ -364,19 +391,9 @@
             <section class="quick-access">
                 <h3>Quick Access</h3>
                 <div class="card-grid">
-                    <article class="app-card" data-app="portal">
-                        <div class="card-icon">
-                            <img src="https://via.placeholder.com/100x100/4da3ff/ffffff?text=P" alt="Game Portal Icon" loading="lazy">
-                        </div>
-                        <div class="card-content">
-                            <h4>Sawfish Game Portal</h4>
-                            <p class="card-desc">Central launcher for all approved Sawfish games in one place.</p>
-                        </div>
-                    </article>
-
                     <article class="app-card" data-app="chat">
                         <div class="card-icon">
-                            <img src="https://via.placeholder.com/100x100/4da3ff/ffffff?text=C" alt="Chat App Icon" loading="lazy">
+                            <img src="icons/chat.png" alt="Chat App Icon" loading="lazy">
                         </div>
                         <div class="card-content">
                             <h4>Chat App</h4>
@@ -386,19 +403,29 @@
 
                     <article class="app-card" data-app="call">
                         <div class="card-icon">
-                            <img src="https://via.placeholder.com/100x100/4da3ff/ffffff?text=Ca" alt="Call App Icon" loading="lazy">
+                            <img src="icons/call.png" alt="Call App Icon" loading="lazy">
                         </div>
                         <div class="card-content">
                             <h4>Call App</h4>
                             <p class="card-desc">Fast, simple browser-based voice calling interface.</p>
                         </div>
                     </article>
+
+                    <article class="app-card" data-app="2048">
+                        <div class="card-icon">
+                            <img src="icons/2048.png" alt="2048 Icon" loading="lazy">
+                        </div>
+                        <div class="card-content">
+                            <h4>2048</h4>
+                            <p class="card-desc">Classic number puzzle game. Combine tiles to reach 2048.</p>
+                        </div>
+                    </article>
                 </div>
             </section>
-        </main>
+        </div>
 
         <!-- ================= SEARCH PAGE ================= -->
-        <main data-page="search" class="page">
+        <div data-page="search" class="page">
             <section class="page-header">
                 <h2>Search Apps</h2>
                 <p>Find apps, games, and tools quickly. Search by name, category, or description to discover new content.</p>
@@ -438,10 +465,10 @@
                 <h3>No results found</h3>
                 <p>Try adjusting your search terms or browse by category</p>
             </div>
-        </main>
+        </div>
 
         <!-- ================= FEATURED PAGE ================= -->
-        <main data-page="featured" class="page">
+        <div data-page="featured" class="page">
             <section class="page-header">
                 <h2>Featured Apps</h2>
                 <p>Hand-picked apps and games that our community loves the most. These selections represent the best of what the Sawfish App Store has to offer, chosen for their quality, reliability, and educational value.</p>
@@ -552,10 +579,10 @@
                     </article>
                 </div>
             </section>
-        </main>
+        </div>
 
         <!-- ================= GAMES PAGE ================= -->
-        <main data-page="games" class="page">
+        <div data-page="games" class="page">
             <section class="page-header">
                 <h2>Games</h2>
                 <p>Explore our curated collection of school-friendly browser games. From puzzle games to platformers, sandbox simulations to racing games, there's something for everyone. All games have been reviewed to ensure they are appropriate for school environments.</p>
@@ -605,10 +632,6 @@
                     <button class="category-tab" data-category="platformer">Platformer</button>
                     <button class="category-tab" data-category="sandbox">Sandbox</button>
                     <button class="category-tab" data-category="arcade">Arcade</button>
-                    <button class="category-tab" data-category="strategy">Strategy</button>
-                    <button class="category-tab" data-category="sports">Sports</button>
-                    <button class="category-tab" data-category="action">Action</button>
-                    <button class="category-tab" data-category="adventure">Adventure</button>
                 </div>
             </section>
 
@@ -762,11 +785,51 @@
                         <p class="card-desc">Climb the tower, avoid obstacles, and reach the top.</p>
                     </div>
                 </article>
+
+                <article class="app-card" data-app="chilibowl">
+                    <div class="card-icon">
+                        <img src="https://via.placeholder.com/100x100/4da3ff/ffffff?text=CB" alt="Chilibowl Flash Icon" loading="lazy">
+                    </div>
+                    <div class="card-content">
+                        <h4>Chilibowl Flash</h4>
+                        <p class="card-desc">Classic flash game featuring chili pepper challenges.</p>
+                    </div>
+                </article>
+
+                <article class="app-card" data-app="slope">
+                    <div class="card-icon">
+                        <img src="https://via.placeholder.com/100x100/4da3ff/ffffff?text=Sl" alt="Slope Icon" loading="lazy">
+                    </div>
+                    <div class="card-content">
+                        <h4>Slope</h4>
+                        <p class="card-desc">Fast-paced ball rolling game through an endless slope.</p>
+                    </div>
+                </article>
+
+                <article class="app-card" data-app="territorial">
+                    <div class="card-icon">
+                        <img src="https://via.placeholder.com/100x100/4da3ff/ffffff?text=Ti" alt="Territorial.io Icon" loading="lazy">
+                    </div>
+                    <div class="card-content">
+                        <h4>Territorial.io</h4>
+                        <p class="card-desc">Strategic territory conquest game with real-time battles.</p>
+                    </div>
+                </article>
+
+                <article class="app-card" data-app="snowrider3d">
+                    <div class="card-icon">
+                        <img src="icons/snowrider.png" alt="Snow Rider 3D Icon" loading="lazy">
+                    </div>
+                    <div class="card-content">
+                        <h4>Snow Rider 3D</h4>
+                        <p class="card-desc">Thrilling sled racing game with 3D graphics and obstacles.</p>
+                    </div>
+                </article>
             </div>
-        </main>
+        </div>
 
         <!-- ================= SOCIAL PAGE ================= -->
-        <main data-page="social" class="page">
+        <div data-page="social" class="page">
             <section class="page-header">
                 <h2>Social</h2>
                 <p>Stay connected with your classmates using these communication tools. All social tools have been configured to work within school network restrictions while providing effective real-time communication capabilities.</p>
@@ -847,10 +910,10 @@
                     </div>
                 </div>
             </section>
-        </main>
+        </div>
 
         <!-- ================= OS PAGE ================= -->
-        <main data-page="os" class="page">
+        <div data-page="os" class="page">
             <section class="page-header">
                 <h2>Operating Systems</h2>
                 <p>Explore browser-based operating system environments. These simulations provide educational experiences with desktop operating system concepts, complete with window management, file systems, and applications running entirely in your browser.</p>
@@ -946,10 +1009,10 @@
                     </div>
                 </article>
             </div>
-        </main>
+        </div>
 
         <!-- ================= MISCELLANEOUS PAGE ================= -->
-        <main data-page="miscellaneous" class="page">
+        <div data-page="miscellaneous" class="page">
             <section class="page-header">
                 <h2>Miscellaneous</h2>
                 <p>Utilities, experimental tools, and other resources that don't fit into our main categories. These tools are designed for advanced users and students who need specialized functionality.</p>
@@ -1017,11 +1080,31 @@
                         <p class="card-desc">Encrypt and decrypt messages securely. Protect your private conversations.</p>
                     </div>
                 </article>
+
+                <article class="app-card" data-app="investopedia">
+                    <div class="card-icon">
+                        <img src="https://via.placeholder.com/100x100/4da3ff/ffffff?text=In" alt="Investopedia Simulator Icon" loading="lazy">
+                    </div>
+                    <div class="card-content">
+                        <h4>Investopedia Simulator</h4>
+                        <p class="card-desc">Learn stock market trading with virtual currency.</p>
+                    </div>
+                </article>
+
+                <article class="app-card" data-app="studentgrade">
+                    <div class="card-icon">
+                        <img src="https://via.placeholder.com/100x100/4da3ff/ffffff?text=SG" alt="Student Grade Viewer Icon" loading="lazy">
+                    </div>
+                    <div class="card-content">
+                        <h4>Student Grade Viewer</h4>
+                        <p class="card-desc">Track and view student grades and academic performance.</p>
+                    </div>
+                </article>
             </div>
-        </main>
+        </div>
 
         <!-- ================= CHANGELOG PAGE ================= -->
-        <main data-page="changelog" class="page">
+        <div data-page="changelog" class="page">
             <section class="page-header">
                 <h2>Changelog</h2>
                 <p>Track all the updates, improvements, and fixes made to the Sawfish App Store. This section documents the evolution of the application and helps users understand what's new in each version.</p>
@@ -1030,7 +1113,7 @@
             <section class="changelog-meta">
                 <div class="meta-card">
                     <div class="meta-label">Current Version</div>
-                    <div class="meta-value" id="changelog-version">2.6.0</div>
+                    <div class="meta-value" id="changelog-version">2.9.0</div>
                 </div>
                 <div class="meta-card">
                     <div class="meta-label">Last Updated</div>
@@ -1038,12 +1121,77 @@
                 </div>
                 <div class="meta-card">
                     <div class="meta-label">Total Changes</div>
-                    <div class="meta-value">175</div>
+                    <div class="meta-value">180</div>
                 </div>
             </section>
 
             <section class="changelog-timeline">
                 <article class="changelog-entry latest">
+                    <div class="entry-header">
+                        <div class="entry-version">v3.0.0</div>
+                        <div class="entry-date">January 12, 2026</div>
+                        <div class="entry-badge major">BIG REAL RELEASE</div>
+                    </div>
+                    <div class="entry-content">
+                        <h4>Big Public Release</h4>
+                        <ul>
+                            <li>added the pictures and made them work and links as well</li>
+                        </ul>
+                    </div>
+                </article>
+                
+                <article class="changelog-entry">
+                    <div class="entry-header">
+                        <div class="entry-version">v2.9.0</div>
+                        <div class="entry-date">January 12, 2026</div>
+                        <div class="entry-badge major">Security Update</div>
+                    </div>
+                    <div class="entry-content">
+                        <h4>Security Enhancements</h4>
+                        <ul>
+                            <li>Added secure Developer access section with password protection (password: 120622)</li>
+                            <li>Created developer indicator showing active developer mode in sidebar</li>
+                            <li>Enhanced developer logout functionality with dedicated exit button</li>
+                            <li>Developer-only apps now properly hidden from search results when not logged in as developer</li>
+                            <li>All developer tools require authentication before access</li>
+                            <li>Developer section now visible to everyone but requires login to access content</li>
+                        </ul>
+                    </div>
+                </article>
+                
+                <article class="changelog-entry">
+                    <div class="entry-header">
+                        <div class="entry-version">v2.8.0</div>
+                        <div class="entry-date">January 12, 2026</div>
+                        <div class="entry-badge major">Major Update</div>
+                    </div>
+                    <div class="entry-content">
+                        <h4>Critical Fixes</h4>
+                        <ul>
+                            <li>Fixed Firebase Firestore integration - ratings and reviews now properly save to cloud storage</li>
+                            <li>Removed localStorage fallback for reviews - all ratings are now stored in Firebase exclusively</li>
+                            <li>Fixed review synchronization - ratings now sync across all devices in real-time</li>
+                        </ul>
+                        <h4>New Features</h4>
+                        <ul>
+                            <li>Added Investopedia Simulator to Miscellaneous section - learn stock trading with virtual currency</li>
+                            <li>Added Student Grade Viewer to Miscellaneous section - track grades and academic performance</li>
+                            <li>Added Chilibowl Flash to Games section - classic flash game with chili pepper challenges</li>
+                            <li>Added Slope to Games section - fast-paced ball rolling game through endless slopes</li>
+                            <li>Added Territorial.io to Games section - strategic territory conquest with real-time battles</li>
+                            <li>Restored Developer section functionality - all developer apps now visible when in dev mode</li>
+                            <li>Removed Minecraft from Quick Access section - now accessible only through Games section</li>
+                        </ul>
+                        <h4>Bug Fixes</h4>
+                        <ul>
+                            <li>Fixed missing app visibility - all apps now properly displayed in their respective sections</li>
+                            <li>Fixed Developer Tools section - grid now populates correctly with developer-only apps</li>
+                            <li>Fixed Quick Access section layout - improved card arrangement and visual consistency</li>
+                        </ul>
+                    </div>
+                </article>
+                
+                <article class="changelog-entry">
                     <div class="entry-header">
                         <div class="entry-version">v2.7.0</div>
                         <div class="entry-date">January 12, 2026</div>
@@ -1052,29 +1200,22 @@
                     <div class="entry-content">
                         <h4>New Features</h4>
                         <ul>
-                            <li>Complete Developer section overhaul - now dynamically populates from appData with isDev flag</li>
-                            <li>Added 3 new Developer section grids: Development Resources, AI & Productivity Tools, and Web Publishing</li>
-                            <li>All developer apps now automatically organized by category in the Developer tab</li>
-                            <li>Added 2 new apps: Agent Minimax and GitHub.io, both flagged as developer tools</li>
-                            <li>Minecraft removed from Quick Access section for cleaner navigation</li>
-                            <li>All app icons now use placeholder images ensuring every app has a visible icon</li>
-                        </ul>
-                        <h4>Bug Fixes</h4>
-                        <ul>
-                            <li>Fixed broken Minecraft card in Quick Access - removed malformed HTML and missing article tag</li>
-                            <li>Fixed user reviews - now load from localStorage when Firebase is unavailable</li>
-                            <li>Fixed all missing icons - all apps now have proper placeholder icon URLs</li>
-                            <li>Fixed Minecraft expanded view - now includes ratings, reviews, re-guest banner, and Launch Game button</li>
-                            <li>Fixed Developer mode section - now dynamically populates from appData instead of broken static HTML</li>
-                            <li>Fixed Minecraft interaction - "View Info & Reviews" button now opens expanded view with all features</li>
+                            <li>Converted Help section to FAQ with expandable questions for better user experience</li>
+                            <li>Added Snow Rider 3D to the visible Games section with full card display</li>
+                            <li>Improved review comments display with explicit "No comment provided" message when review text is empty</li>
+                            <li>Populated Developer Tools section with all developer-marked apps (Agent Minimax, GitHub.io)</li>
+                            <li>Enhanced developer grids to show all isDev apps across Resources, Productivity, and Publishing sections</li>
                         </ul>
                         <h4>Improvements</h4>
                         <ul>
-                            <li>All apps with isDev flag automatically appear in appropriate Developer section categories</li>
-                            <li>Search system properly filters developer apps from regular users</li>
-                            <li>Developer resources section now categorizes apps by type (Development Tools, AI/P Productivity, Web Publishing)</li>
-                            <li>All card click handlers work consistently across all sections</li>
-                            <li>Unified app card rendering with shared createAppCard and addCardClickHandlers functions</li>
+                            <li>Updated review display to handle multiple data field formats (comment, text, review)</li>
+                            <li>Fixed developer section population logic to ensure all developer apps are visible</li>
+                            <li>Improved FAQ accessibility with proper expand/collapse functionality</li>
+                        </ul>
+                        <h4>Bug Fixes</h4>
+                        <ul>
+                            <li>Fixed review comments not showing in some cases - now displays proper fallback message</li>
+                            <li>Fixed developer apps not appearing in developer section grids</li>
                         </ul>
                     </div>
                 </article>
@@ -1082,7 +1223,7 @@
                 <article class="changelog-entry">
                     <div class="entry-header">
                         <div class="entry-version">v2.6.0</div>
-                        <div class="entry-date">January 12, 2026</div>
+                        <div class="entry-date">January 11, 2026</div>
                         <div class="entry-badge major">Major Update</div>
                     </div>
                     <div class="entry-content">
@@ -1418,62 +1559,234 @@
                     Submit App Request
                 </a>
             </section>
-        </main>
+        </div>
+
+        <!-- ================= FAQ PAGE ================= -->
+        <div data-page="help" class="page">
+            <section class="page-header">
+                <h2>Frequently Asked Questions</h2>
+                <p>Find answers to common questions about the Sawfish App Store. Click on any question to expand the answer.</p>
+            </section>
+
+            <section class="faq-section">
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span class="faq-icon">+</span>
+                        <span>How do I run Minecraft Web?</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>To play Minecraft Web:</p>
+                        <ul>
+                            <li>Click on Minecraft Web from the Featured or Games section</li>
+                            <li><strong>Important:</strong> You MUST use multiplayer servers - single player mode does not include crafting functionality</li>
+                            <li>For the best experience, join the official first server when available</li>
+                            <li>Note: You may need to re-guest (refresh) the game page for multiplayer to work properly</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span class="faq-icon">+</span>
+                        <span>Who made the Sawfish App Store?</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>The Sawfish App Store was created by the Sawfish Developer Group. It was designed to provide students with a fast, school-safe way to access games and educational tools through a modern, app-like interface.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span class="faq-icon">+</span>
+                        <span>Why was this app created?</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>The Sawfish App Store was created to address several needs:</p>
+                        <ul>
+                            <li>Many schools have slow or limited app stores that miss popular apps students want</li>
+                            <li>Students needed a way to access games and tools without special permissions</li>
+                            <li>The existing solutions felt outdated and lacked modern features</li>
+                            <li>We wanted to create a curated, school-safe environment for both entertainment and education</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span class="faq-icon">+</span>
+                        <span>How do I install this as an app on my device?</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p><strong>iOS (iPhone/iPad):</strong></p>
+                        <ol>
+                            <li>Tap the Share button (box with arrow) in Safari</li>
+                            <li>Scroll down and tap "Add to Home Screen"</li>
+                            <li>Tap "Add" to confirm</li>
+                        </ol>
+                        <p><strong>Android:</strong></p>
+                        <ol>
+                            <li>Tap the three-dot menu button</li>
+                            <li>Tap "Install App" or "Add to Home Screen"</li>
+                            <li>Tap "Install" to confirm</li>
+                        </ol>
+                        <p>Once installed, the app will appear on your home screen and launch without browser controls.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span class="faq-icon">+</span>
+                        <span>Are the games free to play?</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Yes! All games and tools in the Sawfish App Store are completely free to use. We don't charge for access to any content. Some games may have optional in-app purchases, but these are never required to enjoy the core gameplay.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span class="faq-icon">+</span>
+                        <span>Is my data safe?</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>We take privacy seriously:</p>
+                        <ul>
+                            <li>Your ratings and reviews are stored securely in Firebase cloud storage</li>
+                            <li>We don't sell or share your personal information</li>
+                            <li>Profile pictures and data are encrypted during transfer</li>
+                            <li>You can browse and use most features without creating an account</li>
+                            <li>Chat messages are logged for safety but not shared with third parties</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span class="faq-icon">+</span>
+                        <span>Can I suggest a new app to be added?</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Absolutely! We welcome suggestions for new apps. Click the "Submit App Request" button in the Changelog section to fill out our suggestion form. We review all submissions and add apps that meet our school-safety guidelines.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span class="faq-icon">+</span>
+                        <span>Why are some apps marked as "Re-Guest Required"?</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Some multiplayer games require you to refresh or "re-guest" the game page for features to work properly. This is typically needed after the game first loads to establish proper connections with multiplayer servers. Look for the re-guest warning banner on affected games.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span class="faq-icon">+</span>
+                        <span>How do I report a problem or inappropriate content?</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>If you encounter any issues or inappropriate content:</p>
+                        <ul>
+                            <li>Use the Community Board to post about issues</li>
+                            <li>Mark posts as Petitions to bring attention to concerns</li>
+                            <li>Developers actively monitor and respond to reports</li>
+                            <li>Chat messages are logged and reviewed for safety</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span class="faq-icon">+</span>
+                        <span>What makes this different from other game sites?</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>The Sawfish App Store stands out because:</p>
+                        <ul>
+                            <li>All content is pre-reviewed for school appropriateness</li>
+                            <li>No excessive ads or tracking</li>
+                            <li>Integrated authentication and cloud sync</li>
+                            <li>PWA installation for app-like experience</li>
+                            <li>Community features including reviews and discussions</li>
+                            <li>Active development and regular updates</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+        </div>
 
         <!-- ================= DEVELOPER TOOLS PAGE ================= -->
-        <main data-page="developer" class="page">
+        <div data-page="developer" class="page developer-only">
             <section class="page-header">
                 <h2>Developer Tools</h2>
                 <p>Access development resources, testing tools, and internal applications. This section is only visible to developers with proper credentials.</p>
             </section>
 
-            <section class="developer-notice">
-                <div class="notice-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                    </svg>
-                </div>
-                <div class="notice-content">
-                    <h3>Restricted Access</h3>
-                    <p>You have access to developer-only tools and resources. These are intended for building, testing, and managing the Sawfish App Store ecosystem.</p>
-                </div>
-            </section>
-
-            <section class="card-section">
-                <h3>Development Resources</h3>
-                <p class="section-subtitle">Essential tools for building and creating</p>
-                <div class="card-grid" id="developer-resources-grid">
-                    <!-- Developer resources will be loaded dynamically -->
-                </div>
-            </section>
-
-            <section class="card-section">
-                <h3>AI & Productivity Tools</h3>
-                <p class="section-subtitle">Modern tools to boost your workflow</p>
-                <div class="card-grid" id="developer-productivity-grid">
-                    <!-- AI and productivity tools will be loaded dynamically -->
+            <!-- Developer Login Required Section - shown when not logged in -->
+            <section id="developer-login-required" class="developer-login-required">
+                <div class="developer-login-prompt">
+                    <div class="prompt-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                        </svg>
+                    </div>
+                    <h3>Developer Access Required</h3>
+                    <p>You must be logged in as a developer to access developer tools and resources.</p>
+                    <button id="developer-page-login-btn" class="btn-primary">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+                            <polyline points="10 17 15 12 10 7"/>
+                            <line x1="15" y1="12" x2="3" y2="12"/>
+                        </svg>
+                        Login as Developer
+                    </button>
                 </div>
             </section>
 
-            <section class="card-section">
-                <h3>Web Publishing</h3>
-                <p class="section-subtitle">Create and share your own websites</p>
-                <div class="card-grid" id="developer-publishing-grid">
-                    <!-- Web publishing tools will be loaded dynamically -->
-                </div>
-            </section>
+            <!-- Developer Content - shown only when logged in -->
+            <section id="developer-content" class="developer-content" style="display: none;">
+                <section class="developer-notice">
+                    <div class="notice-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                        </svg>
+                    </div>
+                    <div class="notice-content">
+                        <h3>Restricted Access</h3>
+                        <p>You have access to developer-only tools and resources. These are intended for building, testing, and managing the Sawfish App Store ecosystem.</p>
+                    </div>
+                </section>
 
-            <section class="card-section">
-                <h3>Development Test Apps</h3>
-                <p class="section-subtitle">Testing and experimental applications</p>
-                <div class="card-grid" id="developer-games-grid">
-                    <!-- Developer-only apps will be loaded here dynamically -->
-                </div>
+                <section class="card-section">
+                    <h3>Development Resources</h3>
+                    <p class="section-subtitle">Essential tools for building and creating</p>
+                    <div class="card-grid" id="developer-resources-grid">
+                        <!-- Developer resources will be loaded dynamically -->
+                    </div>
+                </section>
+
+                <section class="card-section">
+                    <h3>AI & Productivity Tools</h3>
+                    <p class="section-subtitle">Modern tools to boost your workflow</p>
+                    <div class="card-grid" id="developer-productivity-grid">
+                        <!-- AI and productivity tools will be loaded dynamically -->
+                    </div>
+                </section>
+
+                <section class="card-section">
+                    <h3>Web Publishing</h3>
+                    <p class="section-subtitle">Create and share your own websites</p>
+                    <div class="card-grid" id="developer-publishing-grid">
+                        <!-- Web publishing tools will be loaded dynamically -->
+                    </div>
+                </section>
             </section>
-        </main>
+        </div>
 
         <!-- ================= COMMUNITY BOARD PAGE ================= -->
-        <main data-page="community" class="page">
+        <div data-page="community" class="page">
             <section class="page-header">
                 <h2>Community Board</h2>
                 <p>Connect with other users, share your thoughts, and post petitions. All posts are anonymous by default unless you're logged in.</p>
@@ -1527,7 +1840,7 @@
                     </div>
                 </div>
             </section>
-        </main>
+        </div>
     </main>
 
     <!-- ================= EXPANDED APP DETAILS OVERLAY ================= -->
@@ -1570,102 +1883,7 @@
         </div>
     </div>
 
-    <!-- ================= WELCOME MODAL (PWA Only) ================= -->
-    <div id="welcome-modal" class="modal-overlay hidden" aria-hidden="true">
-        <div class="modal-backdrop"></div>
-        <div class="modal-container">
-            <div class="modal-header">
-                <h2 id="welcome-title">Read This First</h2>
-                <p class="modal-subtitle">Important guidelines for the best experience</p>
-            </div>
-            
-            <div class="modal-body">
-                <div class="modal-scroll-content" id="modal-scroll-content">
-                    <div class="guideline-section">
-                        <h3>Minecraft Web Important Rule</h3>
-                        <p>
-                            In Minecraft Web, <strong>do not use single player</strong>. You 
-                            <strong>must use a multiplayer server</strong> to be able to craft.
-                            The single player mode in this web version does not include
-                            crafting functionality. Prefer the <strong>official first server</strong>
-                            when available for the best multiplayer experience with other players.
-                            The developers are working on enabling single player crafting, but
-                            for now, multiplayer is required for full functionality.
-                        </p>
-                    </div>
-                    
-                    <div class="guideline-section">
-                        <h3>Add Apps for Best Experience</h3>
-                        <p>
-                            For the smoothest experience, add important apps to your Home Screen
-                            when possible. Some apps require installation to work well including
-                            fullscreen mode, faster load times, and better reliability on school
-                            networks. The installation process is quick and easy, requiring only
-                            a few taps in your browser's share menu.
-                        </p>
-                    </div>
-                    
-                    <div class="guideline-section">
-                        <h3>Social Tools Usage</h3>
-                        <p>
-                            The Chat App and Call App are designed for legitimate educational
-                            and social purposes. Please use these tools responsibly and respect
-                            other users. Harassment, bullying, or inappropriate content may
-                            result in temporary or permanent loss of access to these services.
-                            All messages are logged for safety purposes.
-                        </p>
-                    </div>
-                    
-                    <div class="guideline-section">
-                        <h3>Changelog & Updates</h3>
-                        <p>
-                            This app improves over time. Check the <strong>Changelog</strong>
-                            tab to see what's new in each version. If you ever see old content
-                            or experience issues, use the <strong>Update</strong> button in
-                            the top banner to refresh the application cache and get the latest
-                            version. Updates are typically deployed weekly with new features
-                            and bug fixes.
-                        </p>
-                    </div>
-                    
-                    <div class="guideline-section">
-                        <h3>Rating and Reviews</h3>
-                        <p>
-                            Your feedback helps improve the app store experience for everyone.
-                            Rate your favorite apps and leave reviews to help other students
-                            discover great content. All ratings and reviews are stored in the
-                            cloud and sync across all devices. Please leave honest and helpful
-                            reviews that benefit the community. Developers can respond to reviews
-                            when logged in with developer mode.
-                        </p>
-                    </div>
-                    
-                    <div class="scroll-indicator">
-                        <span>Scroll to continue</span>
-                        <div class="scroll-arrow"></div>
-                    </div>
-                </div>
-                
-                <div class="modal-returning-content hidden" id="modal-returning-content">
-                    <p>Welcome back! Tap Continue to enter the app.</p>
-                </div>
-            </div>
-            
-            <div class="modal-footer">
-                <label class="ack-checkbox-row hidden" id="ack-checkbox-row">
-                    <input type="checkbox" id="welcome-ack">
-                    <span>I understand and agree to follow these guidelines</span>
-                </label>
-                <button id="welcome-continue" class="modal-continue-btn" type="button" disabled>
-                    Continue
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <line x1="5" y1="12" x2="19" y2="12"/>
-                        <polyline points="12 5 19 12 12 19"/>
-                    </svg>
-                </button>
-            </div>
-        </div>
-    </div>
+    <!-- WELCOME MODAL REMOVED - No longer blocking users -->
 
     <!-- ================= AUTH MODAL (Login/Signup) ================= -->
     <div id="auth-modal" class="modal-overlay auth-modal hidden" aria-hidden="true">
