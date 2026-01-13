@@ -2522,7 +2522,7 @@ const appData = {
         description: "Fast, simple browser-based voice calling interface.",
         features: "One-click calling, no app installation required, low latency audio.",
         additional: "Great for quick check-ins with study partners.",
-        link: "https://the-sawfish.github.io/callapp/",
+        link: "https://the-sawfish.github.io/call-app/",
         screenshots: ["icons/IMG_0649.jpeg", "icons/IMG_0650.jpeg"]
     },
     circle: {
@@ -2567,7 +2567,7 @@ const appData = {
         description: "Fast-paced block placement puzzle game with competitive scoring.",
         features: "Classic block puzzle mechanics, competitive scoring system.",
         additional: "Perfect for quick gaming sessions. Works offline once loaded.",
-        link: "https://aappqq.github.io/BlockBlast/index.html/",
+        link: "https://aappqq.github.io/BlockBlast/index.html",
         screenshots: ["icons/IMG_0659.jpeg", "icons/IMG_0660.jpeg"]
     },
     run3: {
