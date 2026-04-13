@@ -2035,7 +2035,7 @@ const UpdateChecker = {
                 const latestVersion = data.version;
                 
                 if (this.compareVersions(latestVersion, currentVersion) > 0) {
-                    if (status) status.textContent = `Update available (v${latestVersion})`;
+                    if (status) status.textContent = `Update available (v${latestVersion}) Reload or Swipe Out`;
                     if (action) {
                         action.innerHTML = '<span class="btn-text">Update</span><span class="btn-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg></span>';
                     }
