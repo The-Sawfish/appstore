@@ -2035,7 +2035,7 @@ const UpdateChecker = {
                 const latestVersion = data.version;
                 
                 if (this.compareVersions(latestVersion, currentVersion) > 0) {
-                    if (status) status.textContent = `Update available (v${latestVersion}) Reload or Swipe Out`;
+                    if (status) status.textContent = `Update available (v${latestVersion})`;
                     if (action) {
                         action.innerHTML = '<span class="btn-text">Update</span><span class="btn-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg></span>';
                     }
@@ -2495,310 +2495,310 @@ const appData = {
     portal: {
         name: "Sawfish Game Portal",
         developer: "Sawfish",
-        icon: "icons/IMG_0648.png",
+        icon: "https://via.placeholder.com/100x100/4da3ff/ffffff?text=P",
         category: "Games / Portal",
         description: "Central launcher for all approved Sawfish games in one place.",
         features: "Browse games by category, see what's popular, quick launch any game.",
         additional: "This portal serves as your gateway to all the games available.",
-        link: "https://the-sawfish.github.io/game-portal/",
-        screenshots: ["icons/IMG_0645.jpeg", "icons/IMG_0648.png"]
+        link: "https://the-sawfish.github.io/portal/",
+        screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Game+Portal", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Game+Library"]
     },
     chat: {
         name: "Chat App",
-        developer: "Jimeneutron",
-        icon: "icons/IMG_0647.jpeg",
+        developer: "Sawfish",
+        icon: "https://via.placeholder.com/100x100/4da3ff/ffffff?text=C",
         category: "Social / Communication",
         description: "Real-time browser-based messaging with rooms and channels.",
         features: "Join topic-based rooms, create channels, share text messages instantly.",
         additional: "Perfect for study groups and class discussions.",
-        link: "https://jimeneutron.github.io/chatapp/",
-        screenshots: ["icons/IMG_0646.jpeg", "icons/IMG_0648.png"]
+        link: "https://the-sawfish.github.io/chat/",
+        screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Chat+Interface", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Message+Rooms"]
     },
     call: {
         name: "Call App",
         developer: "Sawfish",
-        icon: "icons/IMG_0651.jpeg",
+        icon: "https://via.placeholder.com/100x100/4da3ff/ffffff?text=Ca",
         category: "Social / Communication",
         description: "Fast, simple browser-based voice calling interface.",
         features: "One-click calling, no app installation required, low latency audio.",
         additional: "Great for quick check-ins with study partners.",
-        link: "https://the-sawfish.github.io/call-app/",
-        screenshots: ["icons/IMG_0649.jpeg", "icons/IMG_0650.jpeg"]
+        link: "https://the-sawfish.github.io/call/",
+        screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Call+Interface", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Voice+Call"]
     },
     circle: {
         name: "Draw a Circle",
         developer: "Sawfish",
-        icon: "icons/IMG_0652.jpeg",
+        icon: "https://via.placeholder.com/100x100/4da3ff/ffffff?text=O",
         category: "Games / Puzzle",
         description: "Quick reflex challenge - draw the most perfect circle you can.",
         features: "Instant feedback on circle precision, score tracking.",
         additional: "Perfect for quick breaks between classes. Works offline once loaded.",
-        link: "https://the-sawfish.github.io/circle/",
-        screenshots: ["icons/IMG_0653.jpeg", "icons/IMG_0654.jpeg"]
+        link: "https://the-sawfish.github.io/seraph/games/circle/",
+        screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Draw+a+Circle", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Score+Screen"]
     },
     sandboxels: {
         name: "Sandboxels",
         developer: "Rhex Lorenz",
-        icon: "icons/IMG_0655.jpeg",
+        icon: "https://via.placeholder.com/100x100/4da3ff/ffffff?text=S",
         category: "Games / Simulation",
         description: "Falling sand physics simulator with over 500 unique elements.",
         features: "Hundreds of different elements, realistic physics simulation.",
         additional: "A great way to learn about cellular automata and physics.",
-        link: "https://the-sawfish.github.io/sandboxels/",
-        screenshots: ["icons/IMG_0656.jpeg", "icons/IMG_0657.jpeg"]
+        link: "https://sandboxels.riverside.rocks/",
+        screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Sandboxels+Simulation", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Physics+Elements"]
     },
     minecraft: {
-        name: "Minecraft Web",
+        name: "Minecraft Web (Beta)",
         developer: "Zardoy",
-        icon: "icons/IMG_0746.jpeg",
+        icon: "https://via.placeholder.com/100x100/5c8a3d/ffffff?text=MC",
         category: "Games / Sandbox",
         description: "The iconic sandbox building game, now in your browser.",
         features: "Full block-based world generation, mining and crafting, multiplayer support.",
         additional: "This is a browser-based recreation of Minecraft.",
         link: "https://zardoy.github.io/minecraft-web-client/",
-        screenshots: ["icons/IMG_0610.jpeg", "icons/IMG_0611.jpeg"],
+        screenshots: ["https://via.placeholder.com/400x250/5c8a3d/ffffff?text=Minecraft+Web", "https://via.placeholder.com/400x250/5c8a3d/ffffff?text=Block+Building"],
         reguestRequired: true
     },
     blockblast: {
         name: "Block Blast",
-        developer: "A Guy",
-        icon: "icons/IMG_0658.jpeg",
+        developer: "Sawfish",
+        icon: "https://via.placeholder.com/100x100/4da3ff/ffffff?text=BB",
         category: "Games / Puzzle",
         description: "Fast-paced block placement puzzle game with competitive scoring.",
         features: "Classic block puzzle mechanics, competitive scoring system.",
         additional: "Perfect for quick gaming sessions. Works offline once loaded.",
-        link: "https://aappqq.github.io/BlockBlast/index.html",
-        screenshots: ["icons/IMG_0659.jpeg", "icons/IMG_0660.jpeg"]
+        link: "https://the-sawfish.github.io/seraph/games/blockblast/",
+        screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Block+Blast", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Puzzle+Gameplay"]
     },
     run3: {
         name: "Run 3",
         developer: "Jupiter Hadley",
-        icon: "icons/IMG_0664.jpeg",
+        icon: "https://via.placeholder.com/100x100/4da3ff/ffffff?text=R3",
         category: "Games / Platformer",
         description: "Endless space runner through procedurally generated tunnels.",
         features: "Procedurally generated endless tunnels, wall-running mechanics.",
         additional: "A classic endless runner with a unique 3D tunnel perspective.",
-        link: "https://the-sawfish.github.io/Run3Final/",
-        screenshots: ["icons/IMG_0662.jpeg", "icons/IMG_0663.jpeg"]
+        link: "https://the-sawfish.github.io/seraph/games/run3/",
+        screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Run+3+Gameplay", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Space+Tunnels"]
     },
     retrobowl: {
         name: "Retro Bowl",
         developer: "Collin Crews",
-        icon: "icons/IMG_0667.jpeg",
+        icon: "https://via.placeholder.com/100x100/4da3ff/ffffff?text=RB",
         category: "Games / Sports",
         description: "Classic American football management game with retro aesthetics.",
         features: "Team management, strategic playcalling, retro pixel art style.",
         additional: "The perfect game for football fans.",
         link: "https://the-sawfish.github.io/seraph/games/retrobowl/",
-        screenshots: ["icons/IMG_0665.jpeg", "icons/IMG_0666.jpeg"]
+        screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Retro+Bowl", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Football+Action"]
     },
     paperio2: {
         name: "Paper Io 2",
         developer: "Voodoo",
-        icon: "icons/IMG_0648.png",
+        icon: "https://via.placeholder.com/100x100/4da3ff/ffffff?text=IO",
         category: "Games / Action",
         description: "Territory conquest game. Capture territory and defeat opponents.",
         features: "Territory capture mechanics, real-time multiplayer battles.",
         additional: "A highly addictive territory conquest game.",
         link: "https://the-sawfish.github.io/seraph/games/paperio2/",
-        screenshots: ["icons/IMG_0669.jpeg", "icons/IMG_0670.jpeg"]
+        screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Paper+IO+2", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Territory+Capture"]
     },
     bobtherobber: {
         name: "Bob The Robber",
         developer: "Bob The Robber Team",
-        icon: "icons/IMG_0672.jpeg",
+        icon: "https://via.placeholder.com/100x100/4da3ff/ffffff?text=BR",
         category: "Games / Puzzle",
         description: "Stealth puzzle game series. Infiltrate locations and steal treasures.",
         features: "Progressive level difficulty, stealth mechanics.",
         additional: "A beloved stealth puzzle series.",
-        link: "https://bobtherobberunblocked.github.io/2/",
-        screenshots: ["icons/IMG_0673.jpeg", "icons/IMG_0674.jpeg"]
+        link: "https://the-sawfish.github.io/seraph/games/bobtherobber/",
+        screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Bob+The+Robber", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Stealth+Action"]
     },
     tinyfishing: {
         name: "Tiny Fishing",
         developer: "Ketchapp",
-        icon: "icons/IMG_0648.png",
+        icon: "https://via.placeholder.com/100x100/4da3ff/ffffff?text=TF",
         category: "Games / Casual",
         description: "Addictive fishing game. Catch fish and upgrade your gear.",
         features: "Hook fish of various sizes, upgrade your fishing gear.",
         additional: "A simple yet addictive fishing game.",
         link: "https://the-sawfish.github.io/seraph/games/tinyfishing/",
-        screenshots: ["icons/IMG_0675.jpeg", "icons/IMG_0676.jpeg"]
+        screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Tiny+Fishing", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Fish+Collection"]
     },
     ovo: {
         name: "OVO",
         developer: "Maestro",
-        icon: "icons/IMG_0677.jpeg",
+        icon: "https://via.placeholder.com/100x100/4da3ff/ffffff?text=OV",
         category: "Games / Platformer",
         description: "Fast-paced parkour game. Jump, slide, and wall-run through obstacles.",
         features: "Smooth parkour mechanics, challenging obstacle courses.",
         additional: "A beloved parkour platformer with fluid movement controls.",
-        link: "https://the-sawfish.github.io/legalizenuclearbombs5.github.io/games/ovo.html",
-        screenshots: ["icons/IMG_0678.jpeg", "icons/IMG_0679.jpeg"]
+        link: "https://the-sawfish.github.io/seraph/games/ovo/",
+        screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=OVO+Parkour", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Obstacle+Course"]
     },
     towerofdestiny: {
         name: "Tower of Destiny",
         developer: "Sawfish",
-        icon: "icons/IMG_0748.jpeg",
+        icon: "https://via.placeholder.com/100x100/4da3ff/ffffff?text=TD",
         category: "Games / Adventure",
         description: "Exciting adventure game where you build and ascend a tower.",
         features: "Procedurally generated levels, hero upgrades, boss battles.",
         additional: "The tower keeps getting taller as you progress.",
-        link: "https://natleef1.github.io/tower-of-destiny/",
-        screenshots: ["icons/IMG_0749.jpeg", "icons/IMG_0750.jpeg"]
+        link: "https://the-sawfish.github.io/legalizenuclearbombs5.github.io/games/Tower%20of%20Destiny",
+        screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Tower+of+Destiny", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Ascend+the+Tower"]
     },
     novaos: {
         name: "NovaOS",
         developer: "RunNova",
-        icon: "icons/IMG_0683.jpeg",
+        icon: "https://via.placeholder.com/100x100/4da3ff/ffffff?text=N",
         category: "Operating System",
         description: "Full-featured browser-based desktop operating system environment.",
         features: "Customizable desktop, window management, file manager.",
         additional: "For the full NovaOS experience, open in a new tab.",
         link: "https://runnova.github.io/NovaOS/",
-        screenshots: ["icons/IMG_0684.jpeg", "icons/IMG_0685.jpeg"]
+        screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=NovaOS+Desktop", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=NovaOS+Apps"]
     },
     winripen: {
         name: "WinRipen",
         developer: "Ripenos",
-        icon: "icons/IMG_0686.jpeg",
+        icon: "https://via.placeholder.com/100x100/4da3ff/ffffff?text=WR",
         category: "Operating System",
         description: "Web-based operating system recreating classic Windows.",
         features: "Authentic Windows-like interface, window management.",
         additional: "Due to browser security restrictions, open in a new tab.",
         link: "https://ripenos.web.app/WinRipen/index.html",
-        screenshots: ["icons/IMG_0687.jpeg", "icons/IMG_0688.jpeg"]
+        screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=WinRipen+Interface", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Windows+Apps"]
     },
     plutoos: {
         name: "PlutoOS",
         developer: "Zeon",
-        icon: "icons/IMG_0689.jpeg",
+        icon: "https://via.placeholder.com/100x100/4da3ff/ffffff?text=PL",
         category: "Operating System",
         description: "Futuristic vision of a web-based operating system.",
         features: "Modular design, glass-morphism effects, smooth animations.",
         additional: "An experimental project demonstrating cutting edge web computing.",
         link: "https://pluto-app.zeon.dev",
-        screenshots: ["icons/IMG_0690.jpeg", "icons/IMG_0691.jpeg"]
+        screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=PlutoOS+Modern+UI", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Fluid+Animations"]
     },
     ripenos: {
         name: "Ripenos",
         developer: "Ripenos",
-        icon: "icons/IMG_0648.png",
+        icon: "https://via.placeholder.com/100x100/4da3ff/ffffff?text=RP",
         category: "Operating System",
         description: "Lightweight, modular web-based operating system framework.",
         features: "Essential desktop functionality, modular architecture.",
         additional: "Suitable for educational environments with varied hardware.",
         link: "https://ripenos.web.app/Ripenos/",
-        screenshots: ["icons/IMG_0692.jpeg", "icons/IMG_0693.jpeg"]
+        screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Ripenos+Desktop", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Modular+Apps"]
     },
     piskel: {
         name: "Piskel",
         developer: "Piskel Team",
-        icon: "icons/IMG_0648.png",
+        icon: "https://via.placeholder.com/100x100/4da3ff/ffffff?text=Pi",
         category: "Developer Tools / Graphics",
         description: "Free online editor for creating animated sprites and pixel art.",
         features: "Layers, color palettes, onion skinning, animation timeline.",
         additional: "Perfect for creating game assets and pixel art.",
         link: "https://www.piskelapp.com/",
-        screenshots: ["icons/IMG_0694.jpeg", "icons/IMG_0695.jpeg"],
+        screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Piskel+Pixel+Editor", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Animation+Timeline"],
         isDev: true
     },
     vscodeweb: {
         name: "VS Code Web",
         developer: "Microsoft",
-        icon: "icons/IMG_0696.jpeg",
+        icon: "https://via.placeholder.com/100x100/4da3ff/ffffff?text=VS",
         category: "Developer Tools / Code",
         description: "Visual Studio Code editor in your browser.",
         features: "Syntax highlighting, IntelliSense, Git integration.",
         additional: "Requires a Microsoft account for full functionality.",
         link: "https://vscode.dev/",
-        screenshots: ["icons/IMG_0697.jpeg", "icons/IMG_0699.jpeg"],
+        screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=VS+Code+Editor", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Code+IntelliSense"],
         isDev: true
     },
     shadertoy: {
         name: "ShaderToy",
         developer: "ShaderToy Team",
-        icon: "icons/IMG_0702.jpeg",
+        icon: "https://via.placeholder.com/100x100/4da3ff/ffffff?text=ST",
         category: "Developer Tools / Graphics",
         description: "Platform for learning and sharing GLSL shaders.",
         features: "Powerful shader editor, thousands of example shaders.",
         additional: "Perfect for learning computer graphics programming.",
         link: "https://www.shadertoy.com/",
-        screenshots: ["icons/IMG_0700.jpeg", "icons/IMG_0701.jpeg"],
+        screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=ShaderToy+Editor", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=GLSL+Shaders"],
         isDev: true
     },
     photopea: {
         name: "Photopea",
         developer: "Ivan Kuckir",
-        icon: "icons/IMG_0705.jpeg",
+        icon: "https://via.placeholder.com/100x100/4da3ff/ffffff?text=Ph",
         category: "Productivity / Graphics",
         description: "Powerful online image editor in your browser.",
         features: "Layer support, filters, brushes, vector shapes.",
         additional: "All processing happens in your browser for privacy.",
         link: "https://www.photopea.com/",
-        screenshots: ["icons/IMG_0704.jpeg", "icons/IMG_0648.png"]
+        screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Photopea+Interface", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Image+Editing"]
     },
     tiddlywiki: {
         name: "TiddlyWiki",
         developer: "TiddlyWiki Community",
-        icon: "icons/IMG_0708.jpeg",
+        icon: "https://via.placeholder.com/100x100/4da3ff/ffffff?text=TW",
         category: "Productivity / Notes",
         description: "Personal wiki and non-linear notebook for organizing thoughts.",
         features: "Powerful linking, tagging system, rich text editing.",
         additional: "Completely self-contained in one HTML file.",
         link: "https://tiddlywiki.com/",
-        screenshots: ["icons/IMG_0706.jpeg", "icons/IMG_0707.jpeg"],
+        screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=TiddlyWiki+Notebook", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Wiki+Organization"],
         isDev: true
     },
     monkeytype: {
         name: "Monkeytype",
         developer: "Miodec",
-        icon: "icons/IMG_0709.jpeg",
+        icon: "https://via.placeholder.com/100x100/4da3ff/ffffff?text=MT",
         category: "Educational / Typing",
         description: "Minimalist typing test for improving speed and accuracy.",
         features: "Customizable themes, difficulty levels, comprehensive statistics.",
         additional: "Open source and completely ad-free.",
         link: "https://monkeytype.com/",
-        screenshots: ["icons/IMG_0710.jpeg", "icons/IMG_0711.jpeg"]
+        screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Monkeytype+Interface", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Typing+Statistics"]
     },
     lichess: {
         name: "Lichess",
         developer: "Lichess Team",
-        icon: "icons/IMG_0714.jpeg",
+        icon: "https://via.placeholder.com/100x100/4da3ff/ffffff?text=Li",
         category: "Games / Strategy",
         description: "Free, open-source chess platform with no ads or tracking.",
         features: "Multiple game modes, puzzles, tactics training, tournaments.",
         additional: "One of the least blocked chess sites on school networks.",
         link: "https://lichess.org/",
-        screenshots: ["icons/IMG_0712.jpeg", "icons/IMG_0713.jpeg"]
+        screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Lichess+Chess+Board", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Chess+Analysis"]
     },
     neocities: {
         name: "Neocities",
         developer: "Neocities Inc",
-        icon: "icons/IMG_0717.jpeg",
+        icon: "https://via.placeholder.com/100x100/4da3ff/ffffff?text=NC",
         category: "Social / Web Publishing",
         description: "Free service for creating your own website.",
         features: "Free hosting, site templates, drag-and-drop uploads.",
         additional: "Revives the spirit of early web publishing.",
         link: "https://neocities.org/",
-        screenshots: ["icons/IMG_0715.jpeg", "icons/IMG_0716.jpeg"],
+        screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Neocities+Create", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Website+Builder"],
         isDev: true
     },
     hack: {
         name: "Hack Stuff",
         developer: "Sawfish",
-        icon: "icons/IMG_0718.jpeg",
+        icon: "https://via.placeholder.com/100x100/4da3ff/ffffff?text=Hk",
         category: "Miscellaneous / Tools",
         description: "Utilities and experimental tools for advanced users.",
         features: "Password generator, cipher tools, hash generator.",
         additional: "For educational purposes only.",
         link: "https://the-sawfish.github.io/hack/",
-        screenshots: ["icons/IMG_0719.jpeg", "icons/IMG_0720.jpeg"]
+        screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Hack+Tools+Interface", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Password+Generator"]
     },
     securecomms: {
         name: "Secure Communication",
         developer: "Jimeneutron",
-        icon: "icons/IMG_0636.jpeg",
+        icon: "https://via.placeholder.com/100x100/4da3ff/ffffff?text=SC",
         category: "Miscellaneous / Tools",
         description: "Encrypt and decrypt messages securely.",
         features: "AES-256 encryption, message encoding, key generation.",
@@ -2809,135 +2809,135 @@ const appData = {
     2048: {
         name: "2048",
         developer: "Gabriele Cirulli",
-        icon: "icons/IMG_0640.jpeg",
+        icon: "https://via.placeholder.com/100x100/4da3ff/ffffff?text=20",
         category: "Games / Puzzle",
         description: "Classic number puzzle game. Combine tiles to reach 2048.",
         features: "Simple swipe controls, score tracking, undo functionality.",
         additional: "One of the most popular puzzle games of all time.",
         link: "https://the-sawfish.github.io/seraph/games/2048/",
-        screenshots: ["icons/IMG_0637.jpeg", "icons/IMG_0641.jpeg"]
+        screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=2048+Game+Board", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=2048+Win+Screen"]
     },
     hackernews: {
         name: "Hacker News",
         developer: "Y Combinator",
-        icon: "icons/IMG_0648.png",
+        icon: "https://via.placeholder.com/100x100/4da3ff/ffffff?text=HN",
         category: "News / Technology",
         description: "Social news website focusing on computer science and technology.",
         features: "User-submitted stories, threaded comments, karma points.",
         additional: "One of the best sources for technology news.",
         link: "https://news.ycombinator.com/",
-        screenshots: ["icons/IMG_0648.png", "icons/IMG_0648.png"]
+        screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Hacker+News+Front+Page", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Tech+Discussions"]
     },
     syrup: {
         name: "Syrup Games",
         developer: "Syrup Games",
-        icon: "icons/IMG_0721.jpeg",
+        icon: "https://via.placeholder.com/100x100/4da3ff/ffffff?text=Sy",
         category: "Games / Arcade",
         description: "Alternative game launcher with unique browser-based titles.",
         features: "Collection of indie games, daily challenges, leaderboards.",
         additional: "Discover unique indie games you won't find anywhere else.",
-        link: "https://jimeneutron.github.io/",
-        screenshots: ["icons/IMG_0722.jpeg", "icons/IMG_0723.jpeg"]
+        link: "https://syrup.games/",
+        screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Syrup+Games+Launcher", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Indie+Games"]
     },
     hextris: {
         name: "Hextris",
         developer: "Hextris",
-        icon: "icons/IMG_0724.jpeg",
+        icon: "https://via.placeholder.com/100x100/4da3ff/ffffff?text=He",
         category: "Games / Puzzle",
         description: "Addictive puzzle game played on a hexagonal grid.",
         features: "Fast-paced gameplay, score tracking, increasing difficulty.",
         additional: "A unique twist on the classic tetris-style gameplay.",
-        link: "https://codechefvit.github.io/DevTris/",
-        screenshots: ["icons/IMG_0725.jpeg", "icons/IMG_0726.jpeg"]
+        link: "https://the-sawfish.github.io/seraph/games/hextris/",
+        screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Hextris+Gameplay", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Hexagonal+Puzzle"]
     },
     snowrider3d: {
         name: "Snow Rider 3D",
         developer: "Sawfish",
-        icon: "icons/IMG_0680.jpeg",
+        icon: "https://via.placeholder.com/100x100/4da3ff/ffffff?text=SR",
         category: "Games / Arcade",
         description: "Thrilling sled racing game with 3D graphics and obstacles.",
         features: "3D graphics, obstacle avoidance, gifts and power-ups.",
         additional: "A classic school-friendly game. Works offline once loaded.",
         link: "https://the-sawfish.github.io/Snow-Rider3D/",
-        screenshots: ["icons/IMG_0681.jpeg", "icons/IMG_0682.jpeg"]
+        screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Snow+Rider+3D", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Sled+Racing"]
     },
     investopedia: {
         name: "Investopedia Simulator",
         developer: "Investopedia",
-        icon: "icons/IMG_0732.jpeg",
+        icon: "https://via.placeholder.com/100x100/4da3ff/ffffff?text=In",
         category: "Educational / Finance",
         description: "Learn stock market trading with virtual currency.",
         features: "Real-time market data simulation, portfolio tracking.",
         additional: "Perfect for learning trading strategies without risk.",
         link: "http://investopedia.com/simulator",
-        screenshots: ["icons/IMG_0730.jpeg", "icons/IMG_0731.jpeg"]
+        screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Investopedia+Simulator", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Stock+Trading"]
     },
     studentgrade: {
         name: "Student Grade Viewer",
         developer: "Sawfish",
-        icon: "icons/IMG_0733.jpeg",
+        icon: "https://via.placeholder.com/100x100/4da3ff/ffffff?text=SG",
         category: "Productivity / Education",
         description: "Track and view student grades and academic performance.",
         features: "Grade tracking, GPA calculation, assignment management.",
         additional: "Designed for students to monitor their academic progress.",
         link: "http://pa.neonet.org/Student/Grade",
-        screenshots: ["icons/IMG_0648.png", "icons/IMG_0648.png"]
+        screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Student+Grade+Viewer", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Grade+Tracking"]
     },
     chilibowl: {
         name: "Chilibowl Flash",
         developer: "Sawfish",
-        icon: "icons/IMG_0736.jpeg",
+        icon: "https://via.placeholder.com/100x100/4da3ff/ffffff?text=CB",
         category: "Games / Arcade",
         description: "Classic flash game featuring chili pepper challenges.",
         features: "Classic gameplay, multiple levels, time attack mode.",
         additional: "Nostalgic flash gaming experience.",
         link: "https://the-sawfish.github.io/chilibowlflash/",
-        screenshots: ["icons/IMG_0734.jpeg", "icons/IMG_0735.jpeg"]
+        screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Chilibowl+Flash", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Chili+Challenge"]
     },
     territorial: {
         name: "Territorial.io",
         developer: "Territorial Team",
-        icon: "icons/IMG_0742.jpeg",
+        icon: "https://via.placeholder.com/100x100/4da3ff/ffffff?text=Ti",
         category: "Games / Strategy",
         description: "Strategic territory conquest game with real-time battles.",
         features: "Territory expansion, unit management, real-time multiplayer.",
         additional: "A highly strategic conquest game.",
         link: "https://the-sawfish.github.io/seraph/games/territorialio/index.html",
-        screenshots: ["icons/IMG_0740.jpeg", "icons/IMG_0741.jpeg"]
+        screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Territorial.io", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Territory+Conquest"]
     },
     slope: {
         name: "Slope",
         developer: "Sawfish",
-        icon: "icons/IMG_0739.jpeg",
+        icon: "https://via.placeholder.com/100x100/4da3ff/ffffff?text=Sl",
         category: "Games / Arcade",
         description: "Fast-paced ball rolling game through an endless slope.",
         features: "Endless runner mechanics, obstacle avoidance, high scores.",
         additional: "A thrilling test of reflexes and timing.",
         link: "https://the-sawfish.github.io/seraph/games/slope/index.html",
-        screenshots: ["icons/IMG_0737.jpeg", "icons/IMG_0738.jpeg"]
+        screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Slope+Game", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Ball+Rolling"]
     },
     agentminimax: {
         name: "Agent Minimax",
         developer: "MiniMax",
-        icon: "icons/IMG_0745.jpeg",
+        icon: "https://via.placeholder.com/100x100/4da3ff/ffffff?text=AM",
         category: "Productivity / AI Tools",
         description: "AI-powered task management and automation assistant.",
         features: "Smart scheduling, task prioritization, workflow automation.",
         additional: "Boost your productivity with AI assistance.",
-        link: "https://agent.minimax.io/",
-        screenshots: ["icons/IMG_0743.jpeg", "icons/IMG_0744.jpeg"],
+        link: "https://agent.minimax.chat/",
+        screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Agent+Minimax", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=AI+Assistant"],
         isDev: true
     },
     githubio: {
         name: "GitHub.io",
         developer: "GitHub",
-        icon: "icons/IMG_0727.jpeg",
+        icon: "https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/github.svg",
         category: "Productivity / Web Publishing",
         description: "Free static web hosting for GitHub repositories.",
         features: "Free hosting, custom domains, HTTPS support.",
         additional: "Deploy static sites directly from your repositories.",
-        link: "https://github.io/",
-        screenshots: ["icons/IMG_0728.jpeg", "icons/IMG_0729.jpeg"],
+        link: "https://pages.github.com/",
+        screenshots: ["https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=GitHub+Pages", "https://via.placeholder.com/400x250/1a1a2e/4da3ff?text=Static+Hosting"],
         isDev: true
     }
 };
@@ -3091,6 +3091,7 @@ function setupEventListeners() {
     setupOfflineTagListeners();
     setupMinecraftWarningListeners();
     setupFAQListeners();
+    setupInstallAccordion();
     
     window.matchMedia('(display-mode: standalone)').addEventListener('change', function(e) {
         AppState.isPWA = e.matches;
@@ -3377,6 +3378,53 @@ function setupFAQListeners() {
                     question.click();
                 }
             });
+        }
+    });
+}
+
+function setupInstallAccordion() {
+    const container = document.querySelector('.install-guide-container');
+    if (!container) return;
+    
+    const guideItems = container.querySelectorAll('.install-guide-item');
+    
+    // Add click handlers to each guide header
+    guideItems.forEach(item => {
+        const header = item.querySelector('.guide-header');
+        if (!header) return;
+        
+        header.addEventListener('click', function() {
+            const isOpen = item.classList.contains('open');
+            
+            // Close all other items (accordion behavior)
+            guideItems.forEach(otherItem => {
+                if (otherItem !== item) {
+                    otherItem.classList.remove('open');
+                    const otherHeader = otherItem.querySelector('.guide-header');
+                    if (otherHeader) {
+                        otherHeader.setAttribute('aria-expanded', 'false');
+                    }
+                }
+            });
+            
+            // Toggle current item
+            if (isOpen) {
+                item.classList.remove('open');
+                header.setAttribute('aria-expanded', 'false');
+            } else {
+                item.classList.add('open');
+                header.setAttribute('aria-expanded', 'true');
+            }
+        });
+    });
+    
+    // Set up initial state for default-open items
+    const defaultOpenItems = container.querySelectorAll('.install-guide-item.default-open');
+    defaultOpenItems.forEach(item => {
+        item.classList.add('open');
+        const header = item.querySelector('.guide-header');
+        if (header) {
+            header.setAttribute('aria-expanded', 'true');
         }
     });
 }
