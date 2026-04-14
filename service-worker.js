@@ -493,4 +493,3 @@ async function updateContent() {
 // END OF SERVICE WORKER
 // ==========================================================================
 console.log('[ServiceWorker] Loaded successfully - Version:', CACHE_NAME);
- 
