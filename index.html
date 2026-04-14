@@ -3,16 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Sawfish App Store</title>
-    <meta name="description" content="A fast, school-safe way to access games and student tools. Install as a PWA for the full experience.">
+    <title>The Sawfish App Store</title>
+    <meta name="description" content="The Sawfish App Store - A modern, school-safe web app store with games, tools, and productivity apps. Install as a PWA for the full experience with offline support.">
+    <meta name="robots" content="index, follow">
     <meta name="theme-color" content="#0b0d10">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="monetag" content="570a54dafd78d29bfaad9f346371b557">
     <meta name="apple-mobile-web-app-title" content="Sawfish Store">
+    
+    <!-- Favicon for Google search results -->
+    <link rel="icon" href="icons/icon-192.png" type="image/png">
+    <link rel="apple-touch-icon" sizes="192x192" href="icons/icon-192.png">
+    
+    <!-- Open Graph / Social Media -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://the-sawfish.github.io/appstore">
+    <meta property="og:title" content="The Sawfish App Store">
+    <meta property="og:description" content="A modern, school-safe web app store with games, tools, and productivity apps. Install as a PWA for the full experience.">
+    <meta property="og:image" content="icons/icon-192.png">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://the-sawfish.github.io/appstore">
+    
+    <!-- Structured Data for Google -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "The Sawfish App Store",
+        "alternateName": "Sawfish App Store",
+        "url": "https://the-sawfish.github.io/appstore",
+        "description": "A modern, school-safe web app store with games, tools, and productivity apps.",
+        "applicationCategory": "WebApplication",
+        "operatingSystem": "Web Browser",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        }
+    }
+    </script>
+    
     <link rel="manifest" href="manifest.json">
     <link rel="stylesheet" href="style.css">
-    <link rel="apple-touch-icon" sizes="192x192" href="icons/icon-192.png">
     <link rel="version" href="version.json">
 </head>
 <body>
@@ -58,38 +91,232 @@
 
         <section class="how-it-works">
             <h2>How to Install</h2>
-            <p>This works best when added to your device's Home Screen for a full app experience:</p>
-            
-            <div class="install-instructions">
-                <div class="instruction-step">
-                    <div class="step-number">1</div>
-                    <div class="step-content">
-                        <strong>Tap the Share Button</strong>
-                        <p>In Safari or your browser, look for the share icon typically located in the toolbar. This button usually looks like a square with an arrow pointing upward on iOS devices or three dots connected by lines on Android devices.</p>
+            <p>Click on your device below to see specific installation instructions. Works best when added to your Home Screen for the full app experience.</p>
+
+            <div class="install-guide-container">
+                <!-- Chrome on PC -->
+                <div class="install-guide-item default-open" data-guide="chrome-pc">
+                    <button class="guide-header" aria-expanded="true">
+                        <span class="guide-icon"></span>
+                        <span class="guide-title">Chrome on PC (Windows)</span>
+                        <span class="guide-toggle">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                        </span>
+                    </button>
+                    <div class="guide-content">
+                        <ol class="guide-steps">
+                            <li>Click the three-dot menu icon <strong>(⋯)</strong> in the top-right corner of Chrome</li>
+                            <li>Hover over <strong>"More tools"</strong> in the dropdown menu</li>
+                            <li>Click <strong>"Create shortcut..."</strong></li>
+                            <li>Check the box for <strong>"Open as window"</strong> if available</li>
+                            <li>Click <strong>"Create"</strong> to add to your desktop or start menu</li>
+                            <li>Double-click the shortcut to open the app in its own window</li>
+                        </ol>
                     </div>
                 </div>
-                
-                <div class="instruction-step">
-                    <div class="step-number">2</div>
-                    <div class="step-content">
-                        <strong>Select "Add to Home Screen"</strong>
-                        <p>Scroll down through the share sheet options until you find "Add to Home Screen" or "Install App". Tap this option to proceed with the installation process.</p>
+
+                <!-- Safari on iPad / Tablet -->
+                <div class="install-guide-item" data-guide="safari-tablet">
+                    <button class="guide-header" aria-expanded="true">
+                        <span class="guide-icon"></span>
+                        <span class="guide-title">Safari on iPad / Tablet</span>
+                        <span class="guide-toggle">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                        </span>
+                    </button>
+                    <div class="guide-content">
+                        <ol class="guide-steps">
+                            <li>Tap the <strong>Share button</strong> <svg viewBox="0 0 24 24" fill="currentColor" style="width:16px;height:16px;vertical-align:middle;"><path d="M18 8c-1.7 0-3 1.3-3 3 0 1.3-1 2-2 2s-2-.7-2-2c0-2 3-3 3-6 0-.6-.4-1-1-1s-1 .4-1 1c0 1.5 1 2.5 1 2.5s-1 1-3 1c-2.3 0-3-1.5-3-3 0-1.7 1.3-3 3-3s3 1.3 3 3c0 1.3-1 2-2 2s-2-.7-2-2c0-3 3-4.5 3-6 0-.6-.4-1-1-1s-1 .4-1 1c0 1.5 1 2.5 1 2.5"/></svg> at the top of Safari</li>
+                            <li>Scroll down and tap <strong>"Add to Home Screen"</strong> <svg viewBox="0 0 24 24" fill="currentColor" style="width:16px;height:16px;vertical-align:middle;"><rect x="4" y="4" width="16" height="16" rx="2"/></svg></li>
+                            <li>Tap the name field to edit it if desired (default: "Sawfish App Store")</li>
+                            <li>Tap <strong>"Add"</strong> in the top-right corner</li>
+                            <li>Find the icon on your Home Screen and tap it to open the app</li>
+                        </ol>
                     </div>
                 </div>
-                
-                <div class="instruction-step">
-                    <div class="step-number">3</div>
-                    <div class="step-content">
-                        <strong>Confirm the Installation</strong>
-                        <p>Review the app name and icon that will appear on your home screen. You can customize these if desired, then tap "Add" or "Install" to confirm and begin the installation process.</p>
+
+                <!-- Chrome on Tablet / iPad -->
+                <div class="install-guide-item" data-guide="chrome-tablet">
+                    <button class="guide-header" aria-expanded="false">
+                        <span class="guide-icon"></span>
+                        <span class="guide-title">Chrome on Tablet / iPad</span>
+                        <span class="guide-toggle">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                        </span>
+                    </button>
+                    <div class="guide-content">
+                        <ol class="guide-steps">
+                            <li>Tap the <strong>three-dot menu</strong> <strong>(⋯)</strong> in the top-right corner of Chrome</li>
+                            <li>Scroll down and tap <strong>"Install Sawfish App Store"</strong> or <strong>"Add to Home Screen"</strong></li>
+                            <li>If you don't see the option, tap <strong>Share</strong> first, then look for "Add to Home Screen"</li>
+                            <li>Tap the name field to edit it if desired</li>
+                            <li>Tap <strong>"Add"</strong> to create the shortcut</li>
+                            <li>Find the icon on your Home Screen and tap it to open</li>
+                        </ol>
                     </div>
                 </div>
-                
-                <div class="instruction-step">
-                    <div class="step-number">4</div>
-                    <div class="step-content">
-                        <strong>Open from Home Screen</strong>
-                        <p>Once installed, tap the Sawfish App Store icon from your device's home screen to open the app. The installation screen will disappear and the full application will be available.</p>
+
+                <!-- Chrome on Android -->
+                <div class="install-guide-item" data-guide="chrome-android">
+                    <button class="guide-header" aria-expanded="false">
+                        <span class="guide-icon"></span>
+                        <span class="guide-title">Chrome on Android</span>
+                        <span class="guide-toggle">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                        </span>
+                    </button>
+                    <div class="guide-content">
+                        <ol class="guide-steps">
+                            <li>Tap the <strong>three-dot menu</strong> <strong>(⋯)</strong> in the top-right corner</li>
+                            <li>Tap <strong>"Install app"</strong> or <strong>"Add to Home Screen"</strong></li>
+                            <li>If you don't see the option, tap the <strong>Share</strong> button first</li>
+                            <li>Look for <strong>"Add to Home Screen"</strong> in the share options</li>
+                            <li>Tap <strong>"Add"</strong> or <strong>"Install"</strong> to confirm</li>
+                            <li>The app will appear on your home screen or app drawer</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <!-- Safari on iPhone -->
+                <div class="install-guide-item default-open" data-guide="safari-iphone">
+                    <button class="guide-header" aria-expanded="false">
+                        <span class="guide-icon"></span>
+                        <span class="guide-title">Safari on iPhone</span>
+                        <span class="guide-toggle">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                        </span>
+                    </button>
+                    <div class="guide-content">
+                        <ol class="guide-steps">
+                            <li>Tap the <strong>Share button</strong> <svg viewBox="0 0 24 24" fill="currentColor" style="width:16px;height:16px;vertical-align:middle;"><path d="M18 8c-1.7 0-3 1.3-3 3 0 1.3-1 2-2 2s-2-.7-2-2c0-2 3-3 3-6 0-.6-.4-1-1-1s-1 .4-1 1c0 1.5 1 2.5 1 2.5s-1 1-3 1c-2.3 0-3-1.5-3-3 0-1.7 1.3-3 3-3s3 1.3 3 3c0 1.3-1 2-2 2s-2-.7-2-2c0-3 3-4.5 3-6 0-.6-.4-1-1-1s-1 .4-1 1c0 1.5 1 2.5 1 2.5"/></svg> at the bottom of Safari (iPhone) or top (iPad)</li>
+                            <li>Scroll down and tap <strong>"Add to Home Screen"</strong> <svg viewBox="0 0 24 24" fill="currentColor" style="width:16px;height:16px;vertical-align:middle;"><rect x="4" y="4" width="16" height="16" rx="2"/></svg></li>
+                            <li>Tap the name field to customize the app name</li>
+                            <li>Tap <strong>"Add"</strong> in the top-right corner</li>
+                            <li>Tap and hold any home screen page to move the app icon</li>
+                            <li>Tap the icon to launch the app anytime</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <!-- Chrome on iPhone -->
+                <div class="install-guide-item" data-guide="chrome-iphone">
+                    <button class="guide-header" aria-expanded="false">
+                        <span class="guide-icon"></span>
+                        <span class="guide-title">Chrome on iPhone</span>
+                        <span class="guide-toggle">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                        </span>
+                    </button>
+                    <div class="guide-content">
+                        <ol class="guide-steps">
+                            <li>Tap the <strong>Share button</strong> <svg viewBox="0 0 24 24" fill="currentColor" style="width:16px;height:16px;vertical-align:middle;"><path d="M18 8c-1.7 0-3 1.3-3 3 0 1.3-1 2-2 2s-2-.7-2-2c0-2 3-3 3-6 0-.6-.4-1-1-1s-1 .4-1 1c0 1.5 1 2.5 1 2.5s-1 1-3 1c-2.3 0-3-1.5-3-3 0-1.7 1.3-3 3-3s3 1.3 3 3c0 1.3-1 2-2 2s-2-.7-2-2c0-3 3-4.5 3-6 0-.6-.4-1-1-1s-1 .4-1 1c0 1.5 1 2.5 1 2.5"/></svg> (box with up arrow) in Chrome</li>
+                            <li>Scroll down and tap <strong>"Add to Home Screen"</strong></li>
+                            <li>Edit the name if desired</li>
+                            <li>Tap <strong>"Add"</strong> to create the shortcut</li>
+                            <li>The app will appear on your Home Screen</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <!-- Safari on Mac -->
+                <div class="install-guide-item" data-guide="safari-mac">
+                    <button class="guide-header" aria-expanded="false">
+                        <span class="guide-icon"></span>
+                        <span class="guide-title">Safari on Mac</span>
+                        <span class="guide-toggle">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                        </span>
+                    </button>
+                    <div class="guide-content">
+                        <ol class="guide-steps">
+                            <li>In Safari, go to the Sawfish App Store website</li>
+                            <li>Click <strong>File</strong> in the menu bar</li>
+                            <li>Select <strong>"Add to Dock"</strong> or <strong>"Add to Home Screen"</strong></li>
+                            <li>A dialog will appear - you can rename the app if desired</li>
+                            <li>Click <strong>"Add"</strong> to create the app in your Dock or Home Screen</li>
+                            <li>Click the icon in your Dock to open the app anytime</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <!-- Chrome on Mac -->
+                <div class="install-guide-item" data-guide="chrome-mac">
+                    <button class="guide-header" aria-expanded="false">
+                        <span class="guide-icon"></span>
+                        <span class="guide-title">Chrome on Mac</span>
+                        <span class="guide-toggle">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                        </span>
+                    </button>
+                    <div class="guide-content">
+                        <ol class="guide-steps">
+                            <li>Click the <strong>three-dot menu</strong> <strong>(⋯)</strong> in the top-right corner of Chrome</li>
+                            <li>Hover over <strong>"More tools"</strong></li>
+                            <li>Click <strong>"Create shortcut..."</strong></li>
+                            <li>Check <strong>"Open as window"</strong> for a desktop app experience</li>
+                            <li>Click <strong>"Create"</strong></li>
+                            <li>The app will appear in your Applications folder and Dock</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <!-- Microsoft Edge on PC -->
+                <div class="install-guide-item" data-guide="edge-pc">
+                    <button class="guide-header" aria-expanded="false">
+                        <span class="guide-icon"></span>
+                        <span class="guide-title">Microsoft Edge on PC</span>
+                        <span class="guide-toggle">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                        </span>
+                    </button>
+                    <div class="guide-content">
+                        <ol class="guide-steps">
+                            <li>Click the <strong>three-dot menu</strong> <strong>(⋯)</strong> in the top-right corner</li>
+                            <li>Scroll down and click <strong>"Apps"</strong></li>
+                            <li>Click <strong>"Install this site as an app"</strong></li>
+                            <li>Or click the <strong>Settings menu</strong> <svg viewBox="0 0 24 24" fill="currentColor" style="width:16px;height:16px;"><path d="M12 15.5A3.5 3.5 0 0 1 8.5 12 3.5 3.5 0 0 1 12 8.5a3.5 3.5 0 0 1 3.5 3.5 3.5 3.5 0 0 1-3.5 3.5m7.43-2.53c.04-.32.07-.64.07-.97 0-.33-.03-.66-.07-1l2.11-1.63c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.31-.61-.22l-2.49 1c-.52-.39-1.06-.73-1.69-.98l-.37-2.65A.506.506 0 0 0 14 2h-4c-.25 0-.46.18-.5.42l-.37 2.65c-.63.25-1.17.59-1.69.98l-2.49-1c-.22-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64L4.57 11c-.04.32-.07.65-.07.97 0 .33.03.65.07.97l-2.11 1.66c-.19.15-.25.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1.01c.52.4 1.06.74 1.69.99l.37 2.65c.04.24.25.42.5.42h4c.25 0 .46-.18.5-.42l.37-2.65c.63-.26 1.17-.59 1.69-.99l2.49 1.01c.22.08.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.66z"/></svg> and select "Apps"</li>
+                            <li>Click <strong>"Install"</strong> to create a desktop shortcut</li>
+                            <li>The app will appear on your desktop and in your Start menu</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <!-- Firefox on PC -->
+                <div class="install-guide-item" data-guide="firefox-pc">
+                    <button class="guide-header" aria-expanded="false">
+                        <span class="guide-icon"></span>
+                        <span class="guide-title">Firefox on PC</span>
+                        <span class="guide-toggle">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                        </span>
+                    </button>
+                    <div class="guide-content">
+                        <ol class="guide-steps">
+                            <li>Click the <strong>hamburger menu</strong> <strong>(≡)</strong> in the top-right corner</li>
+                            <li>Click <strong>"Install"</strong> or look for <strong>"Add to Desktop"</strong></li>
+                            <li>If not visible, go to <strong>Customize</strong> and drag the app to your toolbar</li>
+                            <li>Alternatively, use keyboard shortcut <strong>Ctrl+Shift+B</strong> to show the App Menu</li>
+                            <li>Click the installed app to open it in a separate window</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <!-- Firefox on Android -->
+                <div class="install-guide-item" data-guide="firefox-android">
+                    <button class="guide-header" aria-expanded="false">
+                        <span class="guide-icon"></span>
+                        <span class="guide-title">Firefox on Android</span>
+                        <span class="guide-toggle">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                        </span>
+                    </button>
+                    <div class="guide-content">
+                        <ol class="guide-steps">
+                            <li>Tap the <strong>three-dot menu</strong> <strong>(⋯)</strong> in the top-right corner</li>
+                            <li>Tap <strong>"Install"</strong> or <strong>"Add to Home screen"</strong></li>
+                            <li>The app will appear on your home screen</li>
+                            <li>Tap the icon to launch the installed PWA</li>
+                        </ol>
                     </div>
                 </div>
             </div>
@@ -174,7 +401,7 @@
     <header class="app-header">
         <div class="header-content">
             <div class="header-left">
-                <h1 class="app-title">Sawfish App Store</h1>
+                <h1 class="app-title">The Sawfish App Store</h1>
             </div>
             <div class="header-right">
                 <!-- PWA-ONLY BANNER -->
@@ -394,7 +621,7 @@
                 <div class="card-grid">
                     <article class="app-card" data-app="chat">
                         <div class="card-icon">
-                            <img src="icons/IMG_0647.jpeg" alt="Chat App Icon" loading="lazy">
+                            <img src="icons/chat.png" alt="Chat App Icon" loading="lazy">
                         </div>
                         <div class="card-content">
                             <h4>Chat App</h4>
@@ -404,7 +631,7 @@
 
                     <article class="app-card" data-app="call">
                         <div class="card-icon">
-                            <img src="icons/IMG_0651.jpeg" alt="Call App Icon" loading="lazy">
+                            <img src="icons/call.png" alt="Call App Icon" loading="lazy">
                         </div>
                         <div class="card-content">
                             <h4>Call App</h4>
@@ -414,7 +641,7 @@
 
                     <article class="app-card" data-app="2048">
                         <div class="card-icon">
-                            <img src="icons/IMG_0640.jpeg" alt="2048 Icon" loading="lazy">
+                            <img src="icons/2048.png" alt="2048 Icon" loading="lazy">
                         </div>
                         <div class="card-content">
                             <h4>2048</h4>
@@ -485,10 +712,10 @@
                     </div>
                     <div class="featured-badge">Editor's Choice</div>
                     <div class="featured-icon">
-                        <img src="icons/IMG_0746.jpeg" alt="Minecraft Web" loading="lazy">
+                        <img src="https://via.placeholder.com/100x100/5c8a3d/ffffff?text=MC" alt="Minecraft Web" loading="lazy">
                     </div>
                     <div class="featured-info">
-                        <h3>Minecraft Web</h3>
+                        <h3>Minecraft Web (Beta)</h3>
                         <p>The iconic sandbox building game, now in your browser. Build, explore, and create without downloads.</p>
                         <a href="https://zardoy.github.io/minecraft-web-client/" target="_blank" rel="noopener noreferrer" class="featured-btn">
                             Play Now
@@ -506,7 +733,7 @@
                 <div class="card-grid">
                     <article class="app-card" data-app="minecraft" data-reguest="true">
                         <div class="card-icon">
-                            <img src="icons/IMG_0746.jpeg" alt="Minecraft Web Icon" loading="lazy">
+                            <img src="https://via.placeholder.com/100x100/5c8a3d/ffffff?text=MC" alt="Minecraft Web Icon" loading="lazy">
                         </div>
                         <div class="card-content">
                             <h4>Minecraft Web (Beta)</h4>
@@ -516,7 +743,7 @@
 
                     <article class="app-card" data-app="sandboxels">
                         <div class="card-icon">
-                            <img src="icons/IMG_0655.jpeg" alt="Sandboxels Icon" loading="lazy">
+                            <img src="icons/sandboxels.png" alt="Sandboxels Icon" loading="lazy">
                         </div>
                         <div class="card-content">
                             <h4>Sandboxels</h4>
@@ -526,7 +753,7 @@
 
                     <article class="app-card" data-app="2048">
                         <div class="card-icon">
-                            <img src="icons/IMG_0640.jpeg" alt="2048 Icon" loading="lazy">
+                            <img src="icons/2048.png" alt="2048 Icon" loading="lazy">
                         </div>
                         <div class="card-content">
                             <h4>2048</h4>
@@ -536,7 +763,7 @@
 
                     <article class="app-card" data-app="run3">
                         <div class="card-icon">
-                            <img src="icons/IMG_0664.jpeg" alt="Run 3 Icon" loading="lazy">
+                            <img src="icons/run3.png" alt="Run 3 Icon" loading="lazy">
                         </div>
                         <div class="card-content">
                             <h4>Run 3</h4>
@@ -546,7 +773,7 @@
 
                     <article class="app-card" data-app="blockblast">
                         <div class="card-icon">
-                            <img src="icons/IMG_0658.jpeg" alt="Block Blast Icon" loading="lazy">
+                            <img src="icons/blockblast.png" alt="Block Blast Icon" loading="lazy">
                         </div>
                         <div class="card-content">
                             <h4>Block Blast</h4>
@@ -561,7 +788,7 @@
                 <div class="card-grid">
                     <article class="app-card" data-app="novaos">
                         <div class="card-icon">
-                            <img src="icons/IMG_0683.jpeg" alt="NovaOS Icon" loading="lazy">
+                            <img src="icons/novaos.png" alt="NovaOS Icon" loading="lazy">
                         </div>
                         <div class="card-content">
                             <h4>NovaOS</h4>
@@ -571,7 +798,7 @@
 
                     <article class="app-card" data-app="winripen">
                         <div class="card-icon">
-                            <img src="icons/IMG_0686.jpeg" alt="WinRipen Icon" loading="lazy">
+                            <img src="icons/winripen.png" alt="WinRipen Icon" loading="lazy">
                         </div>
                         <div class="card-content">
                             <h4>WinRipen</h4>
@@ -595,7 +822,7 @@
                 <div class="featured-grid">
                     <div class="featured-card" data-app="minecraft">
                         <div class="featured-image-container">
-                            <img src="icons/IMG_0746.jpeg" alt="Minecraft Web" loading="lazy">
+                            <img src="https://via.placeholder.com/100x100/5c8a3d/ffffff?text=MC" alt="Minecraft Web" loading="lazy">
                         </div>
                         <div class="featured-content">
                             <h4>Minecraft Web</h4>
@@ -603,21 +830,21 @@
                         </div>
                     </div>
                     <div class="featured-card" data-app="sandboxels">
-                        <img src="icons/IMG_0655.jpeg" alt="Sandboxels" loading="lazy">
+                        <img src="https://via.placeholder.com/100x100/4da3ff/ffffff?text=S" alt="Sandboxels" loading="lazy">
                         <div class="featured-content">
                             <h4>Sandboxels</h4>
                             <p>500+ physics elements</p>
                         </div>
                     </div>
                     <div class="featured-card" data-app="retrobowl">
-                        <img src="icons/IMG_0667.jpeg" alt="Retro Bowl" loading="lazy">
+                        <img src="https://via.placeholder.com/100x100/4da3ff/ffffff?text=RB" alt="Retro Bowl" loading="lazy">
                         <div class="featured-content">
                             <h4>Retro Bowl</h4>
                             <p>Classic football action</p>
                         </div>
                     </div>
                     <div class="featured-card" data-app="run3">
-                        <img src="icons/IMG_0664.jpeg" alt="Run 3" loading="lazy">
+                        <img src="https://via.placeholder.com/100x100/4da3ff/ffffff?text=R3" alt="Run 3" loading="lazy">
                         <div class="featured-content">
                             <h4>Run 3</h4>
                             <p>Space tunnel runner</p>
@@ -639,7 +866,7 @@
             <div class="card-grid">
                 <article class="app-card" data-app="circle">
                     <div class="card-icon">
-                        <img src="icons/IMG_0652.jpeg" alt="Draw a Circle Icon" loading="lazy">
+                        <img src="https://via.placeholder.com/100x100/4da3ff/ffffff?text=O" alt="Draw a Circle Icon" loading="lazy">
                     </div>
                     <div class="card-content">
                         <h4>Draw a Circle <span class="offline-tag" data-app="circle">OFFLINE</span></h4>
@@ -649,7 +876,7 @@
 
                 <article class="app-card" data-app="2048">
                     <div class="card-icon">
-                        <img src="icons/IMG_0640.jpeg" alt="2048 Icon" loading="lazy">
+                        <img src="https://via.placeholder.com/100x100/4da3ff/ffffff?text=20" alt="2048 Icon" loading="lazy">
                     </div>
                     <div class="card-content">
                         <h4>2048</h4>
@@ -659,17 +886,17 @@
 
                 <article class="app-card" data-app="minecraft" data-reguest="true">
                     <div class="card-icon">
-                        <img src="icons/IMG_0746.jpeg" alt="Minecraft Web Icon" loading="lazy">
+                        <img src="https://via.placeholder.com/100x100/5c8a3d/ffffff?text=MC" alt="Minecraft Web Icon" loading="lazy">
                     </div>
                     <div class="card-content">
-                        <h4>Minecraft Web<span class="reguest-warning" data-app="minecraft">RE-GUEST REQUIRED</span></h4>
+                        <h4>Minecraft Web (Beta)</h4>
                         <p class="card-desc">Browser-based Minecraft experience with multiplayer focus.</p>
                     </div>
                 </article>
 
                 <article class="app-card" data-app="blockblast">
                     <div class="card-icon">
-                        <img src="icons/IMG_0658.jpeg" alt="Block Blast Icon" loading="lazy">
+                        <img src="https://via.placeholder.com/100x100/4da3ff/ffffff?text=BB" alt="Block Blast Icon" loading="lazy">
                     </div>
                     <div class="card-content">
                         <h4>Block Blast <span class="offline-tag" data-app="blockblast">OFFLINE</span></h4>
@@ -679,7 +906,7 @@
 
                 <article class="app-card" data-app="sandboxels">
                     <div class="card-icon">
-                        <img src="icons/IMG_0655.jpeg" alt="Sandboxels Icon" loading="lazy">
+                        <img src="https://via.placeholder.com/100x100/4da3ff/ffffff?text=S" alt="Sandboxels Icon" loading="lazy">
                     </div>
                     <div class="card-content">
                         <h4>Sandboxels</h4>
@@ -689,7 +916,7 @@
 
                 <article class="app-card" data-app="run3">
                     <div class="card-icon">
-                        <img src="icons/IMG_0664.jpeg" alt="Run 3 Icon" loading="lazy">
+                        <img src="https://via.placeholder.com/100x100/4da3ff/ffffff?text=R3" alt="Run 3 Icon" loading="lazy">
                     </div>
                     <div class="card-content">
                         <h4>Run 3</h4>
@@ -699,7 +926,7 @@
 
                 <article class="app-card" data-app="portal">
                     <div class="card-icon">
-                        <img src="icons/IMG_0648.png" alt="Game Portal Icon" loading="lazy">
+                        <img src="https://via.placeholder.com/100x100/4da3ff/ffffff?text=P" alt="Game Portal Icon" loading="lazy">
                     </div>
                     <div class="card-content">
                         <h4>Sawfish Game Portal</h4>
@@ -709,7 +936,7 @@
 
                 <article class="app-card" data-app="syrup">
                     <div class="card-icon">
-                        <img src="icons/IMG_0721.jpeg" alt="Syrup Games Icon" loading="lazy">
+                        <img src="https://via.placeholder.com/100x100/4da3ff/ffffff?text=Sy" alt="Syrup Games Icon" loading="lazy">
                     </div>
                     <div class="card-content">
                         <h4>Syrup Games</h4>
@@ -719,7 +946,7 @@
 
                 <article class="app-card" data-app="bobtherobber">
                     <div class="card-icon">
-                        <img src="icons/IMG_0672.jpeg" alt="Bob The Robber Icon" loading="lazy">
+                        <img src="https://via.placeholder.com/100x100/4da3ff/ffffff?text=BR" alt="Bob The Robber Icon" loading="lazy">
                     </div>
                     <div class="card-content">
                         <h4>Bob The Robber</h4>
@@ -729,7 +956,7 @@
 
                 <article class="app-card" data-app="retrobowl">
                     <div class="card-icon">
-                        <img src="icons/IMG_0667.jpeg" alt="Retro Bowl Icon" loading="lazy">
+                        <img src="https://via.placeholder.com/100x100/4da3ff/ffffff?text=RB" alt="Retro Bowl Icon" loading="lazy">
                     </div>
                     <div class="card-content">
                         <h4>Retro Bowl</h4>
@@ -739,7 +966,7 @@
 
                 <article class="app-card" data-app="paperio2">
                     <div class="card-icon">
-                        <img src="icons/IMG_0648.png" alt="Paper Io 2 Icon" loading="lazy">
+                        <img src="https://via.placeholder.com/100x100/4da3ff/ffffff?text=IO" alt="Paper Io 2 Icon" loading="lazy">
                     </div>
                     <div class="card-content">
                         <h4>Paper Io 2</h4>
@@ -749,7 +976,7 @@
 
                 <article class="app-card" data-app="lichess">
                     <div class="card-icon">
-                        <img src="icons/IMG_0714.jpeg" alt="Lichess Icon" loading="lazy">
+                        <img src="https://via.placeholder.com/100x100/4da3ff/ffffff?text=Li" alt="Lichess Icon" loading="lazy">
                     </div>
                     <div class="card-content">
                         <h4>Lichess</h4>
@@ -759,7 +986,7 @@
 
                 <article class="app-card" data-app="tinyfishing">
                     <div class="card-icon">
-                        <img src="icons/IMG_0648.png" alt="Tiny Fishing Icon" loading="lazy">
+                        <img src="https://via.placeholder.com/100x100/4da3ff/ffffff?text=TF" alt="Tiny Fishing Icon" loading="lazy">
                     </div>
                     <div class="card-content">
                         <h4>Tiny Fishing</h4>
@@ -769,7 +996,7 @@
 
                 <article class="app-card" data-app="ovo">
                     <div class="card-icon">
-                        <img src="icons/IMG_0677.jpeg" alt="OVO Icon" loading="lazy">
+                        <img src="icons/ovo.png" alt="OVO Icon" loading="lazy">
                     </div>
                     <div class="card-content">
                         <h4>OVO</h4>
@@ -779,7 +1006,7 @@
 
                 <article class="app-card" data-app="towerofdestiny">
                     <div class="card-icon">
-                        <img src="icons/IMG_0748.jpeg" alt="Tower of Destiny Icon" loading="lazy">
+                        <img src="icons/towerofdestiny.png" alt="Tower of Destiny Icon" loading="lazy">
                     </div>
                     <div class="card-content">
                         <h4>Tower of Destiny</h4>
@@ -789,7 +1016,7 @@
 
                 <article class="app-card" data-app="chilibowl">
                     <div class="card-icon">
-                        <img src="icons/IMG_0736.jpeg" alt="Chilibowl Flash Icon" loading="lazy">
+                        <img src="https://via.placeholder.com/100x100/4da3ff/ffffff?text=CB" alt="Chilibowl Flash Icon" loading="lazy">
                     </div>
                     <div class="card-content">
                         <h4>Chilibowl Flash</h4>
@@ -799,7 +1026,7 @@
 
                 <article class="app-card" data-app="slope">
                     <div class="card-icon">
-                        <img src="icons/IMG_0739.jpeg" alt="Slope Icon" loading="lazy">
+                        <img src="https://via.placeholder.com/100x100/4da3ff/ffffff?text=Sl" alt="Slope Icon" loading="lazy">
                     </div>
                     <div class="card-content">
                         <h4>Slope</h4>
@@ -809,7 +1036,7 @@
 
                 <article class="app-card" data-app="territorial">
                     <div class="card-icon">
-                        <img src="icons/IMG_0742.jpeg" alt="Territorial.io Icon" loading="lazy">
+                        <img src="https://via.placeholder.com/100x100/4da3ff/ffffff?text=Ti" alt="Territorial.io Icon" loading="lazy">
                     </div>
                     <div class="card-content">
                         <h4>Territorial.io</h4>
@@ -819,7 +1046,7 @@
 
                 <article class="app-card" data-app="snowrider3d">
                     <div class="card-icon">
-                        <img src="icons/IMG_0680.jpeg" alt="Snow Rider 3D Icon" loading="lazy">
+                        <img src="icons/snowrider.png" alt="Snow Rider 3D Icon" loading="lazy">
                     </div>
                     <div class="card-content">
                         <h4>Snow Rider 3D</h4>
@@ -839,7 +1066,7 @@
             <div class="card-grid">
                 <article class="app-card" data-app="chat">
                     <div class="card-icon">
-                        <img src="icons/IMG_0647.jpeg" alt="Chat App Icon" loading="lazy">
+                        <img src="icons/chat.png" alt="Chat App Icon" loading="lazy">
                     </div>
                     <div class="card-content">
                         <h4>Chat App</h4>
@@ -849,7 +1076,7 @@
 
                 <article class="app-card" data-app="call">
                     <div class="card-icon">
-                        <img src="icons/IMG_0651.jpeg" alt="Call App Icon" loading="lazy">
+                        <img src="icons/call.png" alt="Call App Icon" loading="lazy">
                     </div>
                     <div class="card-content">
                         <h4>Call App</h4>
@@ -859,7 +1086,7 @@
 
                 <article class="app-card" data-app="hackernews">
                     <div class="card-icon">
-                        <img src="icons/IMG_0648.png" alt="Hacker News Icon" loading="lazy">
+                        <img src="icons/hackernews.png" alt="Hacker News Icon" loading="lazy">
                     </div>
                     <div class="card-content">
                         <h4>Hacker News</h4>
@@ -925,28 +1152,28 @@
                 <h3 class="section-title">Featured</h3>
                 <div class="featured-grid">
                     <div class="featured-card" data-app="novaos">
-                        <img src="icons/IMG_0683.jpeg" alt="NovaOS" loading="lazy">
+                        <img src="icons/novaos.png" alt="NovaOS" loading="lazy">
                         <div class="featured-content">
                             <h4>NovaOS</h4>
                             <p>Full browser-based desktop</p>
                         </div>
                     </div>
                     <div class="featured-card" data-app="winripen">
-                        <img src="icons/IMG_0686.jpeg" alt="WinRipen" loading="lazy">
+                        <img src="icons/winripen.png" alt="WinRipen" loading="lazy">
                         <div class="featured-content">
                             <h4>WinRipen</h4>
                             <p>Windows-inspired web OS</p>
                         </div>
                     </div>
                     <div class="featured-card" data-app="plutoos">
-                        <img src="icons/IMG_0689.jpeg" alt="PlutoOS" loading="lazy">
+                        <img src="icons/plutoos.png" alt="PlutoOS" loading="lazy">
                         <div class="featured-content">
                             <h4>PlutoOS</h4>
                             <p>Modern experimental web OS</p>
                         </div>
                     </div>
                     <div class="featured-card" data-app="ripenos">
-                        <img src="icons/IMG_0648.png" alt="Ripenos" loading="lazy">
+                        <img src="icons/ripenos.png" alt="Ripenos" loading="lazy">
                         <div class="featured-content">
                             <h4>Ripenos</h4>
                             <p>Lightweight modular framework</p>
@@ -972,7 +1199,7 @@
             <div class="card-grid">
                 <article class="app-card" data-app="novaos">
                     <div class="card-icon">
-                        <img src="icons/IMG_0683.jpeg" alt="NovaOS Icon" loading="lazy">
+                        <img src="icons/novaos.png" alt="NovaOS Icon" loading="lazy">
                     </div>
                     <div class="card-content">
                         <h4>NovaOS</h4>
@@ -982,7 +1209,7 @@
 
                 <article class="app-card" data-app="winripen">
                     <div class="card-icon">
-                        <img src="icons/IMG_0686.jpeg" alt="WinRipen Icon" loading="lazy">
+                        <img src="icons/winripen.png" alt="WinRipen Icon" loading="lazy">
                     </div>
                     <div class="card-content">
                         <h4>WinRipen</h4>
@@ -992,7 +1219,7 @@
 
                 <article class="app-card" data-app="plutoos">
                     <div class="card-icon">
-                        <img src="icons/IMG_0689.jpeg" alt="PlutoOS Icon" loading="lazy">
+                        <img src="icons/plutoos.png" alt="PlutoOS Icon" loading="lazy">
                     </div>
                     <div class="card-content">
                         <h4>PlutoOS</h4>
@@ -1002,7 +1229,7 @@
 
                 <article class="app-card" data-app="ripenos">
                     <div class="card-icon">
-                        <img src="icons/IMG_0648.png" alt="Ripenos Icon" loading="lazy">
+                        <img src="icons/ripenos.png" alt="Ripenos Icon" loading="lazy">
                     </div>
                     <div class="card-content">
                         <h4>Ripenos</h4>
@@ -1034,7 +1261,7 @@
             <div class="card-grid">
                 <article class="app-card" data-app="hack">
                     <div class="card-icon">
-                        <img src="icons/IMG_0718.jpeg" alt="Hack Stuff Icon" loading="lazy">
+                        <img src="icons/hack.png" alt="Hack Stuff Icon" loading="lazy">
                     </div>
                     <div class="card-content">
                         <h4>Hack Stuff</h4>
@@ -1044,7 +1271,7 @@
 
                 <article class="app-card" data-app="monkeytype">
                     <div class="card-icon">
-                        <img src="icons/IMG_0709.jpeg" alt="Monkeytype Icon" loading="lazy">
+                        <img src="icons/monkeytype.png" alt="Monkeytype Icon" loading="lazy">
                     </div>
                     <div class="card-content">
                         <h4>Monkeytype</h4>
@@ -1054,7 +1281,7 @@
 
                 <article class="app-card" data-app="photopea">
                     <div class="card-icon">
-                        <img src="icons/IMG_0705.jpeg" alt="Photopea Icon" loading="lazy">
+                        <img src="icons/photopea.png" alt="Photopea Icon" loading="lazy">
                     </div>
                     <div class="card-content">
                         <h4>Photopea</h4>
@@ -1064,7 +1291,7 @@
 
                 <article class="app-card" data-app="hextris">
                     <div class="card-icon">
-                        <img src="icons/IMG_0724.jpeg" alt="Hextris Icon" loading="lazy">
+                        <img src="icons/hextris.png" alt="Hextris Icon" loading="lazy">
                     </div>
                     <div class="card-content">
                         <h4>Hextris</h4>
@@ -1084,7 +1311,7 @@
 
                 <article class="app-card" data-app="investopedia">
                     <div class="card-icon">
-                        <img src="icons/IMG_0732.jpeg" alt="Investopedia Simulator Icon" loading="lazy">
+                        <img src="https://via.placeholder.com/100x100/4da3ff/ffffff?text=In" alt="Investopedia Simulator Icon" loading="lazy">
                     </div>
                     <div class="card-content">
                         <h4>Investopedia Simulator</h4>
@@ -1094,7 +1321,7 @@
 
                 <article class="app-card" data-app="studentgrade">
                     <div class="card-icon">
-                        <img src="icons/IMG_0733.jpeg" alt="Student Grade Viewer Icon" loading="lazy">
+                        <img src="https://via.placeholder.com/100x100/4da3ff/ffffff?text=SG" alt="Student Grade Viewer Icon" loading="lazy">
                     </div>
                     <div class="card-content">
                         <h4>Student Grade Viewer</h4>
