@@ -2,7 +2,7 @@
     "name": "Sawfish App Store",
     "short_name": "Sawfish Store",
     "description": "A fast, school-safe way to access games and student tools. Install as a PWA for the full experience.",
-    "start_url": "/appstore",
+    "start_url": "/",
     "display": "standalone",
     "orientation": "portrait-primary",
     "background_color": "#0b0d10",
